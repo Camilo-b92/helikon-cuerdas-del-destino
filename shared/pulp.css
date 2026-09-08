@@ -1,0 +1,353 @@
+/* =========================================================
+   PULP — base visual compartida por Home, Helikón y Juanes.
+
+   Aquí vive todo lo que las tres páginas tienen en común:
+   la paleta, la textura de papel, el masthead, el hero y el
+   componente de viñeta (.panel). Cada página enlaza este
+   archivo ANTES del suyo y solo redefine lo que le es propio.
+
+       <link rel="stylesheet" href="../shared/pulp.css">
+       <link rel="stylesheet" href="styles.css">
+
+   Los valores de referencia son los del Home. Helikón y Juanes
+   ajustan tamaños puntuales en sus propias hojas.
+   ========================================================= */
+
+*{
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root{
+  --paper: #e8dfc9;   /* fondo, papel envejecido */
+  --ink: #17130e;     /* tinta / bordes / sombras duras */
+  --red: #a92820;     /* acento — Juanes */
+  --blue: #254f68;    /* acento — Cómic */
+  --yellow: #c79b27;  /* acento — Helikón */
+}
+
+html, body{
+  min-height: 100%;
+}
+
+body{
+  background: radial-gradient(circle at 50% 10%, #f1ead8 0%, var(--paper) 55%, #cfc3a5 100%);
+  color: var(--ink);
+  font-family: Inter, sans-serif;
+  overflow-x: hidden;
+}
+
+a{ color: inherit; }
+
+/* ---------- TEXTURA DE PAPEL (grano + viñeteado) ---------- */
+body::before{
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  pointer-events: none;
+  background-image: radial-gradient(rgba(23,19,14,0.18) 0.7px, transparent 0.8px);
+  background-size: 5px 5px;
+  mix-blend-mode: multiply;
+  opacity: 0.32;
+}
+body::after{
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  pointer-events: none;
+  box-shadow: inset 0 0 90px rgba(53,37,15,0.32); /* viñeta oscura en los bordes */
+}
+.paper-grain{
+  position: fixed;
+  inset: 0;
+  z-index: 19;
+  pointer-events: none;
+  opacity: 0.16;
+  background:
+    repeating-linear-gradient(0deg, transparent 0 3px, rgba(23,19,14,0.08) 4px),
+    repeating-linear-gradient(90deg, transparent 0 5px, rgba(23,19,14,0.035) 6px);
+}
+.sunburst{
+  position: fixed;
+  z-index: 0;
+  top: -440px;
+  left: 50%;
+  width: 900px;
+  height: 900px;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  pointer-events: none;
+  background: repeating-conic-gradient(from 0deg, rgba(23,19,14,0.04) 0 5deg, transparent 5deg 11deg);
+}
+
+/* ---------- MASTHEAD ---------- */
+.emblem{
+  text-align: center;
+  padding: 34px 0 6px;
+}
+.emblem-title{
+  font-family: Bangers, cursive;
+  font-size: clamp(2.2rem, 5.5vw, 3.6rem);
+  letter-spacing: 3px;
+  text-shadow: 3px 3px 0 var(--paper), 5px 5px 0 var(--ink);
+}
+.emblem-sub{
+  margin-top: 4px;
+  font-family: 'Special Elite', serif;
+  font-size: 0.6rem;
+  letter-spacing: 3px;
+  opacity: 0.8;
+}
+
+/* ---------- HERO ---------- */
+.hero{
+  position: relative;
+  padding: 44px 20px 38px;
+  text-align: center;
+}
+.caption-box{
+  display: inline-block;
+  background: var(--yellow);
+  border: 4px solid var(--ink);
+  padding: 9px 20px;
+  font-family: 'Special Elite', serif;
+  font-weight: 900;
+  letter-spacing: 2px;
+  transform: rotate(-2deg);
+  box-shadow: 5px 5px 0 var(--ink);
+}
+.hero h2 em{ color: var(--red); font-style: normal; }
+.hero p{
+  max-width: 620px;
+  margin: 25px auto 0;
+  font-family: 'Special Elite', serif;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+/* =========================================================
+   VIÑETA DE NAVEGACIÓN (.panel)
+   El mismo componente en las tres páginas. El selector de
+   hover excluye .panel-locked para que Helikón pueda tener
+   una viñeta bloqueada sin efectos.
+   ========================================================= */
+.panel{
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  min-height: 330px;
+  padding: 27px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  border: 7px solid var(--ink);
+  color: white;
+  text-decoration: none;
+  box-shadow: 9px 9px 0 var(--ink);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease;
+}
+/* trama de puntos (Ben-Day) sobre el color del panel */
+.panel::before{
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  opacity: 0.35;
+  mix-blend-mode: screen;
+  background: radial-gradient(circle, rgba(255,255,255,0.3) 1.2px, transparent 1.5px);
+  background-size: 9px 9px;
+}
+/* estrella decorativa que gira y crece al hacer hover */
+.panel::after{
+  content: '';
+  position: absolute;
+  z-index: -1;
+  top: -155px;
+  right: -155px;
+  width: 390px;
+  height: 390px;
+  opacity: 0.12;
+  background: white;
+  clip-path: polygon(50% 0,57% 37%,88% 10%,67% 43%,100% 50%,67% 57%,90% 88%,57% 67%,50% 100%,43% 67%,10% 90%,33% 57%,0 50%,33% 43%,10% 10%,43% 37%);
+  transition: transform 0.45s ease;
+}
+
+.panel-helikon{ background: var(--yellow); color: var(--ink); }
+.panel-juanes{ background: var(--red); }
+.panel-comic{ background: var(--blue); }
+
+.panel:not(.panel-locked):hover{
+  transform: translate(-5px, -7px) rotate(-0.7deg);
+  box-shadow: 15px 16px 0 var(--ink);
+  filter: drop-shadow(0 0 15px rgba(0,0,0,0.28)) saturate(1.18);
+}
+.panel:not(.panel-locked):hover::after{
+  transform: scale(1.35) rotate(22deg);
+}
+
+.panel-number{
+  position: absolute;
+  z-index: 2;
+  top: 14px;
+  left: 18px;
+  font-family: Bangers, cursive;
+  font-size: 2.3rem;
+}
+.panel-kicker{
+  font-family: 'Special Elite', serif;
+  font-weight: 900;
+  font-size: 0.62rem;
+  letter-spacing: 2px;
+}
+.panel-title{
+  font-family: Bangers, cursive;
+  font-size: clamp(3.7rem, 6vw, 6.5rem);
+  line-height: 0.78;
+  letter-spacing: 3px;
+  text-shadow: 5px 5px 0 var(--ink);
+}
+.panel-helikon .panel-title{
+  text-shadow: 5px 5px 0 white; /* el panel amarillo necesita la sombra clara para leerse */
+}
+.panel-action{
+  width: fit-content;
+  margin-top: 22px;
+  padding: 7px 12px;
+  background: white;
+  color: var(--ink);
+  border: 3px solid var(--ink);
+  font-family: Bangers, cursive;
+  font-size: 1.2rem;
+  letter-spacing: 1px;
+}
+.burst-text{
+  position: absolute;
+  top: 27px;
+  right: 27px;
+  font-family: Bangers, cursive;
+  font-size: 2.7rem;
+  color: var(--ink);
+  transform: rotate(12deg);
+  text-shadow: 2px 2px 0 white;
+}
+
+/* ---------- PIE DE PÁGINA ---------- */
+.cover-footer{
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  font-family: 'Special Elite', serif;
+  font-weight: 900;
+  letter-spacing: 2px;
+}
+.rule{
+  flex: 1;
+  height: 3px;
+  background: var(--ink);
+}
+
+/* ---------- MOVIMIENTO REDUCIDO ----------
+   Respeta la preferencia del sistema: se neutralizan las
+   animaciones decorativas sin quitar ninguna función.
+   La inclinación 3D y el paralaje se desactivan además desde
+   el JS de cada página. */
+@media (prefers-reduced-motion: reduce){
+  *, *::before, *::after{
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+  .panel:not(.panel-locked):hover{
+    transform: none;
+    filter: none;
+  }
+  .emblem{ transform: none !important; }
+}
+
+/* =========================================================
+   ILUSTRACIÓN DENTRO DE LA VIÑETA
+   Cada panel lleva un dibujo de línea que corresponde a su
+   destino (plumilla, guitarra, televisor, reloj de arena).
+   Va detrás del texto y reacciona al hover junto con la
+   estrella decorativa.
+   ========================================================= */
+.panel-art{
+  position: absolute;
+  z-index: -1;
+  right: -12px;
+  bottom: -18px;
+  width: min(230px, 45%);
+  height: auto;
+  color: white;
+  opacity: 0.24;
+  transition: transform 0.45s ease, opacity 0.45s ease;
+}
+.panel-helikon .panel-art{
+  color: var(--ink);
+  opacity: 0.2;
+}
+.panel:not(.panel-locked):hover .panel-art{
+  transform: translate(-10px, -10px) rotate(-6deg) scale(1.08);
+  opacity: 0.36;
+}
+.panel-locked .panel-art{ opacity: 0.16; }
+
+/* el grito de acción rebota al pasar el mouse por la viñeta */
+.panel:not(.panel-locked):hover .burst-text{
+  animation: burstPop 0.5s ease;
+}
+@keyframes burstPop{
+  0%{ transform: rotate(12deg) scale(1); }
+  45%{ transform: rotate(6deg) scale(1.22); }
+  100%{ transform: rotate(12deg) scale(1); }
+}
+
+/* =========================================================
+   REVELADO AL HACER SCROLL
+   El ocultamiento se aplica solo si el JS arrancó (marca
+   .js-reveal en <html>): sin JS el contenido se ve igual.
+   ========================================================= */
+.js-reveal [data-reveal]{
+  opacity: 0;
+  transform: translateY(26px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.js-reveal [data-reveal].in-view{
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ---------- TIRA DE MEDIOS TONOS (separador decorativo) ---------- */
+.halftone-rule{
+  height: 26px;
+  margin: 6px 0;
+  background:
+    radial-gradient(circle, var(--ink) 1.6px, transparent 1.9px) 0 0/12px 12px,
+    radial-gradient(circle, var(--ink) 1.1px, transparent 1.4px) 6px 6px/12px 12px;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 18%, #000 82%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 18%, #000 82%, transparent);
+  opacity: 0.5;
+}
+
+@media (prefers-reduced-motion: reduce){
+  .panel:not(.panel-locked):hover .panel-art{ transform: none; }
+  .panel:not(.panel-locked):hover .burst-text{ animation: none; }
+  .js-reveal [data-reveal]{ opacity: 1; transform: none; }
+}
+
+/* ---------- VIDA EN EL RÓTULO ----------
+   Balanceo muy leve, como una viñeta recortada y pegada
+   a mano. Se aplica en las tres páginas. */
+.caption-box{
+  animation: captionWobble 5s ease-in-out infinite;
+}
+@keyframes captionWobble{
+  0%, 100%{ transform: rotate(-2deg); }
+  50%{ transform: rotate(-3.4deg) translateY(-2px); }
+}
+@media (prefers-reduced-motion: reduce){
+  .caption-box{ animation: none; transform: rotate(-2deg); }
+}

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Helikon — Comic Digital Interactivo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Special+Elite&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../shared/pulp.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="paper-grain"></div>
+  <div class="sunburst"></div>
+
+  <main class="cover">
+    <header class="emblem">
+      <h1 class="emblem-title">HELIKÓN</h1>
+      <p class="emblem-sub">EL MONTE DONDE NACEN LAS MUSAS</p>
+    </header>
+
+    <section class="hero">
+      <!-- líneas de velocidad, como el fondo de una viñeta de acción -->
+      <div class="speed-lines" aria-hidden="true"></div>
+      <div class="caption-box">WELCOME, READER!</div>
+      <h2>THE MUSIC<br><em>COMES ALIVE!</em></h2>
+      <p>Abre una puerta, entra en la historia y descubre el universo de Helikon.</p>
+    </section>
+
+    <div class="halftone-rule" aria-hidden="true"></div>
+
+    <section class="panels" aria-label="Navegación principal" data-reveal>
+      <a class="panel panel-helikon" href="../Helikon/helikon.html">
+        <span class="panel-number">I</span>
+
+        <!-- plumilla: el estudio que dibuja la historia -->
+        <svg class="panel-art" viewBox="0 0 100 100" fill="none" stroke="currentColor"
+             stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M50 6 L76 46 L50 94 L24 46 Z"/>
+          <path d="M50 62 V94"/>
+          <circle cx="50" cy="52" r="7"/>
+          <path d="M32 30 H68"/>
+        </svg>
+
+        <span class="panel-kicker">ENTER THE WORLD OF</span>
+        <span class="panel-title">HELIKON</span>
+        <span class="panel-action">OPEN →</span>
+        <span class="burst-text">HEY!</span>
+      </a>
+
+      <a class="panel panel-juanes" href="../Juanes/juanes.html">
+        <span class="panel-number">II</span>
+
+        <!-- guitarra: el artista que inspira el cómic -->
+        <svg class="panel-art" viewBox="0 0 100 100" fill="none" stroke="currentColor"
+             stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <g transform="rotate(-28 50 50)">
+            <path d="M50 50 C35 50 26 61 26 72 C26 85 37 93 50 93 C63 93 74 85 74 72 C74 61 65 50 50 50 Z"/>
+            <circle cx="50" cy="69" r="9"/>
+            <path d="M44 50 V16"/>
+            <path d="M56 50 V16"/>
+            <rect x="40" y="4" width="20" height="12" rx="3"/>
+          </g>
+        </svg>
+
+        <span class="panel-kicker">DISCOVER THE STORY OF</span>
+        <span class="panel-title">JUANES</span>
+        <span class="panel-action">OPEN →</span>
+        <span class="burst-text">POW!</span>
+      </a>
+
+      <a class="panel panel-comic" href="../Comic/comic.html">
+        <span class="panel-number">III</span>
+
+        <!-- televisor: la interfaz por la que se lee el cómic -->
+        <svg class="panel-art" viewBox="0 0 100 100" fill="none" stroke="currentColor"
+             stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M30 36 L18 14"/>
+          <path d="M58 36 L72 12"/>
+          <rect x="8" y="36" width="66" height="50" rx="7"/>
+          <rect x="18" y="45" width="46" height="32" rx="4"/>
+          <circle cx="85" cy="50" r="5"/>
+          <circle cx="85" cy="68" r="5"/>
+        </svg>
+
+        <span class="panel-kicker">TURN THE PAGE TO</span>
+        <span class="panel-title">COMIC</span>
+        <span class="panel-action">OPEN →</span>
+        <span class="burst-text">BOOM!</span>
+      </a>
+    </section>
+
+    <footer class="cover-footer">
+      <span>HELIKON</span><span class="rule"></span><span>DIGITAL INTERACTIVE COMIC</span>
+    </footer>
+  </main>
+
+  <script src="../shared/pulp.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

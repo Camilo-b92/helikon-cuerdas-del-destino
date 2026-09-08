@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Juanes — Helikón</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bangers&family=Special+Elite&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/pulp.css">
+<link rel="stylesheet" href="juanes.css">
+</head>
+<body>
+<div class="paper-grain"></div>
+<div class="sunburst"></div>
+
+<!-- barra de progreso de lectura, en tinta sobre el papel -->
+<div class="ink-rail" aria-hidden="true"><div class="ink-fill" id="inkFill"></div></div>
+
+<nav class="topnav">
+  <span class="topnav-links">
+    <a class="topnav-back" href="../Home/index.html">&larr; INICIO</a>
+    <a class="topnav-back" href="../Helikon/helikon.html">HELIKÓN</a>
+  </span>
+  <span class="topnav-mark">JUANES</span>
+</nav>
+
+<main class="page">
+
+  <!-- MASTHEAD -->
+  <header class="emblem">
+    <h1 class="emblem-title">HELIKÓN</h1>
+    <p class="emblem-sub">EL ARTISTA DETRÁS DE LA INSPIRACIÓN</p>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="caption-box">¿QUIÉN ES JUANES?</div>
+    <h2>JUANES</h2>
+    <p class="hero-name">Juan Esteban Aristizábal Vásquez</p>
+    <p class="hero-body">
+      Cantante, compositor y guitarrista colombiano, nacido en Carolina del
+      Príncipe, Antioquia, y criado en Medellín. De las bandas de metal de su
+      adolescencia a convertirse en uno de los artistas más premiados de la
+      música en español — su historia es el punto de partida de este universo.
+    </p>
+    <a class="scroll-cue" href="#origen">CONOCE SU HISTORIA <span aria-hidden="true">&darr;</span></a>
+  </section>
+
+  <!-- EL ORIGEN — tira secuencial -->
+  <section class="strip-section" id="origen" data-reveal>
+    <h3 class="section-title">EL ORIGEN <span>— los inicios</span></h3>
+
+    <div class="origen-head">
+      <p class="pull-quote">De Medellín al thrash metal, <em>mucho antes del pop latino.</em></p>
+
+      <!-- la guitarra y la nota: el hilo que atraviesa toda su historia -->
+      <svg class="origen-mark" viewBox="0 0 230 220" fill="none" stroke="var(--ink)"
+           stroke-width="4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M110 108 C82 108 64 130 64 152 C64 178 85 196 110 196 C135 196 156 178 156 152 C156 130 138 108 110 108 Z"/>
+        <circle cx="110" cy="148" r="18"/>
+        <path d="M96 108 V40"/>
+        <path d="M124 108 V40"/>
+        <path d="M96 92 H124"/>
+        <path d="M96 74 H124"/>
+        <path d="M96 56 H124"/>
+        <path d="M92 40 H128 V16 H92 Z"/>
+        <circle cx="84" cy="26" r="5" fill="var(--ink)"/>
+        <circle cx="136" cy="26" r="5" fill="var(--ink)"/>
+        <circle cx="188" cy="72" r="10" fill="var(--ink)"/>
+        <path d="M198 72 V30 L220 22"/>
+      </svg>
+    </div>
+
+    <div class="strip">
+      <article class="strip-panel">
+        <span class="strip-number">1</span>
+        <svg class="strip-icon" viewBox="0 0 100 100" aria-hidden="true">
+          <path d="M30 88 Q 30 22, 68 22" fill="none" stroke="var(--ink)" stroke-width="6" stroke-linecap="round"/>
+          <ellipse cx="70" cy="22" rx="12" ry="8" fill="none" stroke="var(--ink)" stroke-width="6" transform="rotate(-18 70 22)"/>
+          <circle cx="30" cy="88" r="10" fill="var(--ink)"/>
+        </svg>
+        <p>
+          Nació el 9 de agosto de 1972. Desde niño estuvo rodeado de música: su
+          padre y sus hermanos mayores le enseñaron guitarra y juntos tocaban
+          canciones del folclor colombiano. Esa mezcla entre lo tradicional y lo
+          rebelde marcaría el resto de su carrera.
+        </p>
+      </article>
+
+      <article class="strip-panel">
+        <span class="strip-number">2</span>
+        <svg class="strip-icon" viewBox="0 0 100 100" aria-hidden="true">
+          <path d="M38 78 V26 L76 18 V70" fill="none" stroke="var(--ink)" stroke-width="6" stroke-linejoin="round"/>
+          <circle cx="30" cy="78" r="9" fill="var(--ink)"/>
+          <circle cx="68" cy="70" r="9" fill="var(--ink)"/>
+        </svg>
+        <p>
+          A los quince años fundó <strong>Ekhymosis</strong>, una banda de
+          thrash metal influenciada por grupos como Metallica. Durante diez
+          años, entre 1988 y 1998, la banda publicó varios discos y se convirtió
+          en una de las agrupaciones más importantes del rock colombiano de los
+          noventa, antes de separarse.
+        </p>
+      </article>
+    </div>
+  </section>
+
+  <!-- DISCOGRAFÍA — fichas de álbum -->
+  <section class="albums-section" data-reveal>
+    <h3 class="section-title">DISCOGRAFÍA <span>— la carrera solista</span></h3>
+
+    <div class="albums-grid">
+      <article class="album-card">
+        <span class="album-year">2000</span>
+        <h4>Fíjate Bien</h4>
+        <p>Su álbum debut como solista, producido junto a Gustavo Santaolalla. Le valió tres premios Grammy Latino, incluido Mejor Artista Nuevo.</p>
+      </article>
+
+      <article class="album-card">
+        <span class="album-year">2002</span>
+        <h4>Un Día Normal</h4>
+        <p>El disco que lo llevó al público masivo, con temas como "A Dios le pido" y el dueto "Fotografía" junto a Nelly Furtado.</p>
+      </article>
+
+      <article class="album-card">
+        <span class="album-year">2004</span>
+        <h4>Mi Sangre</h4>
+        <p>Consolidó su lugar como una de las figuras centrales del rock y pop en español de la década.</p>
+      </article>
+
+      <article class="album-card">
+        <span class="album-year">2007</span>
+        <h4>La Vida... Es un Ratico</h4>
+        <p>Un álbum marcado por la reflexión personal y el activismo social que definiría los años siguientes.</p>
+      </article>
+
+      <article class="album-card">
+        <span class="album-year">2010</span>
+        <h4>P.A.R.C.E.</h4>
+        <p>Producido por él mismo; su título resume los valores que ha defendido a lo largo de su carrera: paz, amor, respeto, compromiso y esperanza.</p>
+      </article>
+
+      <article class="album-card">
+        <span class="album-year">2014 / 2017</span>
+        <h4>Loco de Amor · Mis Planes Son Amarte</h4>
+        <p>Dos discos que muestran su exploración continua entre géneros, siempre desde una identidad profundamente colombiana.</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- MÚSICA — el reproductor dentro de una viñeta -->
+  <section class="music-section" data-reveal>
+    <h3 class="section-title">SU MÚSICA, EN TIEMPO REAL <span>— escúchalo ahora</span></h3>
+
+    <p class="section-lead">
+      Antes de seguir leyendo, dale play. La banda sonora de esta historia
+      empieza aquí, directo desde su perfil oficial de Spotify.
+    </p>
+
+    <!-- ecualizador decorativo: da señal de que aquí suena algo -->
+    <div class="equalizer" aria-hidden="true">
+      <span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span>
+    </div>
+
+    <div class="music-panel">
+      <span class="music-tag">&#9654; PLAY</span>
+      <iframe
+        title="Reproductor de Spotify — Juanes"
+        src="https://open.spotify.com/embed/artist/0UWZUmn7sybxMCqrw9tGa7?utm_source=generator&theme=0"
+        width="100%"
+        height="352"
+        frameborder="0"
+        allowfullscreen=""
+        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+        loading="lazy">
+      </iframe>
+    </div>
+  </section>
+
+  <!-- RECONOCIMIENTOS — cifras como estallidos -->
+  <section class="stats-section" data-reveal>
+    <h3 class="section-title">UNA CARRERA PREMIADA <span>— reconocimientos</span></h3>
+
+    <div class="stats-grid">
+      <div class="stat">
+        <span class="stat-number">26</span>
+        <span class="stat-label">Latin Grammy Awards</span>
+      </div>
+      <div class="stat">
+        <span class="stat-number">4</span>
+        <span class="stat-label">Grammy Awards</span>
+      </div>
+      <div class="stat">
+        <span class="stat-number">+16M</span>
+        <span class="stat-label">Discos vendidos en el mundo</span>
+      </div>
+      <div class="stat">
+        <span class="stat-number">2009</span>
+        <span class="stat-label">Artista latino de la década — Billboard</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ACTIVISMO — splash page -->
+  <section class="splash" data-reveal>
+    <div class="splash-burst" aria-hidden="true"></div>
+    <p class="splash-kicker">MÁS ALLÁ DE LA MÚSICA</p>
+    <p class="splash-text">UN ARTISTA CON<br><em>CONCIENCIA SOCIAL.</em></p>
+    <p class="splash-body">
+      En 2008, en medio de una crisis diplomática entre Colombia, Ecuador y
+      Venezuela, impulsó <strong>Paz Sin Fronteras</strong>, un concierto
+      masivo en la frontera colombo-venezolana que reunió a artistas de toda
+      Latinoamérica y a cientos de miles de personas. Ese gesto resume algo
+      constante en su carrera: usar la música como puente, no solo como
+      espectáculo.
+    </p>
+  </section>
+
+  <!-- CTA — viñeta de navegación, igual que en Home y Helikón -->
+  <section class="cta-section" data-reveal>
+    <h3 class="section-title">DE LA VIDA REAL AL MITO <span>— a dónde ir desde aquí</span></h3>
+
+    <a class="panel panel-comic" href="../Comic/comic.html">
+      <span class="panel-number">I</span>
+
+      <!-- televisor: la interfaz por la que se lee el cómic -->
+      <svg class="panel-art" viewBox="0 0 100 100" fill="none" stroke="currentColor"
+           stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M30 36 L18 14"/>
+        <path d="M58 36 L72 12"/>
+        <rect x="8" y="36" width="66" height="50" rx="7"/>
+        <rect x="18" y="45" width="46" height="32" rx="4"/>
+        <circle cx="85" cy="50" r="5"/>
+        <circle cx="85" cy="68" r="5"/>
+      </svg>
+
+      <span class="panel-kicker">SU HISTORIA INSPIRA</span>
+      <span class="panel-title">CUERDAS<br>DEL DESTINO</span>
+      <span class="panel-copy">
+        El cómic digital interactivo de Helikón toma la esencia de este viaje
+        artístico — no como biografía literal, sino como punto de partida para
+        una historia de ficción sobre pasión, destino y arte.
+      </span>
+      <span class="panel-action">EXPLORAR EL CÓMIC →</span>
+      <span class="burst-text">POW!</span>
+    </a>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="cover-footer">
+    <span>JUANES</span>
+    <span class="rule"></span>
+    <a href="../Home/index.html">INICIO</a>
+    <a href="../Helikon/helikon.html">HELIKÓN</a>
+    <a href="../Comic/comic.html">CÓMIC</a>
+  </footer>
+
+  <p class="footer-note">Contenido biográfico con fines informativos y creativos — proyecto multimedia académico.</p>
+
+</main>
+
+<!-- transición "pasar la página", igual que en Home y Helikón -->
+
+<script src="../shared/pulp.js"></script>
+<script src="juanes.js"></script>
+</body>
+</html>

@@ -1,0 +1,529 @@
+/* =========================================================
+   JUANES — el artista detrás de la inspiración
+
+   La base visual (paleta, textura de papel, masthead, hero y
+   el componente .panel) vive en ../shared/pulp.css. Aquí solo
+   están los ajustes de esta página y sus secciones propias:
+   la tira del origen, las fichas de álbum, el reproductor,
+   las cifras y el splash de activismo.
+
+   El acento de esta página es el rojo, que es el color con el
+   que Juanes aparece en el Home.
+   ========================================================= */
+
+html{
+  scroll-behavior: smooth;
+}
+
+/* ---------- BARRA DE PROGRESO DE LECTURA ---------- */
+.ink-rail{
+  position: fixed;
+  z-index: 18;
+  top: 0;
+  left: 0;
+  width: 6px;
+  height: 100vh;
+  background: rgba(23,19,14,0.12);
+  border-right: 2px solid var(--ink);
+  pointer-events: none;
+}
+.ink-fill{
+  width: 100%;
+  height: 0;
+  background: var(--red);
+}
+@media (max-width: 860px){ .ink-rail{ display: none; } }
+
+/* ---------- NAV SUPERIOR ---------- */
+.topnav{
+  position: sticky;
+  z-index: 18;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 10px clamp(14px, 4vw, 34px);
+  background: var(--paper);
+  border-bottom: 4px solid var(--ink);
+  font-family: 'Special Elite', serif;
+  font-weight: 900;
+  font-size: 0.6rem;
+  letter-spacing: 2px;
+}
+.topnav-links{ display: flex; align-items: center; gap: 1.4rem; }
+.topnav-back{ text-decoration: none; opacity: 0.75; transition: opacity 0.25s ease; }
+.topnav-back:hover{ opacity: 1; }
+.topnav-mark{ opacity: 0.85; }
+
+/* ---------- CONTENEDOR ---------- */
+.page{
+  position: relative;
+  z-index: 2;
+  width: min(1450px, 94vw);
+  margin: auto;
+  padding: 20px 0 26px;
+}
+
+/* ---------- HERO ----------
+   Los dos párrafos del hero llevan clase propia, y `.hero p`
+   de la hoja compartida gana por especificidad sobre una clase
+   suelta — de ahí que los selectores incluyan el tipo `p`. */
+.emblem{ padding: 30px 0 6px; }
+
+.hero{ padding: 40px 20px 46px; }
+.hero h2{
+  margin-top: 23px;
+  font-family: Bangers, cursive;
+  font-size: clamp(4.5rem, 12vw, 10rem);
+  line-height: 0.78;
+  letter-spacing: 4px;
+  color: var(--red);
+  transform: rotate(-1.5deg);
+  text-shadow: 5px 5px 0 var(--paper), 9px 9px 0 var(--ink);
+}
+.hero p.hero-name{
+  max-width: none;
+  margin: 22px auto 0;
+  font-size: 0.78rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+.hero p.hero-body{
+  max-width: 640px;
+  margin: 22px auto 0;
+}
+.scroll-cue{
+  display: inline-block;
+  margin-top: 32px;
+  padding: 8px 16px;
+  background: var(--paper);
+  border: 3px solid var(--ink);
+  box-shadow: 5px 5px 0 var(--ink);
+  font-family: Bangers, cursive;
+  font-size: 1.1rem;
+  letter-spacing: 2px;
+  text-decoration: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.scroll-cue:hover{
+  transform: translate(-3px, -3px);
+  box-shadow: 8px 8px 0 var(--ink);
+}
+
+/* ---------- TÍTULOS DE SECCIÓN ---------- */
+.section-title{
+  margin-bottom: 22px;
+  font-family: Bangers, cursive;
+  font-size: clamp(1.7rem, 3.4vw, 2.6rem);
+  letter-spacing: 2px;
+  border-bottom: 5px solid var(--ink);
+  padding-bottom: 8px;
+}
+.section-title span{
+  font-family: 'Special Elite', serif;
+  font-size: 0.6rem;
+  font-weight: 900;
+  letter-spacing: 2px;
+  opacity: 0.7;
+  white-space: nowrap;
+}
+.section-lead{
+  max-width: 640px;
+  margin-bottom: 24px;
+  font-family: 'Special Elite', serif;
+  font-size: 0.85rem;
+  line-height: 1.65;
+}
+
+/* ---------- EL ORIGEN — tira secuencial ---------- */
+.strip-section{ padding: 40px 0; }
+
+.pull-quote{
+  margin-bottom: 28px;
+  font-family: Bangers, cursive;
+  font-size: clamp(1.9rem, 4.4vw, 3.4rem);
+  line-height: 0.95;
+  letter-spacing: 2px;
+  max-width: 20ch;
+}
+.pull-quote em{ color: var(--red); font-style: normal; }
+
+.strip{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.strip-panel{
+  position: relative;
+  padding: 30px 24px 26px;
+  background: #f1ead8;
+  border: 6px solid var(--ink);
+  box-shadow: 8px 8px 0 var(--ink);
+}
+.strip-number{
+  position: absolute;
+  top: -3px;
+  left: -3px;
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  background: var(--red);
+  color: white;
+  border: 4px solid var(--ink);
+  font-family: Bangers, cursive;
+  font-size: 1.4rem;
+}
+.strip-icon{
+  width: 66px;
+  height: 66px;
+  display: block;
+  margin: 6px 0 16px;
+}
+.strip-panel p{
+  font-family: 'Special Elite', serif;
+  font-size: 0.84rem;
+  line-height: 1.65;
+}
+.strip-panel strong{ color: var(--red); }
+
+/* ---------- DISCOGRAFÍA — fichas de álbum ---------- */
+.albums-section{ padding: 40px 0; }
+
+.albums-grid{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+.album-card{
+  position: relative;
+  padding: 34px 22px 24px;
+  background: var(--paper);
+  border: 6px solid var(--ink);
+  box-shadow: 8px 8px 0 var(--ink);
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
+}
+/* trama Ben-Day, igual que en las viñetas del Home */
+.album-card::before{
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.3;
+  background: radial-gradient(circle, rgba(23,19,14,0.22) 1px, transparent 1.4px);
+  background-size: 9px 9px;
+}
+.album-card:hover{
+  transform: translate(-4px, -6px) rotate(-0.6deg);
+  box-shadow: 13px 14px 0 var(--ink);
+}
+.album-year{
+  position: absolute;
+  top: -14px;
+  left: 16px;
+  padding: 3px 10px;
+  background: var(--yellow);
+  border: 4px solid var(--ink);
+  font-family: Bangers, cursive;
+  font-size: 1.15rem;
+  letter-spacing: 1px;
+  box-shadow: 3px 3px 0 var(--ink);
+}
+.album-card h4{
+  position: relative;
+  font-family: Bangers, cursive;
+  font-size: 1.9rem;
+  line-height: 0.95;
+  letter-spacing: 1px;
+  color: var(--red);
+}
+.album-card p{
+  position: relative;
+  margin-top: 12px;
+  font-family: 'Special Elite', serif;
+  font-size: 0.8rem;
+  line-height: 1.6;
+}
+
+/* ---------- MÚSICA — el reproductor dentro de una viñeta ---------- */
+.music-section{ padding: 40px 0; }
+
+.music-panel{
+  position: relative;
+  border: 7px solid var(--ink);
+  box-shadow: 9px 9px 0 var(--ink);
+  background: var(--ink);
+  line-height: 0; /* elimina el hueco bajo el iframe */
+}
+.music-tag{
+  position: absolute;
+  z-index: 2;
+  top: -18px;
+  left: 18px;
+  padding: 5px 14px;
+  background: var(--red);
+  color: white;
+  border: 4px solid var(--ink);
+  font-family: Bangers, cursive;
+  font-size: 1.1rem;
+  letter-spacing: 2px;
+  line-height: 1.2;
+  transform: rotate(-2deg);
+  box-shadow: 3px 3px 0 var(--ink);
+}
+.music-panel iframe{
+  display: block;
+  width: 100%;
+  border: 0;
+}
+
+/* ---------- RECONOCIMIENTOS — cifras como estallidos ---------- */
+.stats-section{ padding: 40px 0; }
+
+.stats-grid{
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+.stat{
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding: 30px 18px 22px;
+  text-align: center;
+  background: #f1ead8;
+  border: 6px solid var(--ink);
+  box-shadow: 8px 8px 0 var(--ink);
+}
+/* estallido decorativo detrás de la cifra */
+.stat::before{
+  content: '';
+  position: absolute;
+  z-index: -1;
+  top: -46px;
+  left: 50%;
+  width: 210px;
+  height: 210px;
+  margin-left: -105px;
+  opacity: 0.16;
+  background: var(--yellow);
+  clip-path: polygon(50% 0,57% 37%,88% 10%,67% 43%,100% 50%,67% 57%,90% 88%,57% 67%,50% 100%,43% 67%,10% 90%,33% 57%,0 50%,33% 43%,10% 10%,43% 37%);
+}
+.stat-number{
+  display: block;
+  font-family: Bangers, cursive;
+  font-size: clamp(2.8rem, 5vw, 4.2rem);
+  line-height: 0.9;
+  letter-spacing: 2px;
+  color: var(--red);
+  text-shadow: 3px 3px 0 var(--paper), 5px 5px 0 var(--ink);
+}
+.stat-label{
+  display: block;
+  margin-top: 16px;
+  font-family: 'Special Elite', serif;
+  font-size: 0.66rem;
+  line-height: 1.5;
+  letter-spacing: 1px;
+}
+
+/* ---------- ACTIVISMO — splash page ---------- */
+.splash{
+  position: relative;
+  margin: 46px 0;
+  padding: 54px 30px;
+  text-align: center;
+  border: 7px solid var(--ink);
+  background: var(--paper);
+  box-shadow: 10px 10px 0 var(--ink);
+  overflow: hidden;
+}
+.splash-burst{
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: repeating-conic-gradient(from 0deg at 50% 45%, rgba(169,40,32,0.09) 0 5deg, transparent 5deg 11deg);
+}
+.splash-kicker,
+.splash-text,
+.splash-body{ position: relative; z-index: 1; }
+
+.splash-kicker{
+  font-family: 'Special Elite', serif;
+  font-weight: 900;
+  font-size: 0.62rem;
+  letter-spacing: 3px;
+  opacity: 0.75;
+}
+.splash-text{
+  margin-top: 16px;
+  font-family: Bangers, cursive;
+  font-size: clamp(2.2rem, 6vw, 4.6rem);
+  line-height: 0.9;
+  letter-spacing: 3px;
+  text-shadow: 4px 4px 0 var(--paper), 7px 7px 0 var(--ink);
+}
+.splash-text em{ color: var(--red); font-style: normal; }
+.splash-body{
+  max-width: 660px;
+  margin: 30px auto 0;
+  font-family: 'Special Elite', serif;
+  font-size: 0.84rem;
+  line-height: 1.7;
+  text-align: left;
+}
+.splash-body strong{ color: var(--red); }
+
+/* ---------- CTA — ajustes de la viñeta compartida ---------- */
+.cta-section{ padding: 40px 0 10px; }
+
+.panel{ min-height: 300px; }
+.panel-title{ font-size: clamp(2.9rem, 5.4vw, 5.4rem); }
+
+/* Espacio arriba para que el número y el "POW!" queden solos en las
+   esquinas, como en las viñetas del Home, sin chocar con el kicker. */
+.cta-section .panel{ padding-top: 78px; }
+
+.panel-copy{
+  max-width: 60ch;
+  margin-top: 18px;
+  font-family: 'Special Elite', serif;
+  font-size: 0.8rem;
+  line-height: 1.65;
+}
+
+/* ---------- FOOTER ---------- */
+.cover-footer{
+  padding-top: 34px;
+  font-size: 0.58rem;
+}
+.cover-footer a{
+  text-decoration: none;
+  opacity: 0.75;
+  transition: opacity 0.25s ease;
+}
+.cover-footer a:hover{ opacity: 1; }
+
+.footer-note{
+  margin-top: 14px;
+  font-family: 'Special Elite', serif;
+  font-size: 0.58rem;
+  letter-spacing: 1px;
+  opacity: 0.6;
+}
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width: 1024px){
+  .albums-grid{ grid-template-columns: 1fr 1fr; }
+  .stats-grid{ grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 860px){
+  .page{ width: 92vw; }
+  .strip{ grid-template-columns: 1fr; }
+  .panel{ min-height: 260px; }
+}
+@media (max-width: 560px){
+  .albums-grid{ grid-template-columns: 1fr; }
+  .stats-grid{ grid-template-columns: 1fr; }
+  .hero h2{ font-size: 4.4rem; }
+  .cover-footer{ flex-wrap: wrap; font-size: 0.5rem; gap: 10px; }
+  .sunburst{ display: none; }
+  .section-title span{ display: block; white-space: normal; }
+}
+
+/* ---------- MOVIMIENTO REDUCIDO (además de lo de pulp.css) ---------- */
+@media (prefers-reduced-motion: reduce){
+  html{ scroll-behavior: auto; }
+  .album-card:hover{ transform: none; }
+  .scroll-cue:hover{ transform: none; }
+}
+
+/* =========================================================
+   GRÁFICOS PROPIOS DE ESTA PÁGINA
+   ========================================================= */
+
+/* ---------- LA GUITARRA DEL ORIGEN ----------
+   Acompaña a la cita de apertura. Se oculta en pantallas
+   estrechas, donde la cita ya ocupa todo el ancho. */
+.origen-head{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 34px;
+  margin-bottom: 28px;
+}
+.origen-head .pull-quote{ margin-bottom: 0; }
+
+.origen-mark{
+  flex: 0 0 auto;
+  width: 200px;
+  height: auto;
+  opacity: 0.75;
+  animation: markSway 7s ease-in-out infinite;
+}
+@keyframes markSway{
+  0%, 100%{ transform: rotate(-3deg); }
+  50%{ transform: rotate(3deg) translateY(-6px); }
+}
+@media (max-width: 860px){ .origen-mark{ display: none; } }
+
+/* ---------- ECUALIZADOR ----------
+   Ocho barras de tinta que rebotan sobre el reproductor. */
+.equalizer{
+  display: flex;
+  align-items: flex-end;
+  gap: 7px;
+  height: 46px;
+  margin-bottom: 18px;
+}
+.equalizer span{
+  flex: 0 0 12px;
+  height: 24%;
+  background: var(--red);
+  border: 3px solid var(--ink);
+  animation: eqBounce 1.15s ease-in-out infinite;
+}
+.equalizer span:nth-child(2){ animation-delay: 0.10s; background: var(--yellow); }
+.equalizer span:nth-child(3){ animation-delay: 0.22s; }
+.equalizer span:nth-child(4){ animation-delay: 0.34s; background: var(--yellow); }
+.equalizer span:nth-child(5){ animation-delay: 0.16s; }
+.equalizer span:nth-child(6){ animation-delay: 0.42s; background: var(--yellow); }
+.equalizer span:nth-child(7){ animation-delay: 0.28s; }
+.equalizer span:nth-child(8){ animation-delay: 0.06s; background: var(--yellow); }
+@keyframes eqBounce{
+  0%, 100%{ height: 24%; }
+  50%{ height: 100%; }
+}
+
+/* ---------- VINILO EN LAS FICHAS DE ÁLBUM ----------
+   Un disco asomando por la esquina, que gira al pasar el mouse. */
+.album-card::after{
+  content: '';
+  position: absolute;
+  z-index: 0;
+  right: -30px;
+  bottom: -30px;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0.14;
+  background:
+    radial-gradient(circle, var(--ink) 0 9px, transparent 9px),
+    repeating-radial-gradient(circle, transparent 0 4px, var(--ink) 4px 5px);
+}
+.album-card:hover::after{
+  animation: vinylSpin 4s linear infinite;
+}
+@keyframes vinylSpin{
+  to{ transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .origen-mark{ animation: none; }
+  .equalizer span{ animation: none; height: 60%; }
+  .album-card:hover::after{ animation: none; }
+}

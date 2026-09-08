@@ -1,0 +1,703 @@
+:root{
+  --ink: #F5FBFB;
+  --ink-soft: #E7F3F3;
+  --teal-deep: #1a5d66;
+  --teal-mid: #2a6d7a;
+  --turquoise: #09cbbb;
+  --green: #0b8a3a;
+  --beige: #fafac8;
+  --mist: #cfe8eb;
+  --mist-dim: #8fb3b6;
+  --line: rgba(20,48,46,0.12);
+  --tv-accent: #e8623a;
+
+  /* Texto de la interfaz de página (fuera de la pantalla del TV) */
+  --text: #142E2C;
+  --text-dim: #45696B;
+
+  /* Tipografía de marca OML */
+  --font-title: 'Fredoka', sans-serif;
+  --font-sub: 'Montserrat', sans-serif;
+  --font-body: 'Work Sans', sans-serif;
+  --font-tv: 'Boogaloo', cursive; /* fuente decorativa exclusiva de la interfaz del televisor */
+}
+
+*{ box-sizing: border-box; }
+
+html, body{
+  margin: 0;
+  min-height: 100%;
+  background: var(--ink);
+  color: var(--text);
+  font-family: var(--font-body);
+}
+
+button{ font-family: inherit; }
+a{ color: inherit; }
+
+/* ---------- NAV ---------- */
+.topnav{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.9rem clamp(1.2rem, 5vw, 3rem);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.topnav-back{ text-decoration: none; color: var(--text); opacity: 0.75; transition: opacity 0.3s ease; }
+.topnav-back:hover{ opacity: 1; }
+.topnav-links{ display: flex; align-items: center; gap: 1.4rem; }
+.topnav-mark{
+  font-family: var(--font-sub);
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  font-size: 0.72rem;
+  opacity: 0.85;
+}
+
+/* ---------- STAGE ---------- */
+.tv-stage{
+  min-height: calc(100vh - 56px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 0.25rem clamp(0.5rem, 2vw, 1.5rem) 0.75rem;
+}
+
+.tv{
+  position: relative;
+  /* Crece hasta llenar el espacio disponible en ancho O alto,
+     lo que primero se agote, sin deformar la proporción real
+     de la imagen del televisor (1566x925). Tope en 1566px:
+     esa es la resolución nativa de tv.png — pasar de ahí solo
+     agranda el archivo con upscale y se ve borroso. */
+  width: min(1566px, 99vw, calc((100vh - 100px) * 1.6930));
+  aspect-ratio: 1566 / 925;
+  filter: drop-shadow(0 24px 44px rgba(20,48,46,0.28));
+}
+
+.tv-frame{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* ---------- SCREEN ----------
+   The screen sits ABOVE the frame artwork on purpose: this way the
+   screen and the buttons are always visible and clickable even if
+   the tv.png file ever loses its transparency (flattened to an
+   opaque background by some export/compression step). */
+.tv-screen{
+  position: absolute;
+  left: 6.8%;
+  top: 12.8%;
+  width: 74.3%;
+  height: 74.1%;
+  z-index: 5;
+  overflow: hidden;
+  background: #000;
+  border-radius: 3% / 5%;
+  font-size: clamp(9px, 1.55vw, 15px);
+  box-shadow: 0 0 0 3px #000;
+}
+
+.tv.is-off .tv-screen{ background: #000; }
+
+.tv-screen .screen-content,
+.tv-screen .scanlines,
+.tv-screen .crt-vignette,
+.tv-screen .crt-flicker{
+  opacity: 1;
+  transition: opacity 0.25s ease;
+}
+.tv.is-off .screen-content,
+.tv.is-off .scanlines,
+.tv.is-off .crt-vignette,
+.tv.is-off .crt-flicker{
+  opacity: 0;
+}
+
+.screen-content{
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+/* ---------- INTRO VIDEO ---------- */
+.intro-layer{
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: #000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+.tv-screen.is-intro .intro-layer{
+  opacity: 1;
+  pointer-events: auto;
+}
+.tv-screen.is-intro .screen-content{ opacity: 0; }
+
+.intro-video{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.skip-button{
+  position: absolute;
+  right: 5%;
+  bottom: 6%;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
+  border: 1px solid rgba(207,232,235,0.4);
+  background: rgba(0,0,0,0.55);
+  color: var(--mist, #cfe8eb);
+  font-family: var(--font-sub);
+  font-weight: 500;
+  font-size: 0.78em;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 0.55em 1em;
+  border-radius: 999px;
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(6px);
+  pointer-events: none;
+  transition: opacity 0.4s ease, transform 0.4s ease, border-color 0.3s ease, background 0.3s ease;
+}
+.skip-button.is-visible{
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+.skip-button:hover{
+  border-color: var(--turquoise);
+  background: rgba(0,0,0,0.75);
+}
+.skip-icon{ font-size: 0.85em; letter-spacing: -0.1em; }
+
+/* ---------- CHANNELS ---------- */
+.channel{
+  position: absolute;
+  inset: 0;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 8% 10%;
+}
+.channel.is-active{ display: flex; }
+.channel[data-channel="4"].is-active{ display: block; padding: 0; }
+
+.ch-eyebrow{
+  font-family: var(--font-sub);
+  font-weight: 500;
+  font-size: 0.85em;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--turquoise);
+  margin: 0 0 0.9em;
+}
+
+.ch-cover-title{
+  font-family: var(--font-tv);
+  font-weight: 400;
+  font-size: clamp(1.9rem, 6.4vw, 3.8rem);
+  line-height: 1;
+  letter-spacing: 0.01em;
+  margin: 0 0 0.5em;
+  color: var(--beige);
+  text-shadow: 0 0 18px rgba(9,203,187,0.35);
+}
+
+.ch-cover-sub{
+  font-family: var(--font-sub);
+  font-weight: 500;
+  color: var(--mist);
+  font-size: 1.1em;
+  margin: 0 0 1.6em;
+}
+
+.ch-play-hint{
+  font-size: 0.82em;
+  letter-spacing: 0.06em;
+  color: var(--turquoise);
+  animation: blinkHint 1.6s ease-in-out infinite;
+}
+@keyframes blinkHint{ 0%,100%{ opacity: 1; } 50%{ opacity: 0.25; } }
+
+.ch-title{
+  font-family: var(--font-tv);
+  font-weight: 400;
+  font-size: clamp(1.5rem, 4.6vw, 2.5rem);
+  line-height: 1.05;
+  margin: 0 0 0.6em;
+  color: var(--beige);
+}
+
+.ch-text{
+  font-size: 0.95em;
+  line-height: 1.7;
+  color: var(--mist);
+  max-width: 32ch;
+  margin: 0 auto;
+}
+
+.channel-placeholder{ position: relative; overflow: hidden; }
+.channel-placeholder .ch-illustration{
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: 0.85;
+}
+.channel-placeholder .ch-illustration svg{ width: 100%; height: 100%; }
+.channel-placeholder::after{
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 60%, transparent 0%, rgba(0,0,0,0.55) 75%, rgba(0,0,0,0.85) 100%);
+  z-index: -1;
+}
+
+/* ---------- ESCENA 1 (arte real) ---------- */
+.scene1-stage{
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: #6a9683;
+}
+
+.scene1-container{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1134px;
+  height: 658px;
+  transform-origin: top left;
+}
+
+#s1-fondo{
+  position: absolute; left: 0; width: 1134px; height: 658px;
+  background-image: url(assets/capitulo-n1/scene1/img/fondo.png);
+  background-size: 100% 100%;
+}
+#s1-cielo{
+  position: absolute; left: 0; width: 1134px; height: 425px;
+  background-image: url(assets/capitulo-n1/scene1/img/cielo.jpg);
+  background-size: 100% 100%;
+}
+#s1-nubes{
+  position: absolute; left: 0; height: 245px; width: 1134px;
+  background-image: url(assets/capitulo-n1/scene1/img/nubes.png);
+  background-size: auto 100%;
+  background-repeat: repeat-x;
+  animation: s1MoverNubes 160s linear infinite;
+}
+@keyframes s1MoverNubes{
+  from{ background-position-x: 0px; }
+  to{ background-position-x: -1134px; }
+}
+#s1-humo{ position: absolute; left: 258px; width: 240px; }
+#s1-juanesCorre{ position: absolute; width: 620px; left: 320px; top: 285px; }
+#s1-puerta{
+  position: absolute; width: 128px; left: 263px; top: 340px;
+  cursor: pointer;
+}
+#s1-puerta.is-locked{ cursor: default; }
+
+.scene1-hint{
+  position: absolute;
+  bottom: 5%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  font-size: 0.8em;
+  letter-spacing: 0.03em;
+  color: var(--mist);
+  background: rgba(0,0,0,0.5);
+  padding: 0.35em 0.9em;
+  border-radius: 20px;
+  white-space: nowrap;
+  pointer-events: none;
+  animation: blinkHint 2s ease-in-out infinite;
+}
+.scene1-hint.is-hidden{ display: none; }
+
+/* ---------- ESCENA 2 (arte real) ---------- */
+.scene2-stage{
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: #000;
+}
+
+.scene2-container{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1134px;
+  height: 658px;
+  transform-origin: top left;
+}
+
+#s2-fondoJuanes{
+  position: absolute; width: 694.15px; height: 658px; left: 439.85px; top: 0;
+  background-image: url(assets/capitulo-n1/scene2/img/fondoJuanes.png);
+  background-size: 100% 100%;
+  transform: translateX(694.15px);
+}
+#s2-fondoCaja{
+  position: absolute; width: 534.5px; height: 397.76px; left: 0; top: 260.24px;
+  background-image: url(assets/capitulo-n1/scene2/img/fondoCaja.png);
+  background-size: 100% 100%;
+  transform: translateY(397.76px);
+}
+#s2-fondoTexto{
+  position: absolute; width: 479.96px; height: 314.47px; left: 0; top: 0;
+  background-image: url(assets/capitulo-n1/scene2/img/fondoTexto.png);
+  background-size: 100% 100%;
+  transform: translateX(-479.96px);
+}
+
+.scene2-container.is-ready #s2-fondoJuanes{
+  animation: s2EntrarDerecha 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0s forwards;
+}
+.scene2-container.is-ready #s2-fondoCaja{
+  animation: s2EntrarAbajo 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0s forwards;
+}
+.scene2-container.is-ready #s2-fondoTexto{
+  animation: s2EntrarIzquierda 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) 8s forwards;
+}
+@keyframes s2EntrarDerecha{ from{ transform: translateX(694.15px); } to{ transform: translateX(0); } }
+@keyframes s2EntrarAbajo{ from{ transform: translateY(397.76px); } to{ transform: translateY(0); } }
+@keyframes s2EntrarIzquierda{ from{ transform: translateX(-479.96px); } to{ transform: translateX(0); } }
+
+#s2-juanesBusca{ position: absolute; width: 690px; height: 651px; left: 5px; top: 8px; }
+#s2-caja{ position: absolute; width: 529px; height: 397.76px; left: 0; top: 0; }
+#s2-texto{ position: absolute; width: 400px; height: 250px; left: 40px; top: 30px; }
+
+/* ---------- ESCENA 3 (arte real) ---------- */
+.scene3-stage{
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: #000;
+}
+
+.scene3-container{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1134px;
+  height: 658px;
+  transform-origin: top left;
+}
+
+#s3-fondoPapa{
+  position: absolute; width: 583px; height: 335px; left: 0; top: 0;
+  background-image: url(assets/capitulo-n1/scene3/img/fondoPapa.png);
+  background-size: 100% 100%;
+  overflow: hidden;
+  animation: s3EntrarIzquierda 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0s backwards;
+}
+@keyframes s3EntrarIzquierda{ from{ transform: translateX(-583px); } to{ transform: translateX(0); } }
+
+#s3-papaHabla{
+  position: absolute; width: 350px; left: 100px; top: 0;
+  cursor: pointer;
+  animation: s3Pulso 2.5s ease-in-out infinite;
+}
+
+#s3-fondoText{
+  position: absolute; width: 650px; height: 223px; left: 484px; top: 0;
+  background-image: url(assets/capitulo-n1/scene3/img/fondoText.png);
+  background-size: 100% 100%;
+  animation: s3EntrarArriba 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0s backwards;
+}
+@keyframes s3EntrarArriba{ from{ transform: translateY(-223px); } to{ transform: translateY(0); } }
+
+#s3-text{ position: absolute; width: 600px; left: 25px; top: 10px; animation: s3Pulso 2.5s ease-in-out infinite; }
+
+@keyframes s3Pulso{ 0%, 100%{ transform: scale(1); } 50%{ transform: scale(1.03); } }
+
+#s3-fondoGuitarra{
+  position: absolute; width: 698px; height: 300px; left: 0; top: 358px;
+  overflow: hidden;
+  transform: translateY(300px);
+  transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+#s3-fondoGuitarra.s3-entrar{ transform: translateY(0); }
+
+#s3-fondoGuita{ position: absolute; width: 700px; height: 300px; left: 0; top: 0; }
+
+#s3-guitarra{
+  position: absolute; width: 900px; left: -130px; top: -140px;
+  transform: scale(0);
+  transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+#s3-guitarra.s3-entrar{ transform: scale(1); }
+
+#s3-fondoJuan{
+  position: absolute; width: 565px; height: 417px; left: 569px; top: 241px;
+  background-image: url(assets/capitulo-n1/scene3/img/fondoJuan.png);
+  background-size: 100% 100%;
+  transform: translateX(565px);
+  transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+#s3-fondoJuan.s3-entrar{ transform: translateX(0); }
+
+#s3-juanesEmocion{
+  position: absolute; width: 430px; left: 120px; top: 20px;
+  transform: scale(0);
+  transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+#s3-juanesEmocion.s3-entrar{ transform: scale(1); }
+
+.scene3-hint{
+  position: absolute;
+  bottom: 5%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  font-size: 0.8em;
+  letter-spacing: 0.03em;
+  color: var(--mist);
+  background: rgba(0,0,0,0.5);
+  padding: 0.35em 0.9em;
+  border-radius: 20px;
+  white-space: nowrap;
+  pointer-events: none;
+  animation: blinkHint 2s ease-in-out infinite;
+}
+.scene3-hint.is-hidden{ display: none; }
+
+/* ---------- ESCENA 1, CAPÍTULO 2 (arte real) ---------- */
+.scene4-stage{
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.scene4-container{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1134px;
+  height: 658px;
+  transform-origin: top left;
+  background-image: url(assets/capitulo-n2/scene1/img/sky.png);
+  background-size: 100% 100%;
+  overflow: hidden;
+}
+
+#s4-nubes{
+  position: absolute; left: 0; top: 10px; width: 1134px; height: 200px;
+  background-image: url(assets/capitulo-n2/scene1/img/nubes.png);
+  background-size: auto 100%;
+  background-repeat: repeat-x;
+  animation: s4MoverNubes 60s linear infinite;
+}
+#s4-nubes2{
+  position: absolute; left: 0; top: 220px; width: 1134px; height: 150px;
+  background-image: url(assets/capitulo-n2/scene1/img/nubes.png);
+  background-size: auto 100%;
+  background-repeat: repeat-x;
+  animation: s4MoverNubes2 60s linear infinite;
+}
+@keyframes s4MoverNubes{ from{ background-position-x: 0px; } to{ background-position-x: 1389.15px; } }
+@keyframes s4MoverNubes2{ from{ background-position-x: 0px; } to{ background-position-x: 2268px; } }
+
+#s4-edificio{
+  position: absolute; width: 1134px; height: 658px; left: 0; top: 0;
+  background-image: url(assets/capitulo-n2/scene1/img/edifico.png);
+  background-size: 100% 100%;
+}
+
+#s4-juanCaminando{ position: absolute; width: 1000px; left: 0; top: 80px; }
+#s4-juanCaminando.s4-pulso{ animation: s4PulsoJuan 2.5s ease-in-out infinite; }
+@keyframes s4PulsoJuan{ 0%, 100%{ transform: scale(1); } 50%{ transform: scale(1.05); } }
+
+#s4-txt{
+  position: absolute; width: 500px; left: -20px; top: 100px;
+  opacity: 1;
+  transition: opacity 0.5s ease-out;
+}
+#s4-txt.s4-oculto{ opacity: 0; }
+
+/* ---------- CRT LAYERS ---------- */
+.scanlines{
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(0,0,0,0.28) 0px,
+    rgba(0,0,0,0.28) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  mix-blend-mode: multiply;
+}
+
+.crt-vignette{
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.6) 100%);
+}
+
+.crt-flicker{
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  pointer-events: none;
+  background: #eafffb;
+  opacity: 0.02;
+  mix-blend-mode: overlay;
+  animation: crtFlicker 4s infinite;
+}
+@keyframes crtFlicker{
+  0%, 96%, 100%{ opacity: 0.015; }
+  97%{ opacity: 0.07; }
+  98%{ opacity: 0.01; }
+  99%{ opacity: 0.05; }
+}
+
+/* ---------- POWER ON / OFF ---------- */
+.power-line{
+  position: absolute;
+  inset: 0;
+  z-index: 9;
+  background: #eafffb;
+  opacity: 0;
+  transform: scaleY(0.006);
+  pointer-events: none;
+}
+
+.tv-screen.is-powering-on .power-line{
+  animation: powerOn 0.75s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+@keyframes powerOn{
+  0%{ opacity: 1; transform: scaleY(0.006); }
+  55%{ opacity: 1; transform: scaleY(0.02); }
+  78%{ opacity: 1; transform: scaleY(1.08); }
+  100%{ opacity: 0; transform: scaleY(1.08); }
+}
+
+.tv-screen.is-powering-off .power-line{
+  animation: powerOff 0.55s cubic-bezier(0.4, 0, 0.6, 1) forwards;
+}
+@keyframes powerOff{
+  0%{ opacity: 0; transform: scaleY(1.08); }
+  30%{ opacity: 1; transform: scaleY(1.08); }
+  75%{ opacity: 1; transform: scaleY(0.02); }
+  100%{ opacity: 1; transform: scaleY(0.006); }
+}
+
+.tv-screen.is-powering-on .screen-content,
+.tv-screen.is-powering-on .scanlines,
+.tv-screen.is-powering-on .crt-vignette,
+.tv-screen.is-powering-on .crt-flicker{ opacity: 0; }
+
+.tv-screen.is-powering-off .screen-content,
+.tv-screen.is-powering-off .scanlines,
+.tv-screen.is-powering-off .crt-vignette,
+.tv-screen.is-powering-off .crt-flicker{ opacity: 0; transition: opacity 0.2s ease; }
+
+/* ---------- STATIC (channel change) ---------- */
+.static-canvas{
+  position: absolute;
+  inset: 0;
+  z-index: 8;
+  opacity: 0;
+  pointer-events: none;
+}
+.static-canvas.is-active{ opacity: 0.92; }
+
+/* ---------- BUTTONS (hotspots over the TV artwork) ---------- */
+.tv-btn{
+  position: absolute;
+  transform: translate(-50%, -50%);
+  border: none;
+  background: transparent;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 10;
+  transition: box-shadow 0.25s ease, transform 0.15s ease;
+}
+.tv-btn:hover, .tv-btn:focus-visible{
+  box-shadow: 0 0 0 5px rgba(9,203,187,0.32);
+  outline: none;
+}
+.tv-btn:active{ transform: translate(-50%, -50%) scale(0.92); }
+.tv-btn[disabled]{ cursor: default; box-shadow: none !important; }
+
+.tv-btn--next{ left: 94%; top: 64.4%; width: 9.6%; aspect-ratio: 1; }
+.tv-btn--prev{ left: 93.2%; top: 78.6%; width: 9.6%; aspect-ratio: 1; }
+.tv-btn--power{ left: 89.5%; top: 88.6%; width: 3.6%; aspect-ratio: 1; }
+
+.tv.is-off .tv-btn--power{
+  animation: powerInvite 1.8s ease-in-out infinite;
+  border-radius: 50%;
+}
+@keyframes powerInvite{
+  0%, 100%{ box-shadow: 0 0 0 0 rgba(232,98,58,0.55); }
+  50%{ box-shadow: 0 0 0 9px rgba(232,98,58,0); }
+}
+
+/* ---------- CAPTION ---------- */
+.tv-caption{
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+  color: var(--text-dim);
+  text-align: center;
+  min-height: 1.4em;
+}
+
+@media (max-width: 560px){
+  .tv-btn--next, .tv-btn--prev{ width: 11%; }
+  .tv-btn--power{ width: 4.4%; }
+}
+
+@media (prefers-reduced-motion: reduce){
+  /* Se neutraliza la DURACIÓN, no el retraso: las escenas usan
+     animation-delay para escalonar la entrada de cada capa (el panel de
+     texto de la escena 2 entra a los 8s, sincronizado con su Lottie).
+     Con `animation: none` esas capas se quedaban en su posición inicial,
+     fuera de cuadro. Así saltan directo a su posición final a tiempo. */
+  *, *::before, *::after{
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+  /* Bucles puramente decorativos: no aportan nada sin movimiento. */
+  .ch-play-hint,
+  .scene1-hint,
+  .scene3-hint,
+  .crt-flicker,
+  .tv.is-off .tv-btn--power,
+  #s1-nubes,
+  #s3-text,
+  #s4-nubes,
+  #s4-nubes2,
+  #s4-juanCaminando.s4-pulso{
+    animation: none !important;
+  }
+}

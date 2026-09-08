@@ -1,0 +1,89 @@
+/* =========================================================
+   HOME — Cuerdas del Destino
+   Portada estilo cómic pulp / 1930s.
+
+   La base visual (paleta, textura de papel, masthead, hero y
+   el componente .panel) vive en ../shared/pulp.css. Aquí solo
+   está lo propio de la portada.
+   ========================================================= */
+
+/* ---------- CONTENEDOR PRINCIPAL ---------- */
+.cover{
+  position: relative;
+  z-index: 2;
+  width: min(1450px, 94vw);
+  min-height: 100vh;
+  margin: auto;
+  padding: 26px 0 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---------- HERO ---------- */
+.hero h2{
+  margin-top: 23px;
+  font-family: Bangers, cursive;
+  font-size: clamp(4rem, 8vw, 8rem);
+  line-height: 0.78;
+  letter-spacing: 3px;
+  transform: rotate(-1.5deg);
+  text-shadow: 5px 5px 0 var(--paper), 9px 9px 0 var(--ink);
+}
+
+/* ---------- LOS 3 PANELES DE NAVEGACIÓN ---------- */
+.panels{
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+/* ---------- PIE DE PORTADA ---------- */
+.cover-footer{
+  padding-top: 30px;
+  font-size: 0.58rem;
+}
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width: 900px){
+  .cover{ width: 92vw; }
+  .panels{ grid-template-columns: 1fr; }
+  .panel{ min-height: 220px; }
+  .hero{ padding-top: 35px; }
+  .sunburst{ display: none; }
+}
+
+@media (max-width: 520px){
+  .cover{ padding-top: 15px; }
+  .hero h2{ font-size: 4.2rem; }
+  .panel-title{ font-size: 4rem; }
+  .cover-footer{ font-size: 0.48rem; gap: 8px; }
+}
+
+/* ---------- LÍNEAS DE VELOCIDAD DEL HERO ----------
+   Fondo de viñeta de acción: rayas verticales que entran
+   desde los bordes y dejan limpio el centro, donde va el
+   titular. Se desplazan muy despacio para que la portada
+   no quede del todo quieta. */
+.speed-lines{
+  position: absolute;
+  z-index: -1;
+  inset: -14% -22% auto -22%;
+  height: 135%;
+  pointer-events: none;
+  opacity: 0.55;
+  background: repeating-linear-gradient(90deg,
+    rgba(23,19,14,0.11) 0 2px,
+    transparent 2px 26px);
+  -webkit-mask-image: radial-gradient(ellipse 52% 58% at 50% 50%, transparent 32%, #000 80%);
+  mask-image: radial-gradient(ellipse 52% 58% at 50% 50%, transparent 32%, #000 80%);
+  animation: speedDrift 14s linear infinite;
+}
+@keyframes speedDrift{
+  from{ background-position-x: 0; }
+  to{ background-position-x: 26px; }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .speed-lines{ animation: none; }
+}
