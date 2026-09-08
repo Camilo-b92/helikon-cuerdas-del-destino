@@ -4,6 +4,12 @@ Sitio web de **Helikón**, el estudio detrás de *Cuerdas del Destino*: un cómi
 digital interactivo inspirado en la historia de Juanes, que se lee dentro de un
 televisor retro cambiando de canal.
 
+> **¿Retomando el proyecto?** Lee este archivo para saber **cómo está armado**,
+> y la [**BITÁCORA**](BITACORA.md) para saber **por qué se decidió así** y
+> **qué quedó pendiente**.
+
+**Repositorio:** `github.com/Camilo-b92/helikon-cuerdas-del-destino` (privado)
+
 ## El equipo
 
 | Integrante | Rol |
@@ -65,6 +71,9 @@ Google Fonts.
 Cada sección es autocontenida: su HTML, su CSS y su JS viven juntos. Lo que
 comparten las tres páginas de papel está en `assets/`.
 
+**Todas las rutas del sitio son relativas**, así que el proyecto funciona igual
+sin importar en qué carpeta o en qué máquina esté.
+
 ### El sistema visual
 
 `assets/css/pulp.css` define la identidad de cómic pulp de los años 30 —
@@ -117,14 +126,46 @@ python -m http.server 5500
 
 Y abre <http://localhost:5500>.
 
+## Trabajar desde otra máquina
+
+```bash
+git clone https://github.com/Camilo-b92/helikon-cuerdas-del-destino.git
+```
+
+El repositorio es privado, así que pedirá iniciar sesión como `Camilo-b92`.
+Después, identifícate para que tus commits queden a tu nombre:
+
+```bash
+git config --global user.name "Camilo Betancourt"
+git config --global user.email "camilobetancourt02@gmail.com"
+```
+
+### El ciclo de trabajo
+
+Siempre igual, y en este orden:
+
+```bash
+git pull                      # al empezar, para traer lo último
+```
+
+```bash
+git add -A && git commit -m "qué hiciste" && git push
+```
+
+**La trampa a evitar:** si haces cambios en una máquina sin subirlos y al día
+siguiente trabajas en la otra, las dos versiones se separan y hay que
+reconciliarlas a mano. **`pull` al empezar, `push` al terminar.**
+
 ## Cómo publicarlo
 
-Es un sitio estático: sirve cualquier hosting sin configuración.
+Es un sitio estático: no hay comando de compilación y el directorio de
+publicación es la raíz.
 
-- **GitHub Pages** — sube el repositorio, entra en *Settings → Pages* y
-  publica desde la rama `main`, carpeta raíz.
-- **Netlify** o **Vercel** — arrastra la carpeta, o conecta el repositorio.
-  No hay comando de build; el directorio de publicación es la raíz.
+- **Netlify** o **Vercel** — publican gratis **desde repositorios privados**.
+  Es la opción recomendada mientras este repositorio siga siendo privado.
+- **GitHub Pages** — solo funciona en repositorios públicos con cuenta
+  gratuita. Si el repositorio se hace público, se activa en
+  *Settings → Pages*, publicando desde la rama `main`, carpeta raíz.
 
 ## Cómo agregar imágenes y gráficos
 
@@ -138,6 +179,9 @@ Es un sitio estático: sirve cualquier hosting sin configuración.
   antes de subir.
 - **En los SVG**: usa `stroke="currentColor"` en vez de un color fijo. Así el
   gráfico se tiñe desde CSS y se adapta solo a la viñeta donde esté.
+
+Hay más detalle sobre esto —incluido qué hacer con elementos 3D— en la
+[bitácora](BITACORA.md).
 
 ## Accesibilidad
 
@@ -153,5 +197,4 @@ capítulo dos. En el menú del televisor, los canales **Personajes**,
 **Historial** y **Stop motion** son marcadores de posición a la espera de su
 contenido.
 
-`comic/assets/capitulo-n1/scene3/json/fonemas.json` está en el repositorio pero
-todavía no lo usa ninguna escena.
+La lista completa de pendientes está en la [bitácora](BITACORA.md).
