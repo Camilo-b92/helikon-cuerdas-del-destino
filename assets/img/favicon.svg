@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Helikón">
+  <rect width="64" height="64" fill="#17130e"/>
+  <rect x="14" y="12" width="9" height="40" fill="#c79b27"/>
+  <rect x="41" y="12" width="9" height="40" fill="#c79b27"/>
+  <rect x="14" y="27" width="36" height="9" fill="#c79b27"/>
+</svg>

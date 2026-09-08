@@ -9,7 +9,7 @@
    que choquen con el script propio de cada página. Se enlaza
    ANTES del script de la página:
 
-       <script src="../shared/pulp.js"></script>
+       <script src="../assets/js/pulp.js"></script>
        <script src="script.js"></script>
    ========================================================= */
 (function(){

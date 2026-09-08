@@ -7,7 +7,7 @@
       primera vez que entran en pantalla.
 
    El revelado de las secciones y el paralaje del masthead
-   viven en ../shared/pulp.js, que se carga antes que este
+   viven en ../assets/js/pulp.js, que se carga antes que este
    archivo.
    ========================================================= */
 

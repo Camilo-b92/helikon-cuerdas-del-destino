@@ -5,7 +5,7 @@
    pequeño sonido al hacer clic.
 
    El revelado al hacer scroll y el paralaje del masthead viven
-   en ../shared/pulp.js, que se carga antes que este archivo.
+   en assets/js/pulp.js, que se carga antes que este archivo.
    ========================================================= */
 
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
