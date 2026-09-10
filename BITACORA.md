@@ -9,13 +9,14 @@ README y luego esto.
 
 ---
 
-## Estado a 8 de septiembre de 2026
+## Estado a 10 de septiembre de 2026
 
 | | |
 |---|---|
 | Repositorio | `github.com/Camilo-b92/helikon-cuerdas-del-destino` (privado) |
 | Rama | `main` |
 | Publicado en línea | Todavía no |
+| Canales del televisor | 0–10 (once en total) |
 | Peso total | ~17 MB, casi todo arte del cómic |
 
 Las cuatro páginas cargan sin errores de consola, sin desborde horizontal en
@@ -133,6 +134,52 @@ CSS duplicado tres veces.
   recuperable desde el commit `8d65efe`.
 - Subida a GitHub.
 
+### Ronda 6 — Capítulo dos, escena II (trabajo hecho fuera de Claude Code)
+
+- **Canal 10** con la escena II del capítulo dos: Juan tocando en la calle,
+  con ocho animaciones Lottie. Los cuatro NPC se repiten solos con pausas
+  distintas, el cielo gira para pasar de día a noche, y al hacer clic sobre
+  Juan aparece un texto que se oculta al terminar.
+- **Presentación del título** entre el video de introducción y el menú, con
+  su propia red de seguridad de 4 s. La animación dura 2,24 s, así que el
+  tope no la corta.
+- **Lottie pasa de la CDN a una copia local** en `comic/assets/`. El cómic
+  ya no depende de un tercero ni de la conexión.
+- El fin del video de introducción se detecta con la **duración real** del
+  archivo, no con un tope fijo de 55 s que cortaba el final.
+
+Ajustes añadidos sobre ese trabajo:
+
+- `runStatic` gana una red de seguridad como la de la presentación. Si el
+  navegador deja de emitir frames, `requestAnimationFrame` no vuelve a
+  dispararse y el televisor se quedaba trabado con los botones apagados.
+- `powerOff` limpia el estado de la presentación y **detiene todas las
+  escenas**. Antes solo pausaba el humo de la escena 1, así que apagar el
+  televisor en el canal 10 dejaba cuatro animaciones corriendo sin verse.
+- Se corrigieron las mayúsculas de las carpetas en Git. Ver abajo.
+
+### El bug de las mayúsculas
+
+Al reorganizar el proyecto (ronda 5) las carpetas se renombraron a minúscula
+en el disco, pero Git no registró el cambio: en Windows `core.ignorecase`
+está en `true` y trata `Comic/` y `comic/` como la misma ruta. El
+repositorio quedó con `Comic/`, `Helikon/` y `Juanes/` mientras los enlaces
+del HTML apuntaban a minúsculas.
+
+En Windows no se nota. **En un servidor Linux —GitHub Pages, Netlify,
+Vercel— cada enlace entre secciones habría devuelto 404**, y el sitio se
+habría roto justo al publicarlo. El error habría sido difícil de encontrar,
+porque en local todo funciona.
+
+Corregido en el commit `aaa9b10`, renombrando 55 rutas en el índice de Git
+sin tocar el disco. Si vuelve a pasar tras renombrar carpetas, el síntoma es
+que `git ls-files` muestra una grafía distinta a la del disco. Se comprueba
+así:
+
+```bash
+git ls-files | sed 's|/.*||' | sort -u
+```
+
 ---
 
 ## Pendientes
@@ -143,9 +190,9 @@ En orden de lo que más aporta:
    sirve sin plan de pago. **Netlify** y **Vercel** publican gratis desde
    repositorios privados y no piden tarjeta.
 
-2. **Contenido del cómic.** Los canales **Personajes**, **Historial** y **Stop
-   motion** siguen siendo marcadores de posición. Es lo que la gente entra a
-   ver, y hoy el envoltorio está más desarrollado que el contenido.
+2. **Los tres canales del menú.** **Personajes**, **Historial** y **Stop
+   motion** siguen siendo marcadores de posición. El capítulo dos ya avanzó a
+   dos escenas, así que esos tres canales son lo que queda por llenar.
 
 3. **Unificar el marco de la página del Cómic** con el lenguaje pulp,
    conservando el interior del televisor como está.

@@ -27,8 +27,10 @@ personalizada. Un framework obligaría a instalar Node y un empaquetador para no
 ganar nada, y complicaría justo lo que hace especial al proyecto, que es el CSS
 escrito a mano.
 
-La única dependencia externa es **Lottie** (por CDN), que reproduce las
-animaciones vectoriales que exporta el equipo de dibujo desde After Effects.
+La única biblioteca de terceros es **Lottie**, que reproduce las animaciones
+vectoriales que exporta el equipo de dibujo desde After Effects. Se guarda
+como copia local en `comic/assets/lottie-web-5.13.0.min.js`, así que el cómic
+no depende de ninguna CDN ni de la conexión.
 
 Las tipografías (**Bangers**, **Special Elite** e **Inter**) se cargan desde
 Google Fonts.
@@ -192,9 +194,12 @@ blanco.
 
 ## Estado del contenido
 
-El cómic tiene el capítulo uno completo (tres escenas) y la primera escena del
-capítulo dos. En el menú del televisor, los canales **Personajes**,
-**Historial** y **Stop motion** son marcadores de posición a la espera de su
-contenido.
+El cómic tiene el capítulo uno completo (tres escenas) y las dos primeras
+escenas del capítulo dos, repartidas en once canales (0 a 10). Al encender, el
+televisor reproduce el video de introducción y luego la presentación del
+título antes de llegar al menú.
+
+En ese menú, los canales **Personajes**, **Historial** y **Stop motion** son
+marcadores de posición a la espera de su contenido.
 
 La lista completa de pendientes está en la [bitácora](BITACORA.md).
