@@ -10,7 +10,7 @@
    ANTES del script de la página:
 
        <script src="../assets/js/pulp.js"></script>
-       <script src="script.js"></script>
+       <script src="home.js"></script>
    ========================================================= */
 (function(){
   'use strict';

@@ -7,7 +7,7 @@
    archivo ANTES del suyo y solo redefine lo que le es propio.
 
        <link rel="stylesheet" href="../assets/css/pulp.css">
-       <link rel="stylesheet" href="styles.css">
+       <link rel="stylesheet" href="home.css">
 
    Los valores de referencia son los del Home. Helikón y Juanes
    ajustan tamaños puntuales en sus propias hojas.
