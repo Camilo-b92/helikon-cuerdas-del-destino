@@ -46,6 +46,15 @@
         </button>
       </div>
 
+      <!-- PRESENTACIÓN — aparece después de la introducción y antes del menú -->
+      <div class="title-layer" id="titleLayer" aria-hidden="true">
+        <div class="title-stage" id="titleStage">
+          <div class="title-container" id="titleContainer">
+            <div id="s0-titulo"></div>
+          </div>
+        </div>
+      </div>
+
       <div class="screen-content" id="screenContent">
 
         <!-- CHANNEL 0 — MENÚ: PERSONAJES -->
@@ -143,6 +152,24 @@
           </div>
         </section>
 
+        <!-- CHANNEL 10 — ESCENA 2, CAPÍTULO 2 (arte real) -->
+        <section class="channel" data-channel="10">
+          <div class="scene5-stage" id="scene5Stage">
+            <div class="scene5-container" id="scene5Container">
+              <div id="s5-fondoSky"></div>
+              <div id="s5-escenario"></div>
+              <div id="s5-npcUno"></div>
+              <div id="s5-npcTres"></div>
+              <div id="s5-juanTocaGuita"></div>
+              <div id="s5-musica"></div>
+              <div id="s5-npcDos"></div>
+              <div id="s5-npcCuatro"></div>
+              <div id="s5-textDias"></div>
+              <div id="s5-textVine"></div>
+            </div>
+          </div>
+        </section>
+
       </div>
 
       <div class="scanlines" aria-hidden="true"></div>
@@ -164,7 +191,8 @@
 
 </main>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.13.0/lottie.min.js" integrity="sha512-uOtp2vx2X/5+tLBEf5UoQyqwAkFZJBM5XwGa7BfXDnWR+wdpRvlSVzaIVcRe3tGNsStu6UMDCeXKEnr4IBT8gA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<!-- Lottie se distribuye localmente para que el cómic funcione sin depender del CDN. -->
+<script src="assets/lottie-web-5.13.0.min.js"></script>
 <script src="comic.js"></script>
 </body>
 </html>
