@@ -195,6 +195,55 @@ viene con condiciones, y hay que respetarlas al implementar:
 Cuando el primer modelo esté montado, aquí va lo que se aprendió: pesos reales,
 qué renderizador se usó y qué falló.
 
+### El televisor sigue siendo una imagen, por ahora
+
+*Decidido el 16 de septiembre de 2026.* Se probó convertir `tv.png` en un
+televisor con volumen en CSS 3D, dos veces, y **ninguna convenció**. El
+televisor se queda como imagen plana porque funciona mejor tal como está. La
+decisión es "por el momento": no cierra la puerta, pero cualquier intento nuevo
+debería empezar leyendo esto.
+
+Los dos intentos, que se hicieron en páginas de prueba aparte y nunca tocaron
+el cómic real:
+
+- **Uno hecho con Claude.** El frente seguía siendo `tv.png` con la pantalla
+  viva, y el CSS 3D añadía la carcasa por detrás. Apagado se veía girado con el
+  volumen; al encenderlo se giraba de frente para leer.
+- **Uno propuesto por Gemini y luego corregido.** Tal como llegó **no se podía
+  encender el televisor con el ratón**. Corregido, quedó muy parecido al
+  anterior, con las caras de color liso.
+
+Funcionar, funcionaban: se probaron con clics reales, en móvil y en portátil.
+Lo que no convenció fue el resultado visual.
+
+**Lo que se aprendió, para no repetirlo.** Todo está medido en el navegador:
+
+1. `filter` y `overflow: hidden` sobre un elemento `preserve-3d` aplanan el 3D.
+2. Dentro de un contexto `preserve-3d`, z-index deja de ordenar: el PNG podía
+   tapar la pantalla. El frente tiene que ser un contenedor **plano**.
+3. **`preserve-3d` en el contenedor del frente rompe los clics.** Con esa sola
+   línea, `elementFromPoint` devolvía `#tv` en vez del botón, y el clic real no
+   encendía el televisor. Fue el fallo de la versión de Gemini.
+4. `perspective` solo afecta a los **hijos directos**. Puesta en un abuelo no
+   hace nada: se comprobó midiendo los dos laterales, que salían iguales.
+5. Con perspectiva cerrada (~2,6 veces el ancho), los laterales quedan
+   escondidos detrás del frente y el televisor parece plano. Con ~6 veces el
+   ancho y un giro de −9°/−16° sí se ven.
+6. Con `transform-origin` en el borde izquierdo, `rotateY(-90deg)` manda la
+   cara **hacia delante**, no hacia atrás. Así las caras asomaban por encima del
+   dibujo.
+7. Controlar el giro con una variable CSS normal costó **21–36 ms** por cambio
+   (recalcula los ~770 nodos del cómic); con `@property` e `inherits: false`,
+   **0,07–0,2 ms**. Un fotograma tiene 16,7 ms.
+8. La perspectiva ensancha el televisor: al 99vw aparece barra horizontal.
+   Hay que medir incluyendo las caras laterales, no solo el frente.
+9. Si el televisor sigue al cursor, los botones se mueven justo cuando vas a
+   pulsarlos. Y con la pantalla inclinada, los diálogos se leen peor.
+10. Las esquinas redondeadas de `tv.png` necesitan varias tiras por esquina;
+    con caras rectas, sus picos asoman por detrás de las curvas.
+
+Los archivos de las dos pruebas no están en el repositorio.
+
 ### Los gráficos son SVG en línea, no imágenes
 
 El proyecto no tenía archivos de imagen para las tres páginas de papel, así que
@@ -659,9 +708,11 @@ En orden de lo que más aporta:
    carpeta raíz. **Netlify** y **Vercel** siguen siendo alternativas válidas, y
    son las únicas si el repositorio vuelve a ser privado.
 
-2. **El primer elemento 3D.** Hace falta un modelador instalado y un `.glb`
-   con el que empezar. Las condiciones de peso y carga están en *El 3D entra
-   vivo*, entre las decisiones.
+2. **El primer elemento 3D.** El televisor en CSS 3D se probó y se aparcó (ver
+   *El televisor sigue siendo una imagen, por ahora*). Si se retoma el 3D,
+   mejor por otra pieza que no sea el televisor, porque ahí manda leer el
+   cómic. Hace falta un modelador instalado y un `.glb` con el que empezar; las
+   condiciones de peso y carga están en *El 3D entra vivo*.
 
 3. **Falta `og:image`.** Las cuatro páginas tienen Open Graph, pero ninguna
    declara imagen de vista previa. Hace falta una de **1200x630** con la

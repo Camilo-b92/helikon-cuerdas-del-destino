@@ -350,6 +350,11 @@ acotadas y **three.js** donde haga falta una escena propia. Las condiciones de
 peso y de carga que hay que respetar están en la
 [bitácora](BITACORA.md), en *El 3D entra vivo*.
 
+**El televisor del cómic sigue siendo la imagen `tv.png`, a propósito.** Se
+probó darle volumen en CSS 3D dos veces y no convenció. Antes de volver a
+intentarlo, lee en la bitácora *El televisor sigue siendo una imagen, por
+ahora*: ahí están los diez problemas que ya se encontraron y cómo se midieron.
+
 ## Trabajar desde otra máquina
 
 ```bash
