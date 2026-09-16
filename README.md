@@ -248,6 +248,44 @@ dejaría las viñetas rectas.
   selector excluye `.panel-locked`, que es la viñeta de "Próximo capítulo",
   bloqueada a propósito.
 
+### La página de Helikón: el Nº 0
+
+Si la portada es el Nº 1, Helikón es el **Nº 0**: el número especial que las
+editoriales de cómics publican para contar el origen de una serie. Se lee de
+arriba abajo:
+
+1. **Cabecera de edición especial**, con caja "Nº 0" que vuelve a la portada.
+2. **Titular y sello** de edición: el lema gira alrededor de un círculo con
+   `textPath`, estirado con `textLength` para que dé la vuelta completa.
+3. **El origen en cuatro viñetas** (`.vineta-origen`): el Monte Helicón,
+   Pegaso golpeando la roca, la fuente Hipocrene con las nueve musas y el
+   nombre HELIKÓN. Los dibujos son SVG en línea con trazo de tinta.
+4. **Manifiesto** como página de impacto, con la lira.
+5. **Quién es quién**: fichas del equipo al estilo del *Who's Who* de los
+   cómics.
+6. **Extras del taller**: la hoja de modelo real con las seis expresiones de
+   Juanes, el proceso de producción en cuatro pasos y el cómic en cifras.
+7. **Expedientes**, **tablero de ideas**, **nuestro universo** y cierre
+   "Fin del Nº 0".
+
+Reglas de esta página:
+
+- **Nada inventado sobre personas reales.** Sin retratos, sin frases que no
+  dijeron y sin estadísticas de "poderes". Las fichas dicen el oficio y lo que
+  cada uno aporta al cómic; el proceso y las cifras salen de este README y de
+  la bitácora.
+- **El dibujo del monte usa `preserveAspectRatio="xMidYMax slice"`** con la
+  cima centrada en un lienzo de 1000×260, de la misma proporción que la viñeta.
+  Así, en móvil se recortan los lados pero la cima y el templo siempre se ven.
+  En móvil, además, el cartucho del monte baja a la base para no taparla.
+- **Las fichas del equipo no llevan la animación de asentado** de `pulp.css`:
+  van inclinadas con `rotate`, y esa animación también escribe `rotate`.
+- **Las sombras del título van en `em`**, no en píxeles. Con desplazamientos
+  fijos, a tamaño de móvil las capas de papel y tinta se separaban y dejaban
+  franjas claras entre las letras.
+- **Bangers no tiene "º"**, también dentro del SVG: el "Nº 0" del sello lleva la
+  "o" en un `<tspan>` pequeño, elevado y subrayado.
+
 ### `juanes/juanes.js`
 
 - `updateReadingProgress()` — barra de progreso de lectura (`#inkFill`).

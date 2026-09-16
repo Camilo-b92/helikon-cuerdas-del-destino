@@ -603,6 +603,59 @@ No se tocó ni una línea del sitio: es preparación.
   animaciones por scroll, View Transitions, rendimiento) y, para el pendiente
   de publicar, los conectores de Netlify y Vercel.
 
+### Ronda 15 — Helikón pasa a ser el Nº 0
+
+La página del estudio era una sucesión de tarjetas bien vestidas. Ahora es un
+**número cero**: el especial de origen que publican las editoriales de cómics.
+La estructura está en el README, en *La página de Helikón*.
+
+De dónde salieron las decisiones:
+
+- **El mito, contrastado antes de dibujarlo.** El Monte Helicón está en
+  Beocia, Grecia, y era el lugar favorito de las musas. Pegaso golpeó una roca
+  con el casco y brotó el manantial Hipocrene, cuya agua daba inspiración
+  poética. Hesíodo, pastor de ese monte, contó en la *Teogonía* que allí las
+  musas le dieron el canto. Fuentes: Britannica, Theoi y Wikipedia (Pegásides).
+  Las viñetas cuentan solo eso.
+- **El formato de fichas viene del *Who's Who in the DC Universe*** (1985–87),
+  el directorio de personajes de DC.
+- **Material real del proyecto, no relleno.** La hoja de modelo usa las seis
+  expresiones de Juanes que ya existían en el canal 0. Las cifras (2 capítulos,
+  9 canales, 5 personajes, 30 expresiones) y el proceso (Illustrator →
+  After Effects → Lottie → HTML/CSS/JS) salen de esta bitácora.
+- **Los tres "casos" de la bitácora de la página eran títulos sin contenido.**
+  Ahora cuentan hechos reales: la decisión de los dos sistemas visuales, el
+  arco de los personajes y la conversión del book a vectores.
+
+**Una línea roja: nada inventado sobre personas reales.** Las fichas del
+equipo no tienen retratos (no hay fotos y no se generan con IA), ni frases
+atribuidas, ni estadísticas de "poderes". Dicen el oficio de cada uno y lo que
+aporta al cómic. **Pendiente de confirmar con el equipo:** la descripción de
+lo que hace cada uno se dedujo del rol que figura en el README. Si alguno hace
+algo distinto o más, hay que corregirlo en su ficha.
+
+**Qué costó encontrar:**
+
+- **Espacio vacío otra vez.** Con el título alineado a la izquierda, la mitad
+  derecha del titular quedaba vacía, y lo mismo pasaba en el manifiesto. Es lo
+  que se corrigió en la portada, así que aquí se resolvió de entrada: un sello
+  de edición junto al título y la lira del mito junto al manifiesto.
+- **El dibujo del monte se cortaba por arriba.** Con `slice` sobre un lienzo
+  más estrecho que la viñeta, se escalaba al ancho y perdía la cima y el templo.
+  Se redibujó a la proporción de la viñeta, con la cima centrada.
+- **La animación de asentado de `pulp.css` enderezaba las fichas**, que van
+  inclinadas con `rotate`. Tercera vez que aparece este choque entre una
+  animación y una propiedad fija; en esas fichas la animación se desactiva.
+- **Sombras en píxeles a tamaño de móvil** dejaban franjas claras entre las
+  letras del título. Pasaron a `em`.
+- **Las imágenes con `loading="lazy"` parecían rotas** al medir con el panel
+  del navegador oculto: sin dibujar, el navegador nunca detecta que entran en
+  pantalla. Respondían HTTP 200 y cargaban al pedirlas.
+
+Verificado midiendo el DOM en 1366×658 y 375×760: sin desborde horizontal,
+ninguna pieza fuera de su viñeta, las cifras caben en sus estallidos y los
+textos del proceso no se salen de sus recuadros.
+
 ### Ronda 14 — La portada pasa a ser el Nº 1 de un cómic
 
 La portada anterior era una web con tres botones decorados. Ahora es **un cómic
