@@ -375,6 +375,33 @@ publicación es la raíz.
 Hay más detalle sobre esto —incluido qué hacer con elementos 3D— en la
 [bitácora](BITACORA.md).
 
+## Créditos de imágenes
+
+`juanes/img/` contiene fotografías **de terceros con licencia Creative
+Commons**. No son del equipo y no son de libre uso sin condiciones: la licencia
+obliga a **citar autor y licencia allí donde se publiquen**, y el repositorio
+las distribuye, así que la atribución vive aquí y debe aparecer también en la
+página donde se usen.
+
+| Archivo | Autor | Licencia | Origen |
+|---|---|---|---|
+| `juanes-retrato.webp` | RGB Productions | **CC BY 3.0** | [Commons](https://commons.wikimedia.org/wiki/File:Juanes_2022.png) |
+| `aldabon-casa-familiar.webp` | laloking97 | **CC BY-SA 2.0** | [Commons](https://commons.wikimedia.org/wiki/File:Aldab%C3%B3n-casa_de_los_pap%C3%A1s_de_Juanes.jpg) |
+| `estatua-carolina-del-principe.webp` | XalD | **CC BY-SA 4.0** | [Commons](https://commons.wikimedia.org/wiki/File:Estatua_de_Juanes_en_Carolina_del_Pr%C3%ADncipe,_2023.jpg) |
+
+Las tres se redujeron y se convirtieron a WebP con `ffmpeg` para cumplir el
+límite de 300 KB por archivo; los originales no están en el repositorio.
+
+**Cuidado con la diferencia entre las dos licencias.** Las dos **CC BY-SA**
+son *compartir igual*: cualquier versión modificada —una foto tramada como
+viñeta, por ejemplo— debe publicarse bajo esa misma licencia. La **CC BY 3.0**
+del retrato solo pide atribución, así que es la indicada para las piezas que
+vayan a llevar mucho retoque.
+
+Cualquier imagen nueva de una persona real entra por esta puerta: con licencia
+verificable y su fila en esta tabla. Nada de descargas sueltas ni de retratos
+generados con IA — el porqué está en la [bitácora](BITACORA.md).
+
 ## Accesibilidad
 
 Todas las animaciones respetan `prefers-reduced-motion`. El revelado al hacer

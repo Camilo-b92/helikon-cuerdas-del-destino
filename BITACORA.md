@@ -678,6 +678,19 @@ No generar retratos suyos con IA: es una persona real, hay derecho de imagen de
 por medio y el resultado se notaría falso. Si se quiere su rostro, usar material
 de prensa con licencia y citarlo.
 
+*Aplicado el 16 de septiembre de 2026:* se bajaron tres fotografías de
+Wikimedia Commons, todas Creative Commons y todas verificadas una por una
+—autor, licencia y enlace— antes de tocarlas. La tabla de atribución está en el
+README. Lo que **no** sirve es buscar en un buscador de imágenes y descargar lo
+que salga: casi todo el material de prensa de un músico conocido es de agencia
+y no se puede usar.
+
+Dos hallazgos que no se buscaban y valen más que el retrato: hay foto del
+**aldabón de la casa de sus padres** en Carolina del Príncipe —y la escena I
+del cómic es exactamente Juanes llamando a una puerta— y de la **estatua** que
+tiene en el pueblo. Material documental del sitio real donde empieza la
+historia que el cómic dibuja.
+
 ---
 
 ## Cómo retomar en otra máquina
