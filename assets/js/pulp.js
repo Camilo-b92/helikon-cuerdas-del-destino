@@ -52,6 +52,28 @@
     });
   }
 
+  function initOnomatopeyas(){
+    const paneles = document.querySelectorAll('.panel:not(.panel-locked)');
+    if (!paneles.length) return;
+
+    paneles.forEach(panel => {
+      const grito = panel.querySelector('.burst-text');
+      if (!grito) return;
+
+      function sortear(){
+        if (reduceMotion.matches) return;
+        const giro = (Math.random() * 22 - 4).toFixed(1);
+        const brinco = (1.16 + Math.random() * 0.24).toFixed(2);
+        grito.style.setProperty('--giro', giro + 'deg');
+        grito.style.setProperty('--brinco', brinco);
+      }
+
+      panel.addEventListener('mouseenter', sortear);
+      panel.addEventListener('focus', sortear);
+    });
+  }
+
   initReveal();
   initParallax();
+  initOnomatopeyas();
 })();

@@ -554,6 +554,50 @@ No se tocó ni una línea del sitio: es preparación.
   animaciones por scroll, View Transitions, rendimiento) y, para el pendiente
   de publicar, los conectores de Netlify y Vercel.
 
+### Ronda 13 — El sitio empieza a comportarse como un cómic
+
+El diagnóstico: el cómic estaba **encerrado dentro del televisor**. Las tres
+páginas de papel hablaban *sobre* un cómic en vez de comportarse como uno. Se
+llevaron al sitio tres de las seis propuestas del laboratorio, las que más dan
+a cambio de menos:
+
+- **Tinta sobre fotografía** (`.tono` en `pulp.css`). Tres fotos reales entran
+  en la página de Juanes tratadas como viñetas: el retrato en el hero, y el
+  aldabón y la estatua como par documental en *El origen*. El lector no ve una
+  foto pegada en un cómic — ve al cómic dibujando a una persona real.
+- **Asentado al leer.** Viñetas y tarjetas se colocan sobre la página al entrar
+  en pantalla, con animaciones guiadas por scroll nativas. Cero JavaScript.
+- **Onomatopeyas vivas.** El `HEY!`, el `POW!` y el `BOOM!` ya no saltan
+  siempre igual: `initOnomatopeyas()` sortea giro y brinco en cada pasada.
+
+El coste total en peso es **365 KB de fotos y 0 KB de código**.
+
+Lo que se dejó fuera a propósito: el televisor en 3D, que sigue esperando un
+modelador y pesaría entre 1 y 3 MB.
+
+**El tramado se hace con CSS, y eso no es un detalle estético sino legal.** Dos
+de las tres fotos son CC BY-SA, es decir *compartir igual*: una versión
+modificada tendría que publicarse bajo la misma licencia. Al aplicar el duotono
+y los puntos con `filter` y `mix-blend-mode`, **el archivo que se guarda y se
+distribuye es el original sin tocar** — quien lo descargue del repositorio se
+lleva la foto tal cual la publicó su autor. No se genera obra derivada alguna.
+Si algún día se tramara la imagen en un editor y se guardara así, esa condición
+sí se activaría.
+
+**Una trampa que costó encontrar:** la animación de asentado tuvo que hacerse
+con las propiedades `translate` y `rotate`, no con `transform`. Los tres
+scripts de página escriben `transform` en línea para la inclinación 3D que
+sigue al cursor, y **una animación CSS gana sobre una declaración en línea**,
+así que animar `transform` habría desactivado esa inclinación sin dar ningún
+error. `translate` y `rotate` son propiedades independientes y se componen con
+`transform` en vez de pisarlo.
+
+Al verificar apareció otra cosa útil: **el navegador del panel tiene
+`prefers-reduced-motion: reduce` activo**, así que ninguna de las animaciones
+nuevas se aplicaba ahí. No era un fallo — era la guardia de accesibilidad
+funcionando. Conviene recordarlo antes de dar por roto algo que no lo está: se
+comprueba con `matchMedia('(prefers-reduced-motion: reduce)').matches`.
+
 ### Ronda 12 — La carpeta vuelve al repositorio
 
 Al conectar por fin con GitHub apareció el problema gordo: **el repositorio

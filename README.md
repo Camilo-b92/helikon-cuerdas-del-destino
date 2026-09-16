@@ -145,6 +145,33 @@ cada archivo.
 |---|---|
 | `initReveal()` | Revela las secciones `[data-reveal]` al entrar en pantalla con un `IntersectionObserver`. Añade la clase `.js-reveal` a `<html>`, **y solo entonces** el CSS oculta el contenido: si el JS no corre, la página se ve igual en vez de quedarse en blanco. Sin `IntersectionObserver`, marca todo como visible y sale. |
 | `initParallax()` | Paralaje del masthead siguiendo el cursor. El valor se acumula y se aplica **una vez por frame** con `requestAnimationFrame`, porque `mousemove` dispara muchas más veces de las que el navegador alcanza a pintar. |
+| `initOnomatopeyas()` | Sortea `--giro` y `--brinco` en cada pasada del cursor por una viñeta, para que el `HEY!` o el `POW!` no salte nunca dos veces igual. El CSS es quien anima; esto solo cambia las variables. No hace nada si el usuario pidió movimiento reducido. |
+
+### El componente `.tono` — tinta sobre fotografía
+
+Convierte una foto en una viñeta: escala de grises forzada, duotono sobre un
+color de la paleta y una retícula de puntos encima. Va en `pulp.css`, así que
+las tres páginas de papel pueden usarlo.
+
+```html
+<figure class="foto">
+  <div class="tono tono--azul">
+    <img src="img/loquesea.webp" width="1200" height="900" loading="lazy" alt="...">
+  </div>
+  <figcaption>Pie de foto.
+    <span class="credito">Foto: Autor — Fuente, Licencia</span>
+  </figcaption>
+</figure>
+```
+
+Modificadores: `.tono` (rojo, por defecto), `.tono--azul`, `.tono--amarillo`.
+La imagen conserva su proporción salvo que le des `aspect-ratio` al `.tono`, y
+entonces hay que añadir `height: 100%` y `object-fit: cover` a su `img`.
+
+**Es todo CSS, y eso tiene una consecuencia legal favorable:** el archivo que
+se guarda y se distribuye es el original sin tocar — el tramado lo aplica el
+navegador al pintar. Ver la nota sobre CC BY-SA en
+[créditos de imágenes](#créditos-de-imágenes).
 
 ### `assets/js/home.js` — portada
 
@@ -266,6 +293,17 @@ verse.
   panel de texto de la escena 2 entra a los 8 s, sincronizado con su Lottie—.
   Con `animation: none` esas capas se quedaban fuera de cuadro; así saltan
   directo a su posición final a tiempo.
+- **El asentado al leer usa `translate` y `rotate`, no `transform`.** Las
+  viñetas y las tarjetas se colocan sobre la página al entrar en pantalla, con
+  `animation-timeline: view()` — sin JavaScript. Tenía que animar propiedades
+  **independientes**: `home.js`, `helikon.js` y `juanes.js` escriben
+  `transform` en línea para la inclinación 3D, y una animación CSS gana sobre
+  una declaración en línea, así que animar `transform` habría matado el efecto
+  de inclinación. `translate` y `rotate` son propiedades aparte y se componen
+  con él en vez de pisarlo.
+  La animación **parte de un estado visible** y solo se asienta: nada queda en
+  `opacity: 0` esperando al scroll, así que un navegador sin soporte muestra la
+  página igual. Va dentro de `@media (prefers-reduced-motion: no-preference)`.
 - **Los avisos de "pasa de canal" se ocultan con `visibility`, no con
   `opacity`.** La animación `blinkHint` anima justo `opacity`, y una animación
   gana sobre una declaración normal: con `opacity` el aviso se vería desde el
