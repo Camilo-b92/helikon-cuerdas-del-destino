@@ -1,13 +1,3 @@
-/* =========================================================
-   HOME — Cuerdas del Destino
-   Portada estilo cómic pulp / 1930s.
-
-   La base visual (paleta, textura de papel, masthead, hero y
-   el componente .panel) vive en assets/css/pulp.css. Aquí solo
-   está lo propio de la portada.
-   ========================================================= */
-
-/* ---------- CONTENEDOR PRINCIPAL ---------- */
 .cover{
   position: relative;
   z-index: 2;
@@ -19,7 +9,6 @@
   flex-direction: column;
 }
 
-/* ---------- HERO ---------- */
 .hero h2{
   margin-top: 23px;
   font-family: Bangers, cursive;
@@ -30,7 +19,6 @@
   text-shadow: 5px 5px 0 var(--paper), 9px 9px 0 var(--ink);
 }
 
-/* ---------- LOS 3 PANELES DE NAVEGACIÓN ---------- */
 .panels{
   flex: 1;
   display: grid;
@@ -38,13 +26,11 @@
   gap: 16px;
 }
 
-/* ---------- PIE DE PORTADA ---------- */
 .cover-footer{
   padding-top: 30px;
   font-size: 0.58rem;
 }
 
-/* ---------- RESPONSIVE ---------- */
 @media (max-width: 900px){
   .cover{ width: 92vw; }
   .panels{ grid-template-columns: 1fr; }
@@ -60,11 +46,6 @@
   .cover-footer{ font-size: 0.48rem; gap: 8px; }
 }
 
-/* ---------- LÍNEAS DE VELOCIDAD DEL HERO ----------
-   Fondo de viñeta de acción: rayas verticales que entran
-   desde los bordes y dejan limpio el centro, donde va el
-   titular. Se desplazan muy despacio para que la portada
-   no quede del todo quieta. */
 .speed-lines{
   position: absolute;
   z-index: -1;

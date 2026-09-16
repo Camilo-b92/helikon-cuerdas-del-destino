@@ -1,21 +1,10 @@
-/* =========================================================
-   CUERDAS DEL DESTINO — Televisor interactivo
-   Al encender: video de introducción (con botón de saltar) →
-   presentación del título → menú
-   Canales 0–2 = menú (Personajes, Historial, Stop motion)
-   Canal 3 = portada capítulo uno · Canales 4–6 = escenas I–III
-   Canal 7 = fin del capítulo uno
-   Canal 8 = portada capítulo dos · Canales 9–10 = escenas I–II
-   ========================================================= */
-
-const TOTAL_CHANNELS = 10; // last index (0..10)
+const TOTAL_CHANNELS = 8;
 let currentChannel = 0;
 let tvOn = false;
-let isAnimating = false; // true during power-on/off or static transition
+let isAnimating = false;
 let introPlaying = false;
-let introEnded = false; // guards against double-triggering the end-of-intro transition
+let introEnded = false;
 
-/* ---------- DOM refs ---------- */
 const tv = document.getElementById('tv');
 const tvScreen = document.getElementById('tvScreen');
 const screenContent = document.getElementById('screenContent');
@@ -31,10 +20,6 @@ const btnPower = document.getElementById('btnPower');
 const introLayer = document.getElementById('introLayer');
 const introVideo = document.getElementById('introVideo');
 const skipButton = document.getElementById('skipButton');
-
-const titleStage = document.getElementById('titleStage');
-const titleContainer = document.getElementById('titleContainer');
-const titleTarget = document.getElementById('s0-titulo');
 
 const scene1Stage = document.getElementById('scene1Stage');
 const scene1Container = document.getElementById('scene1Container');
@@ -54,54 +39,220 @@ const scene5Stage = document.getElementById('scene5Stage');
 const scene5Container = document.getElementById('scene5Container');
 
 const channelNames = [
-  'Personajes', 'Historial', 'Stop motion',
-  'Cuerdas del Destino — Portada', 'Escena I — El llamado', 'Escena II',
+  'Personajes',
+  'Capítulo uno — Presentación', 'Escena I — El llamado', 'Escena II',
   'Escena III', 'Fin del capítulo uno',
-  'Capítulo dos — Portada', 'Capítulo 2 — Escena I', 'Capítulo 2 — Escena II'
+  'Capítulo dos — Presentación', 'Capítulo 2 — Escena I', 'Capítulo 2 — Escena II'
 ];
 
-/* =========================================================
-   Placeholder illustrations (canales 2–6, en espera de arte final)
-   ========================================================= */
-const illustrations = {
-  personajes: `<svg viewBox="0 0 800 600" preserveAspectRatio="xMidYMid slice">
-    <circle cx="400" cy="230" r="70" fill="none" stroke="#09cbbb" stroke-width="1.6"/>
-    <path d="M270 460 C 270 350, 330 300, 400 300 C 470 300, 530 350, 530 460" fill="none" stroke="#09cbbb" stroke-width="1.6"/>
-    <circle cx="230" cy="270" r="34" fill="none" stroke="#0b8a3a" stroke-width="1" opacity="0.5"/>
-    <circle cx="570" cy="270" r="34" fill="none" stroke="#0b8a3a" stroke-width="1" opacity="0.5"/>
-  </svg>`,
-  historial: `<svg viewBox="0 0 800 600" preserveAspectRatio="xMidYMid slice">
-    <circle cx="400" cy="300" r="120" fill="none" stroke="#09cbbb" stroke-width="1.6"/>
-    <line x1="400" y1="300" x2="400" y2="210" stroke="#fafac8" stroke-width="1.6"/>
-    <line x1="400" y1="300" x2="460" y2="320" stroke="#fafac8" stroke-width="1.6"/>
-    <circle cx="400" cy="300" r="4" fill="#0b8a3a"/>
-    <circle cx="400" cy="150" r="2" fill="#cfe8eb" opacity="0.6"/>
-    <circle cx="650" cy="300" r="2" fill="#cfe8eb" opacity="0.6"/>
-  </svg>`,
-  stopmotion: `<svg viewBox="0 0 800 600" preserveAspectRatio="xMidYMid slice">
-    <rect x="260" y="200" width="280" height="200" rx="6" fill="none" stroke="#09cbbb" stroke-width="1.6"/>
-    <line x1="260" y1="240" x2="540" y2="240" stroke="#09cbbb" stroke-width="1" opacity="0.5"/>
-    <line x1="260" y1="360" x2="540" y2="360" stroke="#09cbbb" stroke-width="1" opacity="0.5"/>
-    <circle cx="300" cy="220" r="4" fill="#0b8a3a"/>
-    <circle cx="500" cy="220" r="4" fill="#0b8a3a"/>
-    <circle cx="300" cy="380" r="4" fill="#0b8a3a"/>
-    <circle cx="500" cy="380" r="4" fill="#0b8a3a"/>
-  </svg>`
+const PERSONAJES = [
+  {
+    id: 'juanes',
+    gestos: ['alegria', 'tristeza', 'asombro', 'miedo', 'enojo', 'aburrimiento'],
+    nombre: 'Juanes',
+    rol: 'Protagonista — etapa adulta',
+    datos: [
+      ['Nombre', 'Juan Esteban Aristizábal'],
+      ['Edad', '24 años'],
+      ['Origen', 'Carolina del Príncipe'],
+      ['Oficio', 'Músico callejero'],
+      ['Carácter', 'Perseverante, sensible, introspectivo']
+    ],
+    nota: 'Toca para una ciudad que no lo escucha. Su viaje va de la ' +
+          'frustración a la expresión sincera: entiende que la música nace ' +
+          'del amor y la emoción, no de la técnica.'
+  },
+  {
+    id: 'nino',
+    gestos: ['alegria', 'tristeza', 'asombro', 'miedo', 'enojo', 'aburrimiento'],
+    nombre: 'Juanes niño',
+    rol: 'Protagonista — etapa inicial',
+    datos: [
+      ['Edad', '12 años'],
+      ['Origen', 'Carolina del Príncipe'],
+      ['Carácter', 'Curioso, inquieto, espontáneo'],
+      ['Rasgo', 'Exploración del entorno'],
+      ['Aprende', 'De forma intuitiva']
+    ],
+    nota: 'Descubre la guitarra y recibe de su padre la enseñanza que ' +
+          'sostiene toda la historia: la música nace del corazón.'
+  },
+  {
+    id: 'ente',
+    gestos: ['alegria', 'desagrado', 'somnoliento', 'asombro', 'enojo', 'tristeza'],
+    nombre: 'El Ente',
+    rol: 'Personaje simbólico',
+    datos: [
+      ['Estatura', 'Cerca de 2 metros'],
+      ['Rostro', 'Sin rasgos definidos'],
+      ['Carácter', 'Serio, neutral'],
+      ['Presencia', 'Imponente, directa'],
+      ['Aparece', 'En los momentos de crisis']
+    ],
+    nota: 'No es un personaje del mundo real: es el conflicto interno de ' +
+          'Juanes hecho figura. Aparece de repente, dice lo justo y ' +
+          'desaparece. De inquietante pasa a calmante.'
+  },
+  {
+    id: 'padre',
+    gestos: ['alegria', 'tristeza', 'asombro', 'miedo', 'enojo', 'aburrimiento'],
+    nombre: 'El Padre',
+    rol: 'Secundario clave — guía inicial',
+    datos: [
+      ['Edad', 'Entre 50 y 60 años'],
+      ['Origen', 'Carolina del Príncipe'],
+      ['Entorno', 'Vivienda en medio natural'],
+      ['Carácter', 'Tranquilo, reflexivo, sabio'],
+      ['Rasgo', 'Serenidad y paciencia']
+    ],
+    nota: 'Representa las raíces y la tradición. Pone la guitarra en manos ' +
+          'de su hijo y siembra la idea central de la historia: tocar con ' +
+          'el corazón.'
+  },
+  {
+    id: 'madre',
+    gestos: ['alegria', 'tristeza', 'asombro', 'miedo', 'enojo', 'aburrimiento'],
+    nombre: 'La Madre',
+    rol: 'Secundaria clave — punto de cambio',
+    datos: [
+      ['Edad', 'Entre 40 y 50 años'],
+      ['Origen', 'Carolina del Príncipe'],
+      ['Entorno', 'Doméstico y familiar'],
+      ['Carácter', 'Tranquila, comprensiva, sensible'],
+      ['Rasgo', 'Empatía y calma']
+    ],
+    nota: 'Observa antes de intervenir. Cuando Juanes vuelve derrotado, es ' +
+          'ella quien le da la vuelta a todo: la música nace de lo que se ama.'
+  }
+];
+
+const castArte = document.getElementById('castArte');
+const castRol = document.getElementById('castRol');
+const castNombre = document.getElementById('castNombre');
+const castDatos = document.getElementById('castDatos');
+const castNota = document.getElementById('castNota');
+const castSelector = document.getElementById('castSelector');
+const castGestos = document.getElementById('castGestos');
+const castFigura = castArte ? castArte.parentElement : null;
+const castFicha = castNota ? castNota.parentElement : null;
+
+const NOMBRE_GESTO = {
+  alegria: 'Alegría', tristeza: 'Tristeza', asombro: 'Asombro',
+  miedo: 'Miedo', enojo: 'Enojo', aburrimiento: 'Aburrimiento',
+  desagrado: 'Desagrado', somnoliento: 'Somnoliento'
 };
 
-channels.forEach(ch => {
-  const key = ch.dataset.illustration;
-  if (key && illustrations[key]){
-    const wrap = document.createElement('div');
-    wrap.className = 'ch-illustration';
-    wrap.innerHTML = illustrations[key];
-    ch.prepend(wrap);
-  }
-});
+let castActual = -1;
+let castGesto = null;
+let castTimer = null;
+let castArmado = false;
 
-/* =========================================================
-   Escena 1 — Lottie
-   ========================================================= */
+function rutaArte(p, gesto){
+  return gesto ? 'assets/personajes/expresiones/' + p.id + '-' + gesto + '.svg'
+               : 'assets/personajes/' + p.id + '.svg';
+}
+
+function pintarArte(){
+  const p = PERSONAJES[castActual];
+  if (!p || !castArte) return;
+  castArte.src = rutaArte(p, castGesto);
+  castArte.alt = castGesto
+    ? p.nombre + ' — expresión: ' + NOMBRE_GESTO[castGesto]
+    : p.nombre + ' — ' + p.rol;
+  castArte.classList.toggle('es-gesto', Boolean(castGesto));
+  Array.from(castGestos.children).forEach(b => {
+    b.setAttribute('aria-pressed', String(b.dataset.gesto === (castGesto || '')));
+  });
+}
+
+function pintarPersonaje(i){
+  const p = PERSONAJES[i];
+  if (!p) return;
+
+  castRol.textContent = p.rol;
+  castNombre.textContent = p.nombre;
+  castNota.textContent = p.nota;
+
+  castDatos.textContent = '';
+  p.datos.forEach(([clave, valor]) => {
+    const dt = document.createElement('dt');
+    dt.textContent = clave;
+    const dd = document.createElement('dd');
+    dd.textContent = valor;
+    castDatos.append(dt, dd);
+  });
+
+  Array.from(castSelector.children).forEach((b, n) => {
+    b.setAttribute('aria-pressed', String(n === i));
+  });
+
+  castGestos.textContent = '';
+  [['', 'Figura']].concat((p.gestos || []).map(g => [g, NOMBRE_GESTO[g] || g]))
+    .forEach(([gesto, etiqueta]) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'cast-gesto';
+      b.dataset.gesto = gesto;
+      b.textContent = etiqueta;
+      b.setAttribute('aria-pressed', 'false');
+      b.addEventListener('click', () => {
+        castGesto = gesto || null;
+        pintarArte();
+      });
+      castGestos.append(b);
+    });
+
+  pintarArte();
+
+  (p.gestos || []).forEach(g => {
+    const img = new Image();
+    img.src = rutaArte(p, g);
+  });
+}
+
+function mostrarPersonaje(i){
+  if (i === castActual || !castArte) return;
+  const primero = castActual === -1;
+  castActual = i;
+  castGesto = null;
+
+  if (primero){
+    pintarPersonaje(i);
+    return;
+  }
+
+  clearTimeout(castTimer);
+  castFigura.classList.add('is-cambiando');
+  castFicha.classList.add('is-cambiando');
+  castTimer = setTimeout(() => {
+    pintarPersonaje(i);
+    castFigura.classList.remove('is-cambiando');
+    castFicha.classList.remove('is-cambiando');
+  }, 180);
+}
+
+function initCast(){
+  if (castArmado || !castSelector) return;
+  castArmado = true;
+
+  PERSONAJES.forEach((p, i) => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'cast-chip';
+    b.textContent = p.nombre;
+    b.setAttribute('aria-pressed', 'false');
+    b.addEventListener('click', () => mostrarPersonaje(i));
+    castSelector.append(b);
+  });
+
+  PERSONAJES.slice(1).forEach(p => {
+    const img = new Image();
+    img.src = 'assets/personajes/' + p.id + '.svg';
+  });
+
+  mostrarPersonaje(0);
+}
+
 let s1 = { humo: null, puerta: null, juanesCorre: null, ready: false, played: false };
 
 function initScene1(){
@@ -164,19 +315,11 @@ function scaleScene5(){ scaleStage(scene5Stage, scene5Container); }
 
 window.addEventListener('resize', () => { scaleScene1(); scaleScene2(); scaleScene3(); scaleScene4(); scaleScene5(); });
 
-/* =========================================================
-   Escena 2 — Lottie (secuencia automática, sin clic)
-   ========================================================= */
 let s2 = { juanesBusca: null, caja: null, texto: null, ready: false, textoTimer: null, playTimer: null };
 
 function initScene2(){
   if (s2.ready || typeof lottie === 'undefined') return;
 
-  // juanesBusca y texto vuelven a 'svg': texto.json tiene una capa de
-  // texto real, y el renderer 'canvas' de Lottie no maneja bien su color/
-  // fuente (salía en negro). Solo caja.json necesita 'canvas' — es la
-  // animación vectorial pesada (2.7MB) que congelaba el navegador al
-  // crear miles de nodos SVG.
   s2.juanesBusca = lottie.loadAnimation({
     container: document.getElementById('s2-juanesBusca'),
     renderer: 'svg', loop: false, autoplay: false,
@@ -193,15 +336,8 @@ function initScene2(){
     path: 'assets/capitulo-n1/scene2/json/texto.json'
   });
 
-  // A caja (canvas) solo la remedimos UNA vez, cuando su renderer termina
-  // de construirse — no en cada reproducción, que es lo que sospecho que
-  // seguía colgando el navegador en cada ida y vuelta al canal.
   s2.caja.addEventListener('DOMLoaded', () => { s2.caja.resize(); });
 
-  // setSubframe(false): en vez de interpolar y redibujar en cada instante
-  // de tiempo, solo redibuja en los 25 fotogramas reales del archivo.
-  // Para una animación tan densa como caja.json, esto reduce bastante el
-  // trabajo de redibujado sostenido durante la reproducción.
   s2.caja.setSubframe(false);
 
   s2.ready = true;
@@ -215,11 +351,6 @@ function prefetchScene2(){
     const img = new Image();
     img.src = `assets/capitulo-n1/scene2/img/${name}.png`;
   });
-  // Solo calentamos la caché de red (fetch), sin crear todavía los
-  // canvas de Lottie: el renderer 'canvas' fija su tamaño según el
-  // contenedor en el momento en que se crea, y el canal 5 sigue oculto
-  // aquí (display:none = 0x0). Crearlos de verdad se hace en
-  // initScene2(), que solo se llama cuando el canal ya es visible.
   ['juanesBusca', 'caja', 'texto'].forEach(name => {
     fetch(`assets/capitulo-n1/scene2/json/${name}.json`).catch(() => {});
   });
@@ -275,11 +406,9 @@ function playScene2(){
   if (s2.caja) s2.caja.goToAndStop(0, true);
   if (s2.texto) s2.texto.goToAndStop(0, true);
 
-  // doble rAF: garantiza que el navegador pinte el estado "sin is-ready"
-  // antes de reañadirla, para que la animación de entrada reinicie limpio
   requestAnimationFrame(() => {
     requestAnimationFrame(() => {
-      if (token !== s2PlayToken) return; // una llamada más nueva ya tomó el control
+      if (token !== s2PlayToken) return;
       scene2Container.classList.add('is-ready');
 
       if (s2.juanesBusca) s2.juanesBusca.goToAndPlay(0, true);
@@ -299,9 +428,6 @@ function stopScene2(){
   if (s2.texto) s2.texto.pause();
 }
 
-/* =========================================================
-   Escena 3 — Lottie (clic para disparar, en cascada por etapas)
-   ========================================================= */
 let s3 = {
   papaHabla: null, text: null, guitarra: null, fondoGuita: null, juanesEmocion: null,
   ready: false, played: false, timers: []
@@ -372,7 +498,7 @@ function resetScene3(){
   if (s3.text) s3.text.goToAndStop(0, true);
   if (s3.guitarra) s3.guitarra.goToAndStop(0, true);
   if (s3.fondoGuita) s3.fondoGuita.goToAndStop(0, true);
-  if (s3.juanesEmocion) s3.juanesEmocion.play(); // autoplay en loop, como en el original
+  if (s3.juanesEmocion) s3.juanesEmocion.play();
 
   document.getElementById('s3-fondoGuitarra').classList.remove('s3-entrar');
   document.getElementById('s3-guitarra').classList.remove('s3-entrar');
@@ -392,9 +518,6 @@ function stopScene3(){
   if (s3.juanesEmocion) s3.juanesEmocion.pause();
 }
 
-/* =========================================================
-   Escena 1, Capítulo 2 — Lottie (arranca sola al entrar al canal)
-   ========================================================= */
 let s4 = { juanCaminando: null, txt: null, ready: false, timers: [], playTimer: null };
 
 function initScene4(){
@@ -443,11 +566,6 @@ function stopScene4(){
   if (s4.txt) s4.txt.pause();
 }
 
-/* =========================================================
-   Escena 2, Capítulo 2 — Lottie (varias animaciones ambiente
-   con sus propios ciclos, más el clic de juanTocaGuita que
-   dispara textVine)
-   ========================================================= */
 let s5 = { anims: {}, timers: [], ready: false, playTimer: null };
 
 function s5ScheduleReplay(anim, delay){
@@ -473,13 +591,11 @@ function initScene5(){
   s5.anims.textDias = load('textDias', 's5-textDias', false);
   s5.anims.textVine = load('textVine', 's5-textVine', false);
 
-  // los NPC se repiten solos, cada uno con su propia pausa entre vueltas
   s5.anims.npcUno.addEventListener('complete', () => s5ScheduleReplay(s5.anims.npcUno, 3000));
   s5.anims.npcDos.addEventListener('complete', () => s5ScheduleReplay(s5.anims.npcDos, 6000));
   s5.anims.npcTres.addEventListener('complete', () => s5ScheduleReplay(s5.anims.npcTres, 4000));
   s5.anims.npcCuatro.addEventListener('complete', () => s5ScheduleReplay(s5.anims.npcCuatro, 6000));
 
-  // textVine aparece al tocar a Juan, y se oculta solo al terminar
   s5.anims.textVine.addEventListener('complete', () => {
     document.getElementById('s5-textVine').classList.remove('is-visible');
   });
@@ -514,25 +630,151 @@ function stopScene5(){
   Object.values(s5.anims).forEach(a => a && a.pause());
 }
 
-/* =========================================================
-   Channel rendering
-   ========================================================= */
+const PRES_DELAY_MS = 450;
+const PRES_SAFETY_MS = 6000;
+
+function crearPresentacion({ ruta, imagenes, stageId, containerId, targetId, hintId }){
+  const stage = document.getElementById(stageId);
+  const container = document.getElementById(containerId);
+  const target = document.getElementById(targetId);
+  const hint = document.getElementById(hintId);
+
+  const pres = {
+    anim: null,
+    ready: false,
+    loaded: false,
+    ended: false,
+    prefetched: false,
+    pendiente: null,
+    startTimer: null,
+    safetyTimer: null,
+    token: 0
+  };
+
+  function finish(){
+    if (pres.ended) return;
+    pres.ended = true;
+    clearTimeout(pres.safetyTimer);
+    if (hint) hint.classList.add('is-visible');
+  }
+
+  function arrancar(token){
+    if (token !== pres.token) return;
+    pres.anim.goToAndPlay(0, true);
+    pres.safetyTimer = setTimeout(finish, PRES_SAFETY_MS);
+  }
+
+  pres.prefetch = function(){
+    if (pres.prefetched) return;
+    pres.prefetched = true;
+    fetch(ruta + '/titulo.json').catch(() => {});
+    for (let i = 0; i < imagenes; i++){
+      const img = new Image();
+      img.src = ruta + '/images/img_' + i + '.png';
+    }
+  };
+
+  pres.init = function(){
+    if (pres.ready || typeof lottie === 'undefined') return;
+
+    pres.anim = lottie.loadAnimation({
+      container: target,
+      renderer: 'svg', loop: false, autoplay: false,
+      path: ruta + '/titulo.json',
+      assetsPath: ruta + '/images/'
+    });
+
+    pres.anim.addEventListener('DOMLoaded', () => {
+      pres.loaded = true;
+      if (pres.pendiente !== null){
+        const token = pres.pendiente;
+        pres.pendiente = null;
+        arrancar(token);
+      }
+    });
+    pres.anim.addEventListener('complete', finish);
+    pres.anim.addEventListener('error', finish);
+
+    pres.ready = true;
+  };
+
+  pres.play = function(){
+    pres.init();
+    pres.stop();
+
+    const token = ++pres.token;
+    pres.ended = false;
+    if (hint) hint.classList.remove('is-visible');
+    if (pres.anim && pres.loaded) pres.anim.goToAndStop(0, true);
+
+    requestAnimationFrame(() => scaleStage(stage, container));
+
+    if (!pres.anim){ finish(); return; }
+
+    pres.startTimer = setTimeout(() => {
+      if (token !== pres.token) return;
+      if (pres.loaded) arrancar(token);
+      else pres.pendiente = token;
+    }, PRES_DELAY_MS);
+  };
+
+  pres.stop = function(){
+    clearTimeout(pres.startTimer);
+    clearTimeout(pres.safetyTimer);
+    pres.pendiente = null;
+    if (pres.anim) pres.anim.pause();
+  };
+
+  window.addEventListener('resize', () => scaleStage(stage, container));
+
+  return pres;
+}
+
+const pres1 = crearPresentacion({
+  ruta: 'assets/presentacion-c1/json', imagenes: 5,
+  stageId: 'pres1Stage', containerId: 'pres1Container',
+  targetId: 'p1-titulo', hintId: 'pres1Hint'
+});
+
+const pres2 = crearPresentacion({
+  ruta: 'assets/presentacion-c2/json', imagenes: 6,
+  stageId: 'pres2Stage', containerId: 'pres2Container',
+  targetId: 'p2-titulo', hintId: 'pres2Hint'
+});
+
 function showChannel(index){
   channels.forEach(ch => {
     ch.classList.toggle('is-active', Number(ch.dataset.channel) === index);
   });
 
-  if (index === 4){
+  if (index === 0) initCast();
+
+  if (index === 0) pres1.prefetch();
+  if (index === 5) pres2.prefetch();
+
+  if (index === 1){
+    pres1.play();
+  } else if (pres1.ready){
+    pres1.stop();
+  }
+
+  if (index === 6){
+    pres2.play();
+  } else if (pres2.ready){
+    pres2.stop();
+  }
+
+  if (index === 2){
     initScene1();
     resetScene1();
     requestAnimationFrame(scaleScene1);
     if (s1.humo) s1.humo.play();
-    prefetchScene2(); // adelanta la carga del canal siguiente mientras el usuario ve este
+    prefetchScene2();
   } else if (s1.humo){
     s1.humo.pause();
   }
 
-  if (index === 5){
+  if (index === 3){
     initScene2();
     requestAnimationFrame(scaleScene2);
     clearTimeout(s2.playTimer);
@@ -542,7 +784,7 @@ function showChannel(index){
     stopScene2();
   }
 
-  if (index === 6){
+  if (index === 4){
     initScene3();
     resetScene3();
     requestAnimationFrame(scaleScene3);
@@ -551,7 +793,7 @@ function showChannel(index){
     stopScene3();
   }
 
-  if (index === 9){
+  if (index === 7){
     initScene4();
     requestAnimationFrame(scaleScene4);
     clearTimeout(s4.playTimer);
@@ -561,7 +803,7 @@ function showChannel(index){
     stopScene4();
   }
 
-  if (index === 10){
+  if (index === 8){
     initScene5();
     requestAnimationFrame(scaleScene5);
     clearTimeout(s5.playTimer);
@@ -573,9 +815,6 @@ function showChannel(index){
   tvCaption.textContent = `Canal ${index} / ${TOTAL_CHANNELS} — ${channelNames[index]}`;
 }
 
-/* =========================================================
-   Static / interference transition
-   ========================================================= */
 const ctx = staticCanvas.getContext('2d');
 let staticRAF = null;
 
@@ -586,8 +825,6 @@ function resizeStaticCanvas(){
 }
 window.addEventListener('resize', resizeStaticCanvas);
 
-/* Ruido dibujado en un buffer chico y escalado hacia arriba: mismo efecto
-   visual (incluso más "granulado" y auténtico), una fracción del costo. */
 const NOISE_SCALE = 6;
 const noiseBuffer = document.createElement('canvas');
 const noiseCtx = noiseBuffer.getContext('2d');
@@ -611,7 +848,6 @@ function drawStaticFrame(){
   ctx.imageSmoothingEnabled = false;
   ctx.drawImage(noiseBuffer, 0, 0, nw, nh, 0, 0, w, h);
 
-  // occasional bright horizontal glitch line
   if (Math.random() < 0.35){
     ctx.fillStyle = 'rgba(255,255,255,0.5)';
     const y = Math.random() * h;
@@ -631,8 +867,6 @@ function runStatic(duration, onMid, done){
     clearTimeout(safetyTimer);
     cancelAnimationFrame(staticRAF);
     staticCanvas.classList.remove('is-active');
-    // si la estática se cortó antes de la mitad, el cambio de canal
-    // todavía no se aplicó: se aplica ahora para no perderlo
     if (onMid && !onMid.done){
       onMid.done = true;
       onMid();
@@ -640,10 +874,6 @@ function runStatic(duration, onMid, done){
     if (done) done();
   }
 
-  // Red de seguridad, igual que la de la presentación: si el navegador
-  // deja de emitir frames (pestaña en segundo plano, ahorro de energía),
-  // requestAnimationFrame no vuelve a dispararse y el televisor se
-  // quedaría trabado con isAnimating en true y los botones apagados.
   const safetyTimer = setTimeout(finish, duration + 1200);
 
   const start = performance.now();
@@ -664,10 +894,7 @@ function runStatic(duration, onMid, done){
   staticRAF = requestAnimationFrame(frame);
 }
 
-/* =========================================================
-   Intro video (plays once per power-on, before the menu)
-   ========================================================= */
-const SKIP_DELAY_MS = 1000; // botón de saltar aparece al primer segundo
+const SKIP_DELAY_MS = 1000;
 let skipTimer = null;
 
 function playIntro(){
@@ -677,20 +904,12 @@ function playIntro(){
   skipButton.classList.remove('is-visible');
   setButtonsDisabled(true);
 
-  // aprovechamos que el video ya está en pantalla para adelantar la
-  // descarga de la presentación que viene justo después
-  ['titulo'].forEach(name => fetch(`assets/presentacion/json/${name}.json`).catch(() => {}));
-  ['img_0','img_1','img_2','img_3','img_4'].forEach(name => {
-    const img = new Image();
-    img.src = `assets/presentacion/json/images/${name}.png`;
-  });
   tvCaption.textContent = 'Reproduciendo introducción…';
 
   introVideo.currentTime = 0;
   const playPromise = introVideo.play();
   if (playPromise && playPromise.catch){
     playPromise.catch(() => {
-      // autoplay bloqueado o archivo ausente: no dejar al usuario atascado
       finishIntro();
     });
   }
@@ -710,74 +929,17 @@ function finishIntro(){
 
   runStatic(420, function onMid(){
     tvScreen.classList.remove('is-intro');
+    currentChannel = 0;
+    showChannel(0);
   }, function done(){
-    playTitlePresentation();
+    isAnimating = false;
+    setButtonsDisabled(false);
   });
-}
-
-/* ---------- PRESENTACIÓN — título de apertura ---------- */
-let titleAnim = null;
-let titleEnded = false;
-let titleSafetyTimer = null;
-
-function playTitlePresentation(){
-  titleEnded = false;
-  tvScreen.classList.add('is-title');
-  tvCaption.textContent = 'Presentación…';
-
-  // la red de seguridad se arma ANTES que cualquier otra cosa: así, sin
-  // importar qué falle abajo (incluso un error de JS que corte la función
-  // a mitad de camino), el televisor nunca se queda trabado más de 4s.
-  clearTimeout(titleSafetyTimer);
-  titleSafetyTimer = setTimeout(finishTitlePresentation, 4000);
-
-  try {
-    // Si la CDN no está disponible o falta el contenedor, salimos de forma
-    // controlada. Nunca ocultamos el menú indefinidamente detrás de negro.
-    if (typeof lottie === 'undefined' || !titleStage || !titleContainer || !titleTarget){
-      throw new Error('La presentación no tiene Lottie o su contenedor disponible.');
-    }
-
-    if (!titleAnim){
-      titleAnim = lottie.loadAnimation({
-        container: titleTarget,
-        renderer: 'svg', loop: false, autoplay: false,
-        path: 'assets/presentacion/json/titulo.json',
-        assetsPath: 'assets/presentacion/json/images/'
-      });
-      titleAnim.addEventListener('complete', finishTitlePresentation);
-      titleAnim.addEventListener('error', finishTitlePresentation);
-    } else {
-      titleAnim.goToAndStop(0, true);
-    }
-
-    requestAnimationFrame(() => scaleStage(titleStage, titleContainer));
-    titleAnim.play();
-  } catch (err) {
-    console.error('No se pudo reproducir la presentación:', err);
-    finishTitlePresentation();
-  }
-}
-
-function finishTitlePresentation(){
-  if (titleEnded) return;
-  titleEnded = true;
-  clearTimeout(titleSafetyTimer);
-
-  // La presentación ya funciona como transición de entrada: aquí pasamos
-  // directo al menú, sin la estática. Los cambios de canal sí la conservan.
-  tvScreen.classList.remove('is-title');
-  currentChannel = 0;
-  showChannel(0);
-  isAnimating = false;
-  setButtonsDisabled(false);
 }
 
 introVideo.addEventListener('ended', finishIntro);
 introVideo.addEventListener('error', finishIntro);
 introVideo.addEventListener('timeupdate', () => {
-  // Respaldo para navegadores que no emiten `ended`: se basa en la duración
-  // real del archivo, no en un límite fijo que cortaba los últimos 5 segundos.
   if (introPlaying && Number.isFinite(introVideo.duration) &&
       introVideo.currentTime >= introVideo.duration - 0.1){
     finishIntro();
@@ -785,9 +947,6 @@ introVideo.addEventListener('timeupdate', () => {
 });
 skipButton.addEventListener('click', finishIntro);
 
-/* =========================================================
-   Navigation
-   ========================================================= */
 function changeChannel(delta){
   if (!tvOn || isAnimating || introPlaying) return;
   const next = currentChannel + delta;
@@ -810,9 +969,6 @@ function setButtonsDisabled(disabled){
   btnPrev.disabled = disabled;
 }
 
-/* =========================================================
-   Power on / off
-   ========================================================= */
 function powerOn(){
   if (tvOn || isAnimating) return;
   isAnimating = true;
@@ -836,15 +992,10 @@ function powerOff(){
   tvCaption.textContent = 'Apagando…';
 
   clearTimeout(skipTimer);
-  clearTimeout(titleSafetyTimer);
   introPlaying = false;
   introEnded = false;
   introVideo.pause();
-  // titleEnded en true evita que un temporizador ya en vuelo llame a
-  // finishTitlePresentation y devuelva el menú con el televisor apagado
-  titleEnded = true;
   tvScreen.classList.remove('is-intro');
-  tvScreen.classList.remove('is-title');
   skipButton.classList.remove('is-visible');
 
   setTimeout(() => {
@@ -853,20 +1004,17 @@ function powerOff(){
     tvOn = false;
     isAnimating = false;
     setButtonsDisabled(false);
-    // apagar el televisor debe detener la escena que estuviera corriendo:
-    // si no, sus animaciones Lottie siguen consumiendo CPU sin verse
     if (s1.humo) s1.humo.pause();
     if (s2.ready) stopScene2();
     if (s3.ready) stopScene3();
     if (s4.ready) stopScene4();
     if (s5.ready) stopScene5();
+    pres1.stop();
+    pres2.stop();
     tvCaption.textContent = 'Televisor apagado';
   }, 560);
 }
 
-/* =========================================================
-   Wiring
-   ========================================================= */
 btnPower.addEventListener('click', () => { tvOn ? powerOff() : powerOn(); });
 btnNext.addEventListener('click', () => changeChannel(1));
 btnPrev.addEventListener('click', () => changeChannel(-1));
@@ -876,17 +1024,12 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'ArrowLeft'){ changeChannel(-1); return; }
 
   if (e.key === ' ' || e.key === 'Enter'){
-    // Si el foco está en cualquier control del televisor (encender,
-    // cambiar canal, saltar la intro) el navegador ya dispara su click:
-    // encender/apagar además de eso apagaba el TV al pulsar Enter sobre
-    // "canal siguiente" o sobre "Saltar".
     if (tv.contains(document.activeElement)) return;
-    e.preventDefault(); // que la barra espaciadora no scrollee la página
+    e.preventDefault();
     tvOn ? powerOff() : powerOn();
   }
 });
 
-/* ---------- Initial state ---------- */
 tv.classList.add('is-off');
 setButtonsDisabled(true);
 btnPower.disabled = false;

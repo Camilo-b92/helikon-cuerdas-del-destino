@@ -11,15 +11,13 @@
   --line: rgba(20,48,46,0.12);
   --tv-accent: #e8623a;
 
-  /* Texto de la interfaz de página (fuera de la pantalla del TV) */
   --text: #142E2C;
   --text-dim: #45696B;
 
-  /* Tipografía de marca OML */
   --font-title: 'Fredoka', sans-serif;
   --font-sub: 'Montserrat', sans-serif;
   --font-body: 'Work Sans', sans-serif;
-  --font-tv: 'Boogaloo', cursive; /* fuente decorativa exclusiva de la interfaz del televisor */
+  --font-tv: 'Boogaloo', cursive;
 }
 
 *{ box-sizing: border-box; }
@@ -35,7 +33,6 @@ html, body{
 button{ font-family: inherit; }
 a{ color: inherit; }
 
-/* ---------- NAV ---------- */
 .topnav{
   display: flex;
   align-items: center;
@@ -56,7 +53,6 @@ a{ color: inherit; }
   opacity: 0.85;
 }
 
-/* ---------- STAGE ---------- */
 .tv-stage{
   min-height: calc(100vh - 56px);
   display: flex;
@@ -69,11 +65,6 @@ a{ color: inherit; }
 
 .tv{
   position: relative;
-  /* Crece hasta llenar el espacio disponible en ancho O alto,
-     lo que primero se agote, sin deformar la proporción real
-     de la imagen del televisor (1566x925). Tope en 1566px:
-     esa es la resolución nativa de tv.png — pasar de ahí solo
-     agranda el archivo con upscale y se ve borroso. */
   width: min(1566px, 99vw, calc((100vh - 100px) * 1.6930));
   aspect-ratio: 1566 / 925;
   filter: drop-shadow(0 24px 44px rgba(20,48,46,0.28));
@@ -89,11 +80,6 @@ a{ color: inherit; }
   user-select: none;
 }
 
-/* ---------- SCREEN ----------
-   The screen sits ABOVE the frame artwork on purpose: this way the
-   screen and the buttons are always visible and clickable even if
-   the tv.png file ever loses its transparency (flattened to an
-   opaque background by some export/compression step). */
 .tv-screen{
   position: absolute;
   left: 6.8%;
@@ -130,7 +116,6 @@ a{ color: inherit; }
   z-index: 1;
 }
 
-/* ---------- INTRO VIDEO ---------- */
 .intro-layer{
   position: absolute;
   inset: 0;
@@ -154,28 +139,6 @@ a{ color: inherit; }
   object-fit: cover;
   display: block;
 }
-
-/* ---------- PRESENTACIÓN — título de apertura, entre el video y el menú ---------- */
-.title-layer{
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  background: #000;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s ease;
-}
-.tv-screen.is-title .title-layer{ opacity: 1; }
-.tv-screen.is-title .screen-content{ opacity: 0; }
-
-.title-stage{ position: absolute; inset: 0; overflow: hidden; }
-.title-container{
-  position: absolute;
-  top: 0; left: 0;
-  width: 1134px; height: 658px;
-  transform-origin: top left;
-}
-#s0-titulo{ position: absolute; inset: 0; width: 1134px; height: 658px; }
 
 .skip-button{
   position: absolute;
@@ -212,7 +175,6 @@ a{ color: inherit; }
 }
 .skip-icon{ font-size: 0.85em; letter-spacing: -0.1em; }
 
-/* ---------- CHANNELS ---------- */
 .channel{
   position: absolute;
   inset: 0;
@@ -224,7 +186,10 @@ a{ color: inherit; }
   padding: 8% 10%;
 }
 .channel.is-active{ display: flex; }
-.channel[data-channel="4"].is-active{ display: block; padding: 0; }
+.channel[data-channel="0"].is-active,
+.channel[data-channel="1"].is-active,
+.channel[data-channel="2"].is-active,
+.channel[data-channel="6"].is-active{ display: block; padding: 0; }
 
 .ch-eyebrow{
   font-family: var(--font-sub);
@@ -236,31 +201,6 @@ a{ color: inherit; }
   margin: 0 0 0.9em;
 }
 
-.ch-cover-title{
-  font-family: var(--font-tv);
-  font-weight: 400;
-  font-size: clamp(1.9rem, 6.4vw, 3.8rem);
-  line-height: 1;
-  letter-spacing: 0.01em;
-  margin: 0 0 0.5em;
-  color: var(--beige);
-  text-shadow: 0 0 18px rgba(9,203,187,0.35);
-}
-
-.ch-cover-sub{
-  font-family: var(--font-sub);
-  font-weight: 500;
-  color: var(--mist);
-  font-size: 1.1em;
-  margin: 0 0 1.6em;
-}
-
-.ch-play-hint{
-  font-size: 0.82em;
-  letter-spacing: 0.06em;
-  color: var(--turquoise);
-  animation: blinkHint 1.6s ease-in-out infinite;
-}
 @keyframes blinkHint{ 0%,100%{ opacity: 1; } 50%{ opacity: 0.25; } }
 
 .ch-title{
@@ -280,23 +220,238 @@ a{ color: inherit; }
   margin: 0 auto;
 }
 
-.channel-placeholder{ position: relative; overflow: hidden; }
-.channel-placeholder .ch-illustration{
+.cast{
   position: absolute;
   inset: 0;
-  z-index: -1;
-  opacity: 0.85;
-}
-.channel-placeholder .ch-illustration svg{ width: 100%; height: 100%; }
-.channel-placeholder::after{
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at 50% 60%, transparent 0%, rgba(0,0,0,0.55) 75%, rgba(0,0,0,0.85) 100%);
-  z-index: -1;
+  display: flex;
+  flex-direction: column;
+  padding: 3% 4.5% 0;
+  text-align: left;
+  background: radial-gradient(ellipse 70% 60% at 28% 40%,
+              rgba(9,203,187,0.13), transparent 70%);
 }
 
-/* ---------- ESCENA 1 (arte real) ---------- */
+.cast-cuerpo{
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 42%) minmax(0, 1fr);
+  gap: 3%;
+  align-items: stretch;
+}
+
+.cast-figura{
+  min-height: 0;
+  padding-bottom: 0.4em;
+}
+.cast-arte{
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: bottom center;
+  filter: drop-shadow(0 0.5em 0.7em rgba(0,0,0,0.55));
+}
+.cast-arte.es-gesto{ object-position: center; }
+
+.cast-rol{
+  margin: 0 0 0.35em;
+  font-family: var(--font-sub);
+  font-weight: 500;
+  font-size: 0.78em;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--turquoise);
+}
+.cast-ficha{ align-self: center; }
+
+.cast-nombre{
+  margin: 0 0 0.55em;
+  font-family: var(--font-tv);
+  font-weight: 400;
+  font-size: 2.6em;
+  line-height: 0.95;
+  color: var(--beige);
+  text-shadow: 0 0 0.5em rgba(9,203,187,0.3);
+}
+
+.cast-datos{
+  margin: 0;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.3em 1.1em;
+}
+.cast-datos dt{
+  font-family: var(--font-sub);
+  font-weight: 600;
+  font-size: 0.72em;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--turquoise);
+  white-space: nowrap;
+}
+.cast-datos dd{
+  margin: 0;
+  font-size: 0.82em;
+  line-height: 1.35;
+  color: var(--mist);
+}
+
+.cast-nota{
+  margin: 1em 0 0;
+  font-size: 0.8em;
+  line-height: 1.6;
+  color: var(--mist-dim);
+  border-left: 2px solid rgba(9,203,187,0.45);
+  padding-left: 0.8em;
+}
+
+.cast-gestos{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3em;
+  margin-top: 0.9em;
+}
+.cast-gesto{
+  border: 1px solid rgba(9,203,187,0.3);
+  background: transparent;
+  color: var(--mist-dim);
+  font-family: var(--font-sub);
+  font-weight: 500;
+  font-size: 0.62em;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.3em 0.65em;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+.cast-gesto:hover,
+.cast-gesto:focus-visible{
+  color: var(--beige);
+  border-color: var(--turquoise);
+  outline: none;
+}
+.cast-gesto[aria-pressed="true"]{
+  background: rgba(9,203,187,0.22);
+  border-color: var(--turquoise);
+  color: var(--beige);
+}
+
+.cast-selector{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45em;
+  justify-content: center;
+  padding: 0.8em 0 1em;
+}
+.cast-chip{
+  border: 1px solid rgba(9,203,187,0.35);
+  background: rgba(9,203,187,0.08);
+  color: var(--mist);
+  font-family: var(--font-sub);
+  font-weight: 500;
+  font-size: 0.72em;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.45em 1em;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+}
+.cast-chip:hover,
+.cast-chip:focus-visible{
+  border-color: var(--turquoise);
+  color: var(--beige);
+  outline: none;
+}
+.cast-chip[aria-selected="true"]{
+  background: var(--turquoise);
+  border-color: var(--turquoise);
+  color: #06282b;
+  font-weight: 600;
+}
+
+.cast-figura.is-cambiando .cast-arte,
+.cast-ficha.is-cambiando{
+  opacity: 0;
+  transform: translateY(0.5em);
+}
+.cast-arte,
+.cast-ficha{
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.28s ease, transform 0.28s ease;
+}
+
+@media (max-width: 760px){
+  .cast{ padding: 2.5% 3.5% 0; }
+  .cast-cuerpo{ grid-template-columns: minmax(0, 38%) minmax(0, 1fr); gap: 2.5%; }
+  .cast-nota{ display: none; }
+  .cast-gestos{ margin-top: 0.6em; gap: 0.22em; }
+  .cast-gesto{ font-size: 0.55em; padding: 0.25em 0.5em; letter-spacing: 0.03em; }
+  .cast-rol{ font-size: 0.66em; letter-spacing: 0.12em; }
+  .cast-nombre{ font-size: 1.9em; margin-bottom: 0.4em; }
+  .cast-datos{ gap: 0.2em 0.7em; }
+  .cast-datos dt{ font-size: 0.62em; }
+  .cast-datos dd{ font-size: 0.7em; line-height: 1.25; }
+
+  .cast-selector{
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    gap: 0.3em;
+    padding: 0.5em 0 0.7em;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .cast-selector::-webkit-scrollbar{ display: none; }
+  .cast-chip{
+    flex: 0 0 auto;
+    font-size: 0.62em;
+    padding: 0.35em 0.7em;
+    letter-spacing: 0.04em;
+  }
+}
+
+.pres-stage{
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: #000;
+}
+
+.pres-container{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1134px;
+  height: 658px;
+  transform-origin: top left;
+}
+
+#p1-titulo,
+#p2-titulo{ position: absolute; inset: 0; width: 1134px; height: 658px; }
+
+.pres-hint{
+  position: absolute;
+  bottom: 5%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  margin: 0;
+  font-size: 0.8em;
+  letter-spacing: 0.03em;
+  color: var(--turquoise);
+  background: rgba(0,0,0,0.55);
+  padding: 0.35em 0.9em;
+  border-radius: 20px;
+  white-space: nowrap;
+  pointer-events: none;
+  visibility: hidden;
+  animation: blinkHint 2s ease-in-out infinite;
+}
+.pres-hint.is-visible{ visibility: visible; }
+
 .scene1-stage{
   position: absolute;
   inset: 0;
@@ -360,7 +515,6 @@ a{ color: inherit; }
 }
 .scene1-hint.is-hidden{ display: none; }
 
-/* ---------- ESCENA 2 (arte real) ---------- */
 .scene2-stage{
   position: absolute;
   inset: 0;
@@ -413,7 +567,6 @@ a{ color: inherit; }
 #s2-caja{ position: absolute; width: 529px; height: 397.76px; left: 0; top: 0; }
 #s2-texto{ position: absolute; width: 400px; height: 250px; left: 40px; top: 30px; }
 
-/* ---------- ESCENA 3 (arte real) ---------- */
 .scene3-stage{
   position: absolute;
   inset: 0;
@@ -508,7 +661,6 @@ a{ color: inherit; }
 }
 .scene3-hint.is-hidden{ display: none; }
 
-/* ---------- ESCENA 1, CAPÍTULO 2 (arte real) ---------- */
 .scene4-stage{
   position: absolute;
   inset: 0;
@@ -561,7 +713,6 @@ a{ color: inherit; }
 }
 #s4-txt.s4-oculto{ opacity: 0; }
 
-/* ---------- ESCENA 2, CAPÍTULO 2 (arte real) ---------- */
 .scene5-stage{
   position: absolute;
   inset: 0;
@@ -609,7 +760,6 @@ a{ color: inherit; }
 }
 #s5-textVine.is-visible{ opacity: 1; }
 
-/* ---------- CRT LAYERS ---------- */
 .scanlines{
   position: absolute;
   inset: 0;
@@ -650,7 +800,6 @@ a{ color: inherit; }
   99%{ opacity: 0.05; }
 }
 
-/* ---------- POWER ON / OFF ---------- */
 .power-line{
   position: absolute;
   inset: 0;
@@ -691,7 +840,6 @@ a{ color: inherit; }
 .tv-screen.is-powering-off .crt-vignette,
 .tv-screen.is-powering-off .crt-flicker{ opacity: 0; transition: opacity 0.2s ease; }
 
-/* ---------- STATIC (channel change) ---------- */
 .static-canvas{
   position: absolute;
   inset: 0;
@@ -701,7 +849,6 @@ a{ color: inherit; }
 }
 .static-canvas.is-active{ opacity: 0.92; }
 
-/* ---------- BUTTONS (hotspots over the TV artwork) ---------- */
 .tv-btn{
   position: absolute;
   transform: translate(-50%, -50%);
@@ -732,7 +879,6 @@ a{ color: inherit; }
   50%{ box-shadow: 0 0 0 9px rgba(232,98,58,0); }
 }
 
-/* ---------- CAPTION ---------- */
 .tv-caption{
   font-size: 0.82rem;
   letter-spacing: 0.04em;
@@ -747,18 +893,12 @@ a{ color: inherit; }
 }
 
 @media (prefers-reduced-motion: reduce){
-  /* Se neutraliza la DURACIÓN, no el retraso: las escenas usan
-     animation-delay para escalonar la entrada de cada capa (el panel de
-     texto de la escena 2 entra a los 8s, sincronizado con su Lottie).
-     Con `animation: none` esas capas se quedaban en su posición inicial,
-     fuera de cuadro. Así saltan directo a su posición final a tiempo. */
   *, *::before, *::after{
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
   }
-  /* Bucles puramente decorativos: no aportan nada sin movimiento. */
-  .ch-play-hint,
+  .pres-hint,
   .scene1-hint,
   .scene3-hint,
   .crt-flicker,
@@ -771,4 +911,6 @@ a{ color: inherit; }
   #s5-fondoSky{
     animation: none !important;
   }
+  .cast-figura.is-cambiando .cast-arte,
+  .cast-ficha.is-cambiando{ opacity: 1; transform: none; }
 }

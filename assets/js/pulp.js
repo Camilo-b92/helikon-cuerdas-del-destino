@@ -1,29 +1,8 @@
-/* =========================================================
-   PULP — comportamientos compartidos por Home, Helikón y Juanes.
-
-   1) Revelado de las secciones marcadas con [data-reveal] al
-      entrar en pantalla.
-   2) Paralaje suave del masthead siguiendo el cursor.
-
-   Va todo dentro de una IIFE para no dejar variables sueltas
-   que choquen con el script propio de cada página. Se enlaza
-   ANTES del script de la página:
-
-       <script src="../assets/js/pulp.js"></script>
-       <script src="home.js"></script>
-   ========================================================= */
 (function(){
   'use strict';
 
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
-  /* -------------------------------------------------------
-     Revelado al hacer scroll
-     La clase .js-reveal en <html> es la que activa el estado
-     oculto en el CSS. Se pone desde aquí para que, si el JS no
-     llega a ejecutarse, el contenido se vea igual en vez de
-     quedarse invisible para siempre.
-     ------------------------------------------------------- */
   function initReveal(){
     const targets = document.querySelectorAll('[data-reveal]');
     if (!targets.length) return;
@@ -47,12 +26,6 @@
     targets.forEach(el => observer.observe(el));
   }
 
-  /* -------------------------------------------------------
-     Paralaje del masthead
-     El valor se acumula y se aplica una sola vez por frame:
-     mousemove dispara muchas más veces de las que el navegador
-     alcanza a pintar.
-     ------------------------------------------------------- */
   function initParallax(){
     const emblem = document.querySelector('.emblem');
     if (!emblem) return;

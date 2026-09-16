@@ -1,5 +1,3 @@
-# Reglas de formato para que todos escribamos igual.
-# Compatible con VS Code (extensión EditorConfig), JetBrains y Sublime.
 root = true
 
 [*]

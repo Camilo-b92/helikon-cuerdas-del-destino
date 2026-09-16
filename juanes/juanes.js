@@ -1,23 +1,7 @@
-/* =========================================================
-   JUANES — interacción de la página
-   1) Inclinación 3D de la viñeta que lleva al cómic. Es un
-      enlace normal: al hacer clic navega directo.
-   2) Barra de progreso de lectura.
-   3) Las cifras de reconocimientos cuentan hacia arriba la
-      primera vez que entran en pantalla.
-
-   El revelado de las secciones y el paralaje del masthead
-   viven en ../assets/js/pulp.js, que se carga antes que este
-   archivo.
-   ========================================================= */
-
 const inkFill = document.getElementById('inkFill');
 
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
-/* =========================================================
-   Viñeta de navegación (misma que en Home y Helikón)
-   ========================================================= */
 document.querySelectorAll('.panel').forEach(panel => {
 
   panel.addEventListener('mousemove', (e) => {
@@ -36,9 +20,6 @@ document.querySelectorAll('.panel').forEach(panel => {
   });
 });
 
-/* =========================================================
-   Barra de progreso de lectura
-   ========================================================= */
 function updateReadingProgress(){
   if (!inkFill) return;
   const docHeight = document.documentElement.scrollHeight - window.innerHeight;
@@ -50,13 +31,6 @@ window.addEventListener('scroll', updateReadingProgress, { passive: true });
 window.addEventListener('resize', updateReadingProgress);
 updateReadingProgress();
 
-/* =========================================================
-   Cifras que cuentan hacia arriba
-   El texto puede traer prefijo y sufijo ("+16M"), así que se
-   separan y solo se anima la parte numérica. Al terminar se
-   restituye el texto original, para no depender de cómo lo
-   hayamos vuelto a componer.
-   ========================================================= */
 const COUNT_DURATION_MS = 900;
 
 function animateCount(el){
@@ -71,7 +45,7 @@ function animateCount(el){
 
   function frame(now){
     const t = Math.min((now - start) / COUNT_DURATION_MS, 1);
-    const eased = 1 - Math.pow(1 - t, 3); // desacelera al final
+    const eased = 1 - Math.pow(1 - t, 3);
     el.textContent = prefix + Math.round(target * eased) + suffix;
 
     if (t < 1){
@@ -91,7 +65,7 @@ if (statNumbers.length && !reduceMotion.matches && 'IntersectionObserver' in win
     entries.forEach(entry => {
       if (entry.isIntersecting){
         animateCount(entry.target);
-        countObserver.unobserve(entry.target); // solo la primera vez
+        countObserver.unobserve(entry.target);
       }
     });
   }, { threshold: 0.6 });

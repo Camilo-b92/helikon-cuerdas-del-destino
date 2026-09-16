@@ -31,12 +31,10 @@
 
   <div class="tv" id="tv">
 
-    <!-- The screen sits ABOVE the frame artwork (see comic.css note) -->
     <div class="tv-screen" id="tvScreen">
       <canvas class="static-canvas" id="staticCanvas"></canvas>
       <div class="power-line" id="powerLine" aria-hidden="true"></div>
 
-      <!-- INTRO VIDEO — plays once on power-on, before the menu -->
       <div class="intro-layer" id="introLayer">
         <video class="intro-video" id="introVideo" playsinline preload="none">
           <source src="assets/intro.mp4" type="video/mp4">
@@ -46,48 +44,38 @@
         </button>
       </div>
 
-      <!-- PRESENTACIÓN — aparece después de la introducción y antes del menú -->
-      <div class="title-layer" id="titleLayer" aria-hidden="true">
-        <div class="title-stage" id="titleStage">
-          <div class="title-container" id="titleContainer">
-            <div id="s0-titulo"></div>
-          </div>
-        </div>
-      </div>
-
       <div class="screen-content" id="screenContent">
 
-        <!-- CHANNEL 0 — MENÚ: PERSONAJES -->
-        <section class="channel channel-placeholder" data-channel="0" data-illustration="personajes">
-          <p class="ch-eyebrow">Próximamente</p>
-          <h2 class="ch-title">Personajes</h2>
-          <p class="ch-text">Los rostros de Cuerdas del Destino todavía se están revelando. Vuelve pronto para conocer quién habita esta historia.</p>
+        <section class="channel" data-channel="0">
+          <div class="cast">
+            <div class="cast-cuerpo">
+              <div class="cast-figura">
+                <img class="cast-arte" id="castArte" src="" alt="">
+              </div>
+              <div class="cast-ficha">
+                <p class="cast-rol" id="castRol"></p>
+                <h2 class="cast-nombre" id="castNombre"></h2>
+                <dl class="cast-datos" id="castDatos"></dl>
+                <p class="cast-nota" id="castNota"></p>
+                <div class="cast-gestos" id="castGestos"
+                     aria-label="Expresiones del personaje"></div>
+              </div>
+            </div>
+            <div class="cast-selector" id="castSelector"
+                 aria-label="Personajes de Cuerdas del Destino"></div>
+          </div>
         </section>
 
-        <!-- CHANNEL 1 — MENÚ: HISTORIAL -->
-        <section class="channel channel-placeholder" data-channel="1" data-illustration="historial">
-          <p class="ch-eyebrow">Próximamente</p>
-          <h2 class="ch-title">Historial</h2>
-          <p class="ch-text">El detrás de cámaras del proyecto — bocetos, referencias y decisiones — se está documentando. Pronto podrás recorrerlo aquí.</p>
+        <section class="channel" data-channel="1">
+          <div class="pres-stage" id="pres1Stage">
+            <div class="pres-container" id="pres1Container">
+              <div id="p1-titulo"></div>
+            </div>
+          </div>
+          <p class="pres-hint" id="pres1Hint">&#9654; Presiona el botón derecho para comenzar</p>
         </section>
 
-        <!-- CHANNEL 2 — MENÚ: STOP MOTION -->
-        <section class="channel channel-placeholder" data-channel="2" data-illustration="stopmotion">
-          <p class="ch-eyebrow">Próximamente</p>
-          <h2 class="ch-title">Stop motion</h2>
-          <p class="ch-text">Fragmentos del proceso de animación cuadro a cuadro que le dan vida a este universo. En construcción.</p>
-        </section>
-
-        <!-- CHANNEL 3 — MENÚ: COMIC (portada del capítulo) -->
-        <section class="channel" data-channel="3">
-          <p class="ch-eyebrow">Helikón presenta</p>
-          <h1 class="ch-cover-title">Cuerdas<br>del Destino</h1>
-          <p class="ch-cover-sub">Capítulo uno</p>
-          <p class="ch-play-hint">&#9654; Presiona el botón derecho para comenzar</p>
-        </section>
-
-        <!-- CHANNEL 4 — ESCENA 1 (arte real) -->
-        <section class="channel" data-channel="4">
+        <section class="channel" data-channel="2">
           <div class="scene1-stage" id="scene1Stage">
             <div class="scene1-container" id="scene1Container">
               <div id="s1-cielo"></div>
@@ -101,8 +89,7 @@
           <p class="scene1-hint" id="scene1Hint">Toca la puerta en la pantalla</p>
         </section>
 
-        <!-- CHANNELS 5–9 — placeholders a la espera de las escenas finales -->
-        <section class="channel" data-channel="5">
+        <section class="channel" data-channel="3">
           <div class="scene2-stage" id="scene2Stage">
             <div class="scene2-container" id="scene2Container">
               <div id="s2-fondoJuanes"><div id="s2-juanesBusca"></div></div>
@@ -112,7 +99,7 @@
           </div>
         </section>
 
-        <section class="channel" data-channel="6">
+        <section class="channel" data-channel="4">
           <div class="scene3-stage" id="scene3Stage">
             <div class="scene3-container" id="scene3Container">
               <div id="s3-fondoPapa"><div id="s3-papaHabla"></div></div>
@@ -124,23 +111,22 @@
           <p class="scene3-hint" id="scene3Hint">Toca a papá para continuar</p>
         </section>
 
-        <!-- CHANNEL 7 — FIN -->
-        <section class="channel" data-channel="7">
+        <section class="channel" data-channel="5">
           <p class="ch-eyebrow">Fin del capítulo uno</p>
           <h2 class="ch-title">La cuerda sigue sonando</h2>
           <p class="ch-text">El viaje continúa. Sigue avanzando para descubrir el segundo capítulo.</p>
         </section>
 
-        <!-- CHANNEL 8 — PORTADA CAPÍTULO DOS -->
-        <section class="channel" data-channel="8">
-          <p class="ch-eyebrow">Helikón presenta</p>
-          <h1 class="ch-cover-title">Cuerdas<br>del Destino</h1>
-          <p class="ch-cover-sub">Capítulo dos</p>
-          <p class="ch-play-hint">&#9654; Presiona el botón derecho para continuar</p>
+        <section class="channel" data-channel="6">
+          <div class="pres-stage" id="pres2Stage">
+            <div class="pres-container" id="pres2Container">
+              <div id="p2-titulo"></div>
+            </div>
+          </div>
+          <p class="pres-hint" id="pres2Hint">&#9654; Presiona el botón derecho para continuar</p>
         </section>
 
-        <!-- CHANNEL 9 — ESCENA 1, CAPÍTULO 2 (arte real) -->
-        <section class="channel" data-channel="9">
+        <section class="channel" data-channel="7">
           <div class="scene4-stage" id="scene4Stage">
             <div class="scene4-container" id="scene4Container">
               <div id="s4-nubes"></div>
@@ -152,8 +138,7 @@
           </div>
         </section>
 
-        <!-- CHANNEL 10 — ESCENA 2, CAPÍTULO 2 (arte real) -->
-        <section class="channel" data-channel="10">
+        <section class="channel" data-channel="8">
           <div class="scene5-stage" id="scene5Stage">
             <div class="scene5-container" id="scene5Container">
               <div id="s5-fondoSky"></div>
@@ -177,10 +162,8 @@
       <div class="crt-flicker" aria-hidden="true"></div>
     </div>
 
-    <!-- TV frame artwork, on top -->
     <img class="tv-frame" src="assets/tv.png" alt="Televisor retro — interfaz de navegación del cómic">
 
-    <!-- Hotspot controls, aligned to the artwork -->
     <button class="tv-btn tv-btn--next" id="btnNext" aria-label="Canal siguiente"></button>
     <button class="tv-btn tv-btn--prev" id="btnPrev" aria-label="Canal anterior"></button>
     <button class="tv-btn tv-btn--power" id="btnPower" aria-label="Encender o apagar el televisor"></button>
@@ -191,7 +174,6 @@
 
 </main>
 
-<!-- Lottie se distribuye localmente para que el cómic funcione sin depender del CDN. -->
 <script src="assets/lottie-web-5.13.0.min.js"></script>
 <script src="comic.js"></script>
 </body>

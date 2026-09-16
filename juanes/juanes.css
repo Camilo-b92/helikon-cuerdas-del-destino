@@ -1,21 +1,7 @@
-/* =========================================================
-   JUANES — el artista detrás de la inspiración
-
-   La base visual (paleta, textura de papel, masthead, hero y
-   el componente .panel) vive en ../assets/css/pulp.css. Aquí solo
-   están los ajustes de esta página y sus secciones propias:
-   la tira del origen, las fichas de álbum, el reproductor,
-   las cifras y el splash de activismo.
-
-   El acento de esta página es el rojo, que es el color con el
-   que Juanes aparece en el Home.
-   ========================================================= */
-
 html{
   scroll-behavior: smooth;
 }
 
-/* ---------- BARRA DE PROGRESO DE LECTURA ---------- */
 .ink-rail{
   position: fixed;
   z-index: 18;
@@ -34,7 +20,6 @@ html{
 }
 @media (max-width: 860px){ .ink-rail{ display: none; } }
 
-/* ---------- NAV SUPERIOR ---------- */
 .topnav{
   position: sticky;
   z-index: 18;
@@ -56,7 +41,6 @@ html{
 .topnav-back:hover{ opacity: 1; }
 .topnav-mark{ opacity: 0.85; }
 
-/* ---------- CONTENEDOR ---------- */
 .page{
   position: relative;
   z-index: 2;
@@ -65,10 +49,6 @@ html{
   padding: 20px 0 26px;
 }
 
-/* ---------- HERO ----------
-   Los dos párrafos del hero llevan clase propia, y `.hero p`
-   de la hoja compartida gana por especificidad sobre una clase
-   suelta — de ahí que los selectores incluyan el tipo `p`. */
 .emblem{ padding: 30px 0 6px; }
 
 .hero{ padding: 40px 20px 46px; }
@@ -112,7 +92,6 @@ html{
   box-shadow: 8px 8px 0 var(--ink);
 }
 
-/* ---------- TÍTULOS DE SECCIÓN ---------- */
 .section-title{
   margin-bottom: 22px;
   font-family: Bangers, cursive;
@@ -137,7 +116,6 @@ html{
   line-height: 1.65;
 }
 
-/* ---------- EL ORIGEN — tira secuencial ---------- */
 .strip-section{ padding: 40px 0; }
 
 .pull-quote{
@@ -189,7 +167,6 @@ html{
 }
 .strip-panel strong{ color: var(--red); }
 
-/* ---------- DISCOGRAFÍA — fichas de álbum ---------- */
 .albums-section{ padding: 40px 0; }
 
 .albums-grid{
@@ -205,7 +182,6 @@ html{
   box-shadow: 8px 8px 0 var(--ink);
   transition: transform 0.22s ease, box-shadow 0.22s ease;
 }
-/* trama Ben-Day, igual que en las viñetas del Home */
 .album-card::before{
   content: '';
   position: absolute;
@@ -247,7 +223,6 @@ html{
   line-height: 1.6;
 }
 
-/* ---------- MÚSICA — el reproductor dentro de una viñeta ---------- */
 .music-section{ padding: 40px 0; }
 
 .music-panel{
@@ -255,7 +230,7 @@ html{
   border: 7px solid var(--ink);
   box-shadow: 9px 9px 0 var(--ink);
   background: var(--ink);
-  line-height: 0; /* elimina el hueco bajo el iframe */
+  line-height: 0;
 }
 .music-tag{
   position: absolute;
@@ -279,7 +254,6 @@ html{
   border: 0;
 }
 
-/* ---------- RECONOCIMIENTOS — cifras como estallidos ---------- */
 .stats-section{ padding: 40px 0; }
 
 .stats-grid{
@@ -297,7 +271,6 @@ html{
   border: 6px solid var(--ink);
   box-shadow: 8px 8px 0 var(--ink);
 }
-/* estallido decorativo detrás de la cifra */
 .stat::before{
   content: '';
   position: absolute;
@@ -329,7 +302,6 @@ html{
   letter-spacing: 1px;
 }
 
-/* ---------- ACTIVISMO — splash page ---------- */
 .splash{
   position: relative;
   margin: 46px 0;
@@ -377,14 +349,11 @@ html{
 }
 .splash-body strong{ color: var(--red); }
 
-/* ---------- CTA — ajustes de la viñeta compartida ---------- */
 .cta-section{ padding: 40px 0 10px; }
 
 .panel{ min-height: 300px; }
 .panel-title{ font-size: clamp(2.9rem, 5.4vw, 5.4rem); }
 
-/* Espacio arriba para que el número y el "POW!" queden solos en las
-   esquinas, como en las viñetas del Home, sin chocar con el kicker. */
 .cta-section .panel{ padding-top: 78px; }
 
 .panel-copy{
@@ -395,7 +364,6 @@ html{
   line-height: 1.65;
 }
 
-/* ---------- FOOTER ---------- */
 .cover-footer{
   padding-top: 34px;
   font-size: 0.58rem;
@@ -415,7 +383,6 @@ html{
   opacity: 0.6;
 }
 
-/* ---------- RESPONSIVE ---------- */
 @media (max-width: 1024px){
   .albums-grid{ grid-template-columns: 1fr 1fr; }
   .stats-grid{ grid-template-columns: 1fr 1fr; }
@@ -434,20 +401,12 @@ html{
   .section-title span{ display: block; white-space: normal; }
 }
 
-/* ---------- MOVIMIENTO REDUCIDO (además de lo de pulp.css) ---------- */
 @media (prefers-reduced-motion: reduce){
   html{ scroll-behavior: auto; }
   .album-card:hover{ transform: none; }
   .scroll-cue:hover{ transform: none; }
 }
 
-/* =========================================================
-   GRÁFICOS PROPIOS DE ESTA PÁGINA
-   ========================================================= */
-
-/* ---------- LA GUITARRA DEL ORIGEN ----------
-   Acompaña a la cita de apertura. Se oculta en pantallas
-   estrechas, donde la cita ya ocupa todo el ancho. */
 .origen-head{
   display: flex;
   align-items: center;
@@ -470,8 +429,6 @@ html{
 }
 @media (max-width: 860px){ .origen-mark{ display: none; } }
 
-/* ---------- ECUALIZADOR ----------
-   Ocho barras de tinta que rebotan sobre el reproductor. */
 .equalizer{
   display: flex;
   align-items: flex-end;
@@ -498,8 +455,6 @@ html{
   50%{ height: 100%; }
 }
 
-/* ---------- VINILO EN LAS FICHAS DE ÁLBUM ----------
-   Un disco asomando por la esquina, que gira al pasar el mouse. */
 .album-card::after{
   content: '';
   position: absolute;
