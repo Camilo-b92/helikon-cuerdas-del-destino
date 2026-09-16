@@ -26,6 +26,46 @@ function playClickSound(){
   }
 }
 
+function initPortada(){
+  const portada = document.getElementById('portada');
+  if (!portada) return;
+
+  const capas = Array.from(portada.querySelectorAll('.capa'));
+  let x = 0;
+  let y = 0;
+  let pendiente = false;
+
+  function aplicar(){
+    pendiente = false;
+    capas.forEach(capa => {
+      const profundidad = Number(capa.dataset.profundidad) || 0;
+      capa.style.translate = `${(x * profundidad).toFixed(2)}px ${(y * profundidad).toFixed(2)}px`;
+    });
+  }
+
+  function pedir(){
+    if (pendiente) return;
+    pendiente = true;
+    requestAnimationFrame(aplicar);
+  }
+
+  portada.addEventListener('pointermove', (e) => {
+    if (reduceMotion.matches || e.pointerType !== 'mouse') return;
+    const caja = portada.getBoundingClientRect();
+    x = (e.clientX - caja.left) / caja.width - 0.5;
+    y = (e.clientY - caja.top) / caja.height - 0.5;
+    pedir();
+  });
+
+  portada.addEventListener('pointerleave', () => {
+    x = 0;
+    y = 0;
+    pedir();
+  });
+}
+
+initPortada();
+
 document.querySelectorAll('.panel').forEach(panel => {
 
   panel.addEventListener('click', playClickSound);

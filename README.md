@@ -183,6 +183,62 @@ navegador al pintar. Ver la nota sobre CC BY-SA en
 - Inclinación 3D de los paneles siguiendo el cursor, más una luz radial que
   se mueve con él. El panel bajo el cursor sube a `z-index: 10` para que su
   sombra dura no quede tapada por el vecino.
+- `initPortada()` — paralaje de la portada del Nº 1. Cada elemento con clase
+  `.capa` se desplaza según su `data-profundidad`: positivo sigue al cursor,
+  negativo va al contrario, y así el título, los anillos y Juanes parecen
+  estar a distinta distancia. Escribe la propiedad `translate`, se agrupa en un
+  cambio por fotograma y no hace nada con movimiento reducido ni en pantallas
+  táctiles.
+
+### La portada: un cómic abierto por la primera doble página
+
+`index.html` no es una web con tres botones: es el **Nº 1 de un cómic**,
+abierto. En escritorio se ven dos hojas enfrentadas; en móvil (≤ 760 px) se
+apilan en vertical, como un webtoon.
+
+- **Hoja izquierda, la portada** (`.portada`). Lleva lo que tiene la portada de
+  un cómic impreso: caja editorial en la esquina con la cara del niño, número,
+  fecha, precio y código de barras. El título es el **logotipo oficial** y los
+  anillos rojos vienen de la presentación animada del capítulo uno. Juanes se
+  sale del marco por abajo.
+- **Hoja derecha, la página 1** (`.pagina`). Un cartucho de narrador y tres
+  viñetas de tamaño distinto que llevan a las tres secciones, con personajes
+  reales del cómic hablando en globos (`.globo`). La viñeta del cómic es la más
+  grande porque es la entrada principal.
+- **Debajo**, el reparto con los cinco personajes y la contraportada: "Continuará
+  en *El Mensaje*", con su rótulo real, y los créditos del equipo.
+
+No se duplicó ningún archivo gráfico: todo se enlaza desde `comic/assets/` y
+`juanes/img/`.
+
+**Cada hoja es un contenedor de tamaño** (`container-type: size`), y todo lo de
+dentro se mide en `cqi` y `cqh`, es decir en porcentaje de la hoja. Por eso la
+página escala entera como una página impresa, sin reajustar cada pieza en cada
+tamaño de pantalla. Tres reglas que hay que respetar al tocarla:
+
+1. **Una hoja no puede usar `cqi` en sus propios estilos**, solo sus hijos: las
+   unidades de contenedor se resuelven contra el contenedor *antepasado*, no
+   contra el propio elemento. Si no hay antepasado, el navegador las calcula
+   contra la ventana, **sin dar error**. Por eso el relleno de `.pagina` se
+   calcula con `--ancho-hoja` y no con `cqi`.
+2. **En móvil, `.pagina` pasa a `container-type: inline-size`** y altura
+   automática, así que dentro de `.pagina` solo se usa `cqi`, nunca `cqh`.
+3. **Dos formatos de hoja.** En pantallas apaisadas (proporción de 3:2 o más y
+   más de 760 px de ancho) las hojas usan el **formato álbum europeo**, 0,8. En
+   el resto, el del cómic americano, 0,66. Lo controla `--proporcion` en
+   `.doble-pagina`, y de ahí salen `--alto` y `--ancho-hoja`. La altura es
+   `min(1040px, calc(100svh - 32px), …)`: la doble página cabe en la pantalla y
+   nunca desborda a lo ancho.
+4. **La portada se mide en `--u`**, no en `cqi`: `--u` es `min(1cqi, 0.66cqh)`.
+   En formato americano equivale exactamente a `1cqi`; en formato álbum se queda
+   corta a propósito, para que al ensanchar la hoja la composición vertical no
+   cambie (el título no tapa a Juanes y la caja editorial no se recorta). Por la
+   misma razón, el título, los anillos y Juanes se centran con `left: 50%` y
+   margen negativo: la propiedad `translate` la ocupa el paralaje.
+
+Las viñetas de la página 1 van ligeramente giradas con la propiedad `rotate` y
+no llevan la animación de asentado: esa animación también escribe `rotate` y
+dejaría las viñetas rectas.
 
 ### `helikon/helikon.js`
 

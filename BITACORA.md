@@ -603,6 +603,72 @@ No se tocó ni una línea del sitio: es preparación.
   animaciones por scroll, View Transitions, rendimiento) y, para el pendiente
   de publicar, los conectores de Netlify y Vercel.
 
+### Ronda 14 — La portada pasa a ser el Nº 1 de un cómic
+
+La portada anterior era una web con tres botones decorados. Ahora es **un cómic
+abierto por la primera doble página**: a la izquierda la portada del Nº 1, a la
+derecha la página 1 con tres viñetas que llevan a las secciones, y debajo el
+reparto y una contraportada. En móvil las hojas se apilan como un webtoon. El
+detalle técnico está en el README, en *La portada*.
+
+De dónde salieron las decisiones:
+
+- **Material que ya existía y nadie usaba.** La presentación animada del
+  capítulo uno trae el **logotipo oficial** de *Cuerdas del Destino* y los
+  anillos rojos del fondo; la del capítulo dos, el rótulo de *El Mensaje*. Los
+  cinco personajes en SVG y sus expresiones estaban solo en el canal 0. Ahora la
+  portada los usa todos, enlazados sin duplicar archivos.
+- **Convenciones reales del cómic impreso**, no adornos genéricos: caja
+  editorial en la esquina con una cara, número, fecha, precio y código de
+  barras; cartucho de narrador; globos con cola; folio de página; "Continuará…".
+- **Principios de maquetación de cómic**, consultados en guías de diseño de
+  páginas: el tamaño de la viñeta marca la importancia (la del cómic es la más
+  grande porque es la entrada principal), recorrido en Z, pensar las dos hojas
+  enfrentadas como una sola composición, y figuras que se salen del marco.
+
+**Idioma: todo en español.** Era un pendiente: la portada mezclaba inglés
+(`THE MUSIC COMES ALIVE!`, `OPEN →`, `HEY!`) con español. Ahora está en español,
+incluidas las onomatopeyas: `¡CLIC!`, `¡ZAS!`, `¡PUM!`. El cómic y el público
+son hispanohablantes. Si se prefiere el inglés en las onomatopeyas por ser
+convención del género, solo hay que cambiar esos tres textos.
+
+**Qué costó encontrar:**
+
+- **Bangers no tiene "º".** El "Nº 1" se leía "NO 1". Se compone a mano: una
+  "o" pequeña, elevada y subrayada (`.caja-ordinal`).
+- **Una animación con relleno `both` anula el paralaje.** Juanes entra con una
+  animación de `translate`, y el paralaje también escribe `translate`. Con
+  `both`, la animación mantiene su valor final para siempre y gana a lo que
+  escribe el JavaScript. Con `backwards` deja de aplicarse al terminar.
+- **La tilde de "CÓMIC" tapaba el "1" de "Capítulos 1 y 2".** El título lleva un
+  interlineado de 0,82, y las mayúsculas acentuadas de Bangers suben por encima
+  de su propia caja. Se separan con margen, no con interlineado.
+- **`elementFromPoint` devuelve `null` fuera de pantalla.** Una comprobación de
+  solapes dio falsos positivos porque las viñetas estaban por debajo del
+  pliegue. Hay que llevar el elemento a la vista antes de medir.
+
+Verificado midiendo el DOM en 375×760, 1366×768, 1440×900 y 1920×1080: sin
+desborde horizontal, ninguna pieza fuera de su viñeta, la doble página cabe en
+la pantalla del portátil y las trece imágenes cargan.
+
+**Ajuste tras la primera revisión: sobraba espacio.** Mirándolo en un portátil
+real (1366×658 útiles dentro de Brave) había dos huecos:
+
+- **Dentro de la página 1**, un margen enorme alrededor de las viñetas. Era un
+  error: el relleno de `.pagina` usaba `cqi` sobre la propia hoja, y sin
+  contenedor antepasado el navegador lo calculó contra la ventana. Salían
+  ~60 px por lado y ~110 abajo en vez de ~20. Es la regla 1 de *La portada* en
+  el README, rota por quien la escribió. Ahora el relleno sale de
+  `--ancho-hoja`.
+- **A los lados del libro**, casi 300 px vacíos por lado: dos hojas verticales
+  de proporción 0,66 en una ventana tan apaisada. En esas pantallas las hojas
+  pasan al formato álbum europeo (0,8), y el vacío lateral bajó a ~180 px en ese
+  portátil y a ~50 px en 1440×900. La portada se mide en una unidad adaptable
+  (`--u`) para que al ensancharse no se descomponga.
+
+También se redujo la cara de la caja editorial: el "Nº 1" rozaba el borde y
+perdía 5 px.
+
 ### Ronda 13 — El sitio empieza a comportarse como un cómic
 
 El diagnóstico: el cómic estaba **encerrado dentro del televisor**. Las tres
@@ -735,11 +801,6 @@ En orden de lo que más aporta:
    - `comic/assets/capitulo-n1/scene3/img/fondoGuitarra.png` (156 KB) — el
      `#s3-fondoGuitarra` del CSS es solo un contenedor con `overflow:hidden`;
      el fondo real lo pinta el Lottie `fondoGuita.json`.
-
-8. **Definir el idioma del Home.** Mezcla inglés (`THE MUSIC COMES ALIVE!`,
-   `OPEN →`) con español en un documento marcado `lang="es"`. Puede ser
-   intencional, porque las onomatopeyas en inglés son convención del cómic,
-   pero conviene que sea una decisión y no inercia.
 
 ---
 
