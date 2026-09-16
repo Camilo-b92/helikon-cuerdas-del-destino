@@ -14,7 +14,7 @@ README y luego esto.
 | | |
 |---|---|
 | Repositorio | `github.com/Camilo-b92/helikon-cuerdas-del-destino` (público) |
-| Rama | `main` |
+| Rama | `main`, al día con el remoto |
 | Publicado en línea | Todavía no |
 | Canales del televisor | 0–8 (nueve en total) |
 | Peso total | ~17 MB, casi todo arte del cómic |
@@ -594,49 +594,54 @@ movimiento.
 diciendo "privado" en cinco sitios. Corregido, y con ello cambia la
 recomendación de publicación: GitHub Pages ya sirve gratis.
 
+**Subido en dos commits**, `ab8c37e` (código y arte) y `3223339`
+(documentación): 67 archivos, 5906 líneas añadidas. El remoto y el disco
+vuelven a tener los mismos 108 archivos.
+
+Sobre la autenticación: se hizo con `gh auth login` desde la terminal, seguido
+de `gh auth setup-git`. Ese segundo comando **no es opcional** — sin él git
+sigue sin saber que existe la credencial de `gh` e intenta abrir su propia
+ventana de inicio de sesión. El token queda en el almacén de credenciales de
+Windows; no se escribe en ningún archivo del proyecto y no debe acabar en él.
+
 ---
 
 ## Pendientes
 
 En orden de lo que más aporta:
 
-1. **Subir las rondas 7 a 12.** La carpeta ya es un repositorio enganchado al
-   remoto (ronda 12), pero el trabajo sigue **sin subir**: hasta que no haya
-   `push`, el arte de los personajes y las expresiones existe en un solo disco.
-   Hace falta iniciar sesión como `Camilo-b92` para poder empujar.
-
-2. **Publicar el sitio.** Ahora que el repositorio es público, **GitHub Pages**
+1. **Publicar el sitio.** Ahora que el repositorio es público, **GitHub Pages**
    sirve sin plan de pago: se activa en *Settings → Pages*, desde `main` y
    carpeta raíz. **Netlify** y **Vercel** siguen siendo alternativas válidas, y
    son las únicas si el repositorio vuelve a ser privado.
 
-3. **El primer elemento 3D.** Hace falta un modelador instalado y un `.glb`
+2. **El primer elemento 3D.** Hace falta un modelador instalado y un `.glb`
    con el que empezar. Las condiciones de peso y carga están en *El 3D entra
    vivo*, entre las decisiones.
 
-4. **Falta `og:image`.** Las cuatro páginas tienen Open Graph, pero ninguna
+3. **Falta `og:image`.** Las cuatro páginas tienen Open Graph, pero ninguna
    declara imagen de vista previa. Hace falta una de **1200x630** con la
    portada definitiva; hasta entonces, compartir el enlace no muestra nada.
 
-5. **Historial y Stop motion**, si se quieren recuperar. Se retiraron por
+4. **Historial y Stop motion**, si se quieren recuperar. Se retiraron por
    estar vacíos; el canal de Personajes sirve de molde para cuando haya
    material que poner.
 
-6. **Unificar el marco de la página del Cómic** con el lenguaje pulp,
+5. **Unificar el marco de la página del Cómic** con el lenguaje pulp,
    conservando el interior del televisor como está.
 
-7. **Comprimir `comic/assets/intro.mp4`** (7.6 MB). Ya hay `ffmpeg` instalado
+6. **Comprimir `comic/assets/intro.mp4`** (7.6 MB). Ya hay `ffmpeg` instalado
    para hacerlo. También `caja.json` (2.6 MB) es pesado, aunque ya está
    mitigado con el renderizador `canvas` y `setSubframe(false)`.
 
-8. **Dos archivos sin usar.** Ninguno lo referencia ningún HTML, CSS ni JS.
+7. **Dos archivos sin usar.** Ninguno lo referencia ningún HTML, CSS ni JS.
    Decidir si se usan o se retiran:
    - `comic/assets/capitulo-n1/scene3/json/fonemas.json` (47 KB)
    - `comic/assets/capitulo-n1/scene3/img/fondoGuitarra.png` (156 KB) — el
      `#s3-fondoGuitarra` del CSS es solo un contenedor con `overflow:hidden`;
      el fondo real lo pinta el Lottie `fondoGuita.json`.
 
-9. **Definir el idioma del Home.** Mezcla inglés (`THE MUSIC COMES ALIVE!`,
+8. **Definir el idioma del Home.** Mezcla inglés (`THE MUSIC COMES ALIVE!`,
    `OPEN →`) con español en un documento marcado `lang="es"`. Puede ser
    intencional, porque las onomatopeyas en inglés son convención del cómic,
    pero conviene que sea una decisión y no inercia.
