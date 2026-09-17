@@ -291,9 +291,75 @@ Reglas de esta página:
 - `updateReadingProgress()` — barra de progreso de lectura (`#inkFill`).
 - `animateCount(el)` — las cifras de reconocimientos cuentan hacia arriba la
   primera vez que entran en pantalla. El texto puede traer prefijo y sufijo
-  (`+16M`), así que se separa con `/^(\D*)(\d+)(.*)$/` y solo se anima la
+  (`+15M`), así que se separa con `/^(\D*)(\d+)(.*)$/` y solo se anima la
   parte numérica; al terminar se restituye el texto original. No se ejecuta
   si el usuario pidió movimiento reducido.
+- `initLinea()` — la línea de tiempo interactiva. Ver abajo.
+
+### La página de Juanes: edición "Basado en hechos reales"
+
+La biografía contada como un cómic: cabecera de edición especial, titular con
+el retrato tramado y un sello, el origen, **la línea de tiempo**, su música,
+cifras en estallidos, el activismo, el paso al cómic y las **fuentes**.
+
+**Esta página habla de una persona real, así que cada dato está contrastado**
+y citado en la sección de fuentes al final. Antes de añadir o cambiar un dato,
+compruébalo y añade su fuente. Donde las fuentes no coinciden, la página no
+elige una: lo dice (el fin de Ekhymosis aparece como "1997–98" y los Latin
+Grammy como "+25").
+
+#### La línea de tiempo
+
+La cuerda de guitarra es el eje de años, de 1972 a 2026, y **la púa es el
+cursor que se arrastra**. Encima va una tira de viñetas, una por hito, que se
+arrastra, se desliza o se recorre con los botones.
+
+Qué se puede hacer:
+
+- **Arrastrar la púa** por la cuerda: la tira salta al hito más cercano a ese
+  año y la cuerda vibra.
+- **Deslizar la tira** con el dedo o arrastrarla con el ratón; al soltar, se
+  centra el hito más cercano.
+- **Pulsar una viñeta** para ir a ella.
+- **Filtrar** por Música, Premios, Activismo o Vida. Si el hito activo queda
+  oculto, salta al visible de año más cercano.
+- **Reproducir**: avanza un hito cada 2,8 s. Se pausa con cualquier
+  interacción y al cambiar de pestaña.
+- **Teclado**: flechas, Inicio y Fin en la tira; en la cuerda, que es un
+  `role="slider"`, también arriba y abajo.
+- **El marcador** muestra el año, el título, los álbumes y Grammy acumulados
+  hasta ese punto, y la posición entre los hitos visibles.
+
+**Para añadir un hito**, basta un `<li class="hito">` más, en su orden
+cronológico, dentro de `#lineaTira`:
+
+```html
+<li class="hito" data-anio="2027" data-tipo="musica" data-disco>
+  <span class="hito-anio">2027</span>
+  <span class="hito-tipo">Álbum</span>
+  <h3 class="hito-titulo">Título</h3>
+  <p class="hito-texto">Una o dos frases, con su fuente comprobada.</p>
+  <svg class="hito-icono" aria-hidden="true"><use href="#icono-musica"/></svg>
+</li>
+```
+
+- `data-tipo`: `musica`, `premio`, `activismo` o `vida`. Decide el color, la
+  onomatopeya y el filtro.
+- `data-disco` suma al contador de álbumes, y `data-grammy` al de Grammy.
+- Si el año pasa de 2026, hay que subir `MAX` en `juanes.js`,
+  `aria-valuemax` en la cuerda y recolocar las marcas de década.
+- **El orden importa**: los contadores suman todo lo que va antes en la lista.
+
+Dos decisiones técnicas que no conviene deshacer:
+
+- **Mientras la tira va hacia un hito elegido, el detector de scroll no
+  interviene** (`navegando`). Si lo hiciera, durante el desplazamiento suave
+  marcaría como activo el hito del que se sale, y un segundo clic rápido
+  partiría de ahí y perdería un paso.
+- **El centrado inicial y el de los filtros se hacen directamente, sin
+  `requestAnimationFrame`.** El script va al final del `body` y las medidas ya
+  existen; con un fotograma de espera, si la pestaña no dibujaba, el centrado
+  quedaba pendiente y devolvía la tira al principio más tarde.
 
 ### `comic/comic.js` — el televisor
 

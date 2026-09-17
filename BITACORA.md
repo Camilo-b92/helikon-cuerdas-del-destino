@@ -603,6 +603,67 @@ No se tocó ni una línea del sitio: es preparación.
   animaciones por scroll, View Transitions, rendimiento) y, para el pendiente
   de publicar, los conectores de Netlify y Vercel.
 
+### Ronda 16 — Juanes, basado en hechos reales, y su línea de tiempo
+
+La página de Juanes pasa a ser una **edición especial "Basado en hechos
+reales"**. Su pieza central es una línea de tiempo muy interactiva: **la
+cuerda de guitarra es el eje de años y el cursor es una púa que se arrastra**.
+El detalle de uso y cómo añadir hitos está en el README.
+
+**Antes de escribir una fecha se contrastó todo**, porque es una persona real.
+Fuentes: Wikipedia en español y en inglés, la lista de premios de Wikipedia,
+El Colombiano y La República. La página las cita al final.
+
+**La investigación destapó errores en lo que ya había publicado:**
+
+- **Juanes nació en Medellín, no en Carolina del Príncipe.** Las dos
+  Wikipedias coinciden; Carolina del Príncipe es donde pasó parte de su
+  infancia. Se corrigieron la entradilla y el pie de la estatua, que decía
+  "el pueblo que lo vio nacer".
+- **"+16M discos" pasa a "+15M"**, que es la cifra de Wikipedia.
+- **"Artista latino de la década — Billboard 2009" se retiró.** Solo la
+  Wikipedia en español menciona una "Estrella de la Década", sin año, y no se
+  encontró otra fuente.
+- **"A los quince años fundó Ekhymosis… entre 1988 y 1998"** no cuadraba: en
+  1988 tenía 15 o 16, y el final es 1997 según una fuente y 1998 según otra.
+  Ahora dice "en 1988" y "a finales de los noventa".
+- **Las fichas de álbum afirmaban cosas sin fuente**: que *P.A.R.C.E.* lo
+  produjo él solo y que su título era un acrónimo de valores. Las fichas se
+  retiraron: la discografía vive ahora en la línea de tiempo, solo con datos
+  comprobados.
+- **Latin Grammy: 26 o 27** según la página de Wikipedia que se mire. Queda
+  "+25".
+
+La cifra de álbumes cuadra por tres vías: la línea de tiempo marca 12 álbumes
+(11 de estudio más el *MTV Unplugged*), la cifra de la página dice 12 y La
+República llama a *Juanesteban* su duodécimo álbum.
+
+**Qué costó encontrar al probar:**
+
+- **Los clics rápidos perdían pasos.** Durante el desplazamiento suave, el
+  detector de scroll volvía a marcar el hito del que se salía, y el segundo
+  clic partía de ahí. Ahora, mientras la tira va hacia un destino elegido, el
+  detector no interviene.
+- **El centrado inicial con `requestAnimationFrame` devolvía la tira al
+  principio** a mitad de uso cuando la pestaña no dibujaba fotogramas: la
+  llamada quedaba pendiente y se ejecutaba tarde. Se hace directo.
+- **`display: flex` en `.hito` anulaba el atributo `hidden`**, así que los
+  filtros no ocultaban nada. Hace falta `.hito[hidden]{ display: none }`
+  explícito.
+- **La reproducción automática "se paraba sola" en el panel de pruebas.** No
+  era un fallo: el panel alterna su visibilidad cada ~6 s, y la página pausa la
+  reproducción al ocultarse, que es lo correcto. Se confirmó registrando los
+  eventos `visibilitychange`.
+- **Una medición marcó las 28 viñetas como desbordadas.** Era el icono
+  decorativo, que sobresale por la esquina a propósito. Midiendo solo el texto,
+  ninguna viñeta corta nada: quedan al menos 89 px libres incluso en móvil.
+
+Verificado en 1366×658 y 375×760: sin desborde horizontal, la viñeta activa
+centrada al píxel en móvil, contadores correctos en cada punto (12 álbumes y
+4 Grammy al final; 11 en 2024, antes de *Juanesteban*), filtros con el número
+exacto de hitos (10 premios, 3 de activismo, 13 de música) y la púa
+ajustándose al año exacto al soltarla.
+
 ### Ronda 15 — Helikón pasa a ser el Nº 0
 
 La página del estudio era una sucesión de tarjetas bien vestidas. Ahora es un

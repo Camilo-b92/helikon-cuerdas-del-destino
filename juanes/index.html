@@ -3,58 +3,94 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="La historia de Juanes, de Ekhymosis al pop latino: su discografía, sus reconocimientos y el activismo que inspira Cuerdas del Destino.">
-<meta name="theme-color" content="#e8dfc9">
+<meta name="description" content="Juanes, basado en hechos reales: su origen, una línea de tiempo interactiva de su carrera de 1972 a 2026, su música y el activismo que inspira Cuerdas del Destino.">
+<meta name="theme-color" content="#a92820">
 <link rel="icon" type="image/svg+xml" href="../assets/img/favicon.svg">
 <meta property="og:type" content="article">
 <meta property="og:locale" content="es_CO">
 <meta property="og:site_name" content="Helikón">
-<meta property="og:title" content="Juanes — El artista detrás de la inspiración">
-<meta property="og:description" content="De las bandas de metal de su adolescencia a uno de los artistas más premiados de la música en español.">
-<title>Juanes — Helikón</title>
+<meta property="og:title" content="Juanes — Basado en hechos reales">
+<meta property="og:description" content="De Ekhymosis a Juanesteban: la carrera de Juanes contada como un cómic, número a número.">
+<title>Juanes — Basado en hechos reales</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bangers&family=Special+Elite&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bangers&family=Special+Elite&family=Patrick+Hand+SC&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/css/pulp.css">
 <link rel="stylesheet" href="juanes.css">
 </head>
 <body>
 <div class="paper-grain"></div>
-<div class="sunburst"></div>
 
 <div class="ink-rail" aria-hidden="true"><div class="ink-fill" id="inkFill"></div></div>
 
-<nav class="topnav">
-  <span class="topnav-links">
-    <a class="topnav-back" href="../">&larr; INICIO</a>
-    <a class="topnav-back" href="../helikon/">HELIKÓN</a>
-  </span>
-  <span class="topnav-mark">JUANES</span>
-</nav>
+<svg class="sprite" aria-hidden="true" focusable="false">
+  <symbol id="icono-musica" viewBox="0 0 100 100">
+    <g transform="rotate(-28 50 50)" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M50 50 C35 50 26 61 26 72 C26 85 37 93 50 93 C63 93 74 85 74 72 C74 61 65 50 50 50 Z"/>
+      <circle cx="50" cy="69" r="9"/>
+      <path d="M44 50 V16 M56 50 V16"/>
+      <rect x="40" y="4" width="20" height="12" rx="3"/>
+    </g>
+  </symbol>
+  <symbol id="icono-premio" viewBox="0 0 100 100">
+    <g fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M30 16 H70 V38 C70 56 60 64 50 64 C40 64 30 56 30 38 Z"/>
+      <path d="M30 24 H16 C16 40 24 46 32 46 M70 24 H84 C84 40 76 46 68 46"/>
+      <path d="M50 64 V76 M34 88 H66 V78 H34 Z"/>
+    </g>
+  </symbol>
+  <symbol id="icono-activismo" viewBox="0 0 100 100">
+    <g fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M18 60 C28 42 50 38 64 46 L86 36 L76 52 C80 68 64 80 44 78 L28 86 L32 72 C24 70 18 66 18 60 Z"/>
+      <path d="M38 54 C46 42 58 38 70 30"/>
+      <circle cx="70" cy="50" r="2.5" fill="currentColor"/>
+    </g>
+  </symbol>
+  <symbol id="icono-vida" viewBox="0 0 100 100">
+    <g fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M14 50 L50 18 L86 50"/>
+      <path d="M24 42 V86 H76 V42"/>
+      <path d="M43 86 V62 H57 V86"/>
+    </g>
+  </symbol>
+</svg>
 
-<main class="page">
+<main class="especial">
 
-  <header class="emblem">
-    <h1 class="emblem-title">HELIKÓN</h1>
-    <p class="emblem-sub">EL ARTISTA DETRÁS DE LA INSPIRACIÓN</p>
+  <header class="cabecera">
+    <a class="cabecera-caja" href="../" aria-label="Volver a la portada">
+      <span class="cabecera-sello">Helikón</span>
+      <span class="cabecera-numero">Bio</span>
+    </a>
+    <p class="cabecera-serie">Edición especial <span>Basado en hechos reales</span></p>
+    <nav class="cabecera-nav" aria-label="Secciones del sitio">
+      <a href="../">Portada</a>
+      <a href="../helikon/">Helikón</a>
+      <a href="../comic/">Cómic</a>
+    </nav>
   </header>
 
-  <section class="hero">
-    <div class="caption-box">¿QUIÉN ES JUANES?</div>
-    <h2>JUANES</h2>
-    <p class="hero-name">Juan Esteban Aristizábal Vásquez</p>
-    <p class="hero-body">
-      Cantante, compositor y guitarrista colombiano, nacido en Carolina del
-      Príncipe, Antioquia, y criado en Medellín. De las bandas de metal de su
-      adolescencia a convertirse en uno de los artistas más premiados de la
-      música en español — su historia es el punto de partida de este universo.
-    </p>
+  <section class="titular">
+    <div class="titular-texto">
+      <p class="titular-antetitulo">¿Quién es Juanes?</p>
+      <h1 class="titular-titulo">Juanes</h1>
+      <p class="titular-nombre">Juan Esteban Aristizábal Vásquez</p>
+      <p class="titular-entradilla">
+        Cantante, compositor y guitarrista colombiano. Nació en Medellín en 1972
+        y pasó su infancia entre Medellín y Carolina del Príncipe, Antioquia. De
+        la banda de metal de su adolescencia a ser uno de los artistas más
+        premiados de la música en español: su historia es el punto de partida
+        de este universo.
+      </p>
+      <a class="boton-comic" href="#linea">Recorre su carrera <span aria-hidden="true">↓</span></a>
+    </div>
 
     <figure class="foto foto-retrato">
       <div class="tono">
-        <img src="img/juanes-retrato.webp" width="660" height="766" loading="lazy"
+        <img src="img/juanes-retrato.webp" width="660" height="766"
              alt="Retrato de Juanes, tramado como una viñeta de cómic">
       </div>
+      <span class="sello-real" aria-hidden="true">Basado en<br>hechos reales</span>
       <figcaption>
         El rostro real, pasado por la tinta del cómic.
         <span class="credito">
@@ -64,16 +100,13 @@
         </span>
       </figcaption>
     </figure>
-
-    <a class="scroll-cue" href="#origen">CONOCE SU HISTORIA <span aria-hidden="true">&darr;</span></a>
   </section>
 
-  <section class="strip-section" id="origen" data-reveal>
-    <h3 class="section-title">EL ORIGEN <span>— los inicios</span></h3>
+  <section class="origen" id="origen" aria-labelledby="origenTitulo" data-reveal>
+    <h2 class="rotulo" id="origenTitulo">El origen</h2>
 
     <div class="origen-head">
       <p class="pull-quote">De Medellín al thrash metal, <em>mucho antes del pop latino.</em></p>
-
       <svg class="origen-mark" viewBox="0 0 230 220" fill="none" stroke="var(--ink)"
            stroke-width="4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <path d="M110 108 C82 108 64 130 64 152 C64 178 85 196 110 196 C135 196 156 178 156 152 C156 130 138 108 110 108 Z"/>
@@ -114,8 +147,9 @@
                alt="Estatua de Juanes con una guitarra, en Carolina del Príncipe">
         </div>
         <figcaption>
-          El pueblo que lo vio nacer le levantó una estatua con la guitarra en
-          las manos: el mismo gesto con el que arranca el capítulo uno.
+          Carolina del Príncipe, donde pasó parte de su infancia, le levantó una
+          estatua con la guitarra en las manos: el mismo gesto con el que arranca
+          el capítulo uno.
           <span class="credito">
             Foto: XalD —
             <a href="https://commons.wikimedia.org/wiki/File:Estatua_de_Juanes_en_Carolina_del_Pr%C3%ADncipe,_2023.jpg"
@@ -149,62 +183,278 @@
           <circle cx="68" cy="70" r="9" fill="var(--ink)"/>
         </svg>
         <p>
-          A los quince años fundó <strong>Ekhymosis</strong>, una banda de
-          thrash metal influenciada por grupos como Metallica. Durante diez
-          años, entre 1988 y 1998, la banda publicó varios discos y se convirtió
-          en una de las agrupaciones más importantes del rock colombiano de los
-          noventa, antes de separarse.
+          En 1988 fundó <strong>Ekhymosis</strong>, una banda de thrash metal
+          que se convirtió en una de las agrupaciones más importantes del rock
+          colombiano de su tiempo, hasta separarse a finales de los noventa.
         </p>
       </article>
     </div>
   </section>
 
-  <section class="albums-section" data-reveal>
-    <h3 class="section-title">DISCOGRAFÍA <span>— la carrera solista</span></h3>
+  <section class="linea" id="linea" aria-labelledby="lineaTitulo">
+    <h2 class="rotulo" id="lineaTitulo">La carrera, número a número</h2>
+    <p class="seccion-nota">
+      Arrastra la púa por la cuerda, desliza las viñetas o dale a reproducir.
+      Cada punto de la cuerda es un momento de su historia.
+    </p>
 
-    <div class="albums-grid">
-      <article class="album-card">
-        <span class="album-year">2000</span>
-        <h4>Fíjate Bien</h4>
-        <p>Su álbum debut como solista, producido junto a Gustavo Santaolalla. Le valió tres premios Grammy Latino, incluido Mejor Artista Nuevo.</p>
-      </article>
+    <div class="linea-pagina">
 
-      <article class="album-card">
-        <span class="album-year">2002</span>
-        <h4>Un Día Normal</h4>
-        <p>El disco que lo llevó al público masivo, con temas como "A Dios le pido" y el dueto "Fotografía" junto a Nelly Furtado.</p>
-      </article>
+      <div class="linea-marcador">
+        <div class="marcador-anio" aria-hidden="true">
+          <span class="marcador-anio-etiqueta">Año</span>
+          <span class="marcador-anio-valor" id="lineaAnio">1972</span>
+        </div>
+        <p class="marcador-titulo" id="lineaTituloActivo">Nace en Medellín</p>
+        <dl class="marcador-contadores">
+          <div><dt>Álbumes</dt><dd id="lineaDiscos">0</dd></div>
+          <div><dt>Grammy</dt><dd id="lineaGrammy">0</dd></div>
+          <div><dt>Hito</dt><dd><span id="lineaPosicion">1</span>/<span id="lineaTotal">27</span></dd></div>
+        </dl>
+        <p class="visualmente-oculto" id="lineaAnuncio" aria-live="polite"></p>
+      </div>
 
-      <article class="album-card">
-        <span class="album-year">2004</span>
-        <h4>Mi Sangre</h4>
-        <p>Consolidó su lugar como una de las figuras centrales del rock y pop en español de la década.</p>
-      </article>
+      <div class="linea-controles">
+        <div class="linea-filtros" role="group" aria-label="Filtrar hitos">
+          <button class="filtro" type="button" data-filtro="todo" aria-pressed="true">Todo</button>
+          <button class="filtro filtro--musica" type="button" data-filtro="musica" aria-pressed="false">Música</button>
+          <button class="filtro filtro--premio" type="button" data-filtro="premio" aria-pressed="false">Premios</button>
+          <button class="filtro filtro--activismo" type="button" data-filtro="activismo" aria-pressed="false">Activismo</button>
+          <button class="filtro filtro--vida" type="button" data-filtro="vida" aria-pressed="false">Vida</button>
+        </div>
+        <div class="linea-botones">
+          <button class="control" type="button" id="lineaAnterior" aria-label="Hito anterior">◀</button>
+          <button class="control control--play" type="button" id="lineaPlay" aria-pressed="false">▶ Reproducir</button>
+          <button class="control" type="button" id="lineaSiguiente" aria-label="Hito siguiente">▶</button>
+        </div>
+      </div>
 
-      <article class="album-card">
-        <span class="album-year">2007</span>
-        <h4>La Vida... Es un Ratico</h4>
-        <p>Un álbum marcado por la reflexión personal y el activismo social que definiría los años siguientes.</p>
-      </article>
+      <ol class="linea-tira" id="lineaTira" tabindex="0" aria-label="Hitos de la carrera de Juanes, de 1972 a 2026">
+        <li class="hito" data-anio="1972" data-tipo="vida">
+          <span class="hito-anio">1972</span>
+          <span class="hito-tipo">Vida</span>
+          <h3 class="hito-titulo">Nace en Medellín</h3>
+          <p class="hito-texto">El 9 de agosto nace Juan Esteban Aristizábal Vásquez. Crece entre Medellín y Carolina del Príncipe.</p>
+          <svg class="hito-icono" aria-hidden="true"><use href="#icono-vida"/></svg>
+        </li>
+        <li class="hito" data-anio="1988" data-tipo="musica">
+          <span class="hito-anio">1988</span>
+          <span class="hito-tipo">Música</span>
+          <h3 class="hito-titulo">Nace Ekhymosis</h3>
+          <p class="hito-texto">Funda la banda de thrash metal con la que se forma en el rock colombiano.</p>
+          <svg class="hito-icono" aria-hidden="true"><use href="#icono-musica"/></svg>
+        </li>
+        <li class="hito" data-anio="1998" data-tipo="vida">
+          <span class="hito-anio">1997–98</span>
+          <span class="hito-tipo">Vida</span>
+          <h3 class="hito-titulo">Rumbo solista</h3>
+          <p class="hito-texto">Ekhymosis se disuelve a finales de los noventa y decide seguir su camino solo.</p>
+          <svg class="hito-icono" aria-hidden="true"><use href="#icono-vida"/></svg>
+        </li>
+        <li class="hito" data-anio="2000" data-tipo="musica" data-disco>
+          <span class="hito-anio">2000</span>
+          <span class="hito-tipo">Álbum</span>
+          <h3 class="hito-titulo">Fíjate Bien</h3>
+          <p class="hito-texto">Su debut como solista, con la producción de Gustavo Santaolalla.</p>
+          <svg class="hito-icono" aria-hidden="true"><use href="#icono-musica"/></svg>
+        </li>
+        <li class="hito" data-anio="2001" data-tipo="premio">
+          <span class="hito-anio">2001</span>
+          <span class="hito-tipo">Premio</span>
+          <h3 class="hito-titulo">Tres Latin Grammy</h3>
+          <p class="hito-texto">De siete nominaciones gana tres, entre ellas Mejor Artista Nuevo.</p>
+          <svg class="hito-icono" aria-hidden="true"><use href="#icono-premio"/></svg>
+        </li>
+        <li class="hito" data-anio="2002" data-tipo="musica" data-disco>
+          <span class="hito-anio">2002</span>
+          <span class="hito-tipo">Álbum</span>
+          <h3 class="hito-titulo">Un Día Normal</h3>
+          <p class="hito-texto">El disco de «A Dios le pido» y de «Fotografía», a dúo con Nelly Furtado.</p>
+          <svg class="hito-icono" aria-hidden="true"><use href="#icono-musica"/></svg>
+        </li>
+        <li class="hito" data-anio="2003" data-tipo="premio">
+          <span class="hito-anio">2003</span>
+          <span class="hito-tipo">Premio</span>
+          <h3 class="hito-titulo">Álbum del Año</h3>
+          <p class="hito-texto"><em>Un Día Normal</em> gana el Latin Grammy a Álbum del Año, y «Es por ti», a Grabación del Año.</p>
+          <svg class="hito-icono" aria-hidden="true"><use href="#icono-premio"/></svg>
+        </li>
+        <li class="hito" data-anio="2004" data-tipo="musica" data-disco>
+          <span class="hito-anio">2004</span>
+          <span class="hito-tipo">Álbum</span>
+          <h3 class="hito-titulo">Mi Sangre</h3>
+          <p class="hito-texto">El álbum de «La camisa negra».</p>
+          <svg class="hito-icono" aria-hidden="true"><use href="#icono-musica"/></svg>
+        </li>
+        <li class="hito" data-anio="2005" data-tipo="premio">
+          <span class="hito-anio">2005</span>
+          <span class="hito-tipo">Reconocimiento</span>
+          <h3 class="hito-titulo">Time 100</h3>
+          <p class="hito-texto">La revista Time lo incluye entre las cien personas más influyentes del mundo.</p>
+          <svg class="hito-icono" aria-hidden="true"><use href="#icono-premio"/></svg>
+        </li>
+        <li class="hito" data-anio="2006" data-tipo="activismo">
+          <span class="hito-anio">2006</span>
+          <span class="hito-tipo">Activismo</span>
+          <h3 class="hito-titulo">Fundación Mi Sangre</h3>
+          <p class="hito-texto">La crea con Catalina Cock Duque para atender a víctimas de minas antipersona en Colombia.</p>
+          <svg class="hito-icono" aria-hidden="true"><use href="#icono-activismo"/></svg>
+        </li>
+        <li class="hito" data-anio="2006" data-tipo="premio">
+          <span class="hito-anio">2006</span>
+          <span class="hito-tipo">Reconocimiento</span>
+          <h3 class="hito-titulo">Caballero de las Artes</h3>
+          <p class="hito-texto">Francia lo nombra Caballero de la Orden de las Artes y las Letras.</p>
+          <svg class="hito-icono" aria-hidden="true"><use href="#icono-premio"/></svg>
+        </li>
+        <li class="hito" data-anio="2007" data-tipo="musica" data-disco>
+          <span class="hito-anio">2007</span>
+          <span class="hito-tipo">Álbum</span>
+          <h3 class="hito-titulo">La Vida… Es un Ratico</h3>
+          <p class="hito-texto">Su cuarto álbum de estudio, el de «Me enamora».</p>
+          <svg class="hito-icono" aria-hidden="true"><use href="#icono-musica"/></svg>
+        </li>
+        <li class="hito" data-anio="2008" data-tipo="activismo">
+          <span class="hito-anio">2008</span>
+          <span class="hito-tipo">Activismo</span>
+          <h3 class="hito-titulo">Paz sin Fronteras</h3>
+          <p class="hito-texto">El 16 de marzo reúne a más de 600.000 personas en el puente Simón Bolívar, en la frontera con Venezuela.</p>
+          <svg class="hito-icono" aria-hidden="true"><use href="#icono-activismo"/></svg>
+        </li>
+        <li class="hito" data-anio="2008" data-tipo="premio">
+          <span class="hito-anio">2008</span>
+          <span class="hito-tipo">Premio</span>
+          <h3 class="hito-titulo">Triple corona latina</h3>
+          <p class="hito-texto">Álbum del Año por <em>La Vida… Es un Ratico</em>, y Canción y Grabación del Año por «Me enamora».</p>
+          <svg class="hito-icono" aria-hidden="true"><use href="#icono-premio"/></svg>
+        </li>
+        <li class="hito" data-anio="2009" data-tipo="activismo">
+          <span class="hito-anio">2009</span>
+          <span class="hito-tipo">Activismo</span>
+          <h3 class="hito-titulo">Paz sin Fronteras II</h3>
+          <p class="hito-texto">El 20 de septiembre, en la Plaza de la Revolución de La Habana, ante más de un millón de personas.</p>
+          <svg class="hito-icono" aria-hidden="true"><use href="#icono-activismo"/></svg>
+        </li>
+        <li class="hito" data-anio="2009" data-tipo="premio" data-grammy>
+          <span class="hito-anio">2009</span>
+          <span class="hito-tipo">Grammy</span>
+          <h3 class="hito-titulo">Primer Grammy</h3>
+          <p class="hito-texto">Mejor Álbum Pop Latino por <em>La Vida… Es un Ratico</em>.</p>
+          <svg class="hito-icono" aria-hidden="true"><use href="#icono-premio"/></svg>
+        </li>
+        <li class="hito" data-anio="2010" data-tipo="musica" data-disco>
+          <span class="hito-anio">2010</span>
+          <span class="hito-tipo">Álbum</span>
+          <h3 class="hito-titulo">P.A.R.C.E.</h3>
+          <p class="hito-texto">Su quinto álbum de estudio.</p>
+          <svg class="hito-icono" aria-hidden="true"><use href="#icono-musica"/></svg>
+        </li>
+        <li class="hito" data-anio="2012" data-tipo="musica" data-disco>
+          <span class="hito-anio">2012</span>
+          <span class="hito-tipo">En vivo</span>
+          <h3 class="hito-titulo">MTV Unplugged</h3>
+          <p class="hito-texto">Su concierto acústico gana el Latin Grammy a Álbum del Año.</p>
+          <svg class="hito-icono" aria-hidden="true"><use href="#icono-musica"/></svg>
+        </li>
+        <li class="hito" data-anio="2013" data-tipo="premio" data-grammy>
+          <span class="hito-anio">2013</span>
+          <span class="hito-tipo">Grammy</span>
+          <h3 class="hito-titulo">Segundo Grammy</h3>
+          <p class="hito-texto">Mejor Álbum Pop Latino por <em>MTV Unplugged</em>.</p>
+          <svg class="hito-icono" aria-hidden="true"><use href="#icono-premio"/></svg>
+        </li>
+        <li class="hito" data-anio="2014" data-tipo="musica" data-disco>
+          <span class="hito-anio">2014</span>
+          <span class="hito-tipo">Álbum</span>
+          <h3 class="hito-titulo">Loco de Amor</h3>
+          <p class="hito-texto">Su sexto álbum de estudio.</p>
+          <svg class="hito-icono" aria-hidden="true"><use href="#icono-musica"/></svg>
+        </li>
+        <li class="hito" data-anio="2017" data-tipo="musica" data-disco>
+          <span class="hito-anio">2017</span>
+          <span class="hito-tipo">Álbum</span>
+          <h3 class="hito-titulo">Mis planes son amarte</h3>
+          <p class="hito-texto">Su séptimo álbum de estudio.</p>
+          <svg class="hito-icono" aria-hidden="true"><use href="#icono-musica"/></svg>
+        </li>
+        <li class="hito" data-anio="2019" data-tipo="musica" data-disco>
+          <span class="hito-anio">2019</span>
+          <span class="hito-tipo">Álbum</span>
+          <h3 class="hito-titulo">Más futuro que pasado</h3>
+          <p class="hito-texto">Su octavo álbum de estudio.</p>
+          <svg class="hito-icono" aria-hidden="true"><use href="#icono-musica"/></svg>
+        </li>
+        <li class="hito" data-anio="2019" data-tipo="premio">
+          <span class="hito-anio">2019</span>
+          <span class="hito-tipo">Reconocimiento</span>
+          <h3 class="hito-titulo">Persona del Año</h3>
+          <p class="hito-texto">La Academia Latina de la Grabación le rinde su homenaje anual.</p>
+          <svg class="hito-icono" aria-hidden="true"><use href="#icono-premio"/></svg>
+        </li>
+        <li class="hito" data-anio="2021" data-tipo="musica" data-disco>
+          <span class="hito-anio">2021</span>
+          <span class="hito-tipo">Álbum</span>
+          <h3 class="hito-titulo">Origen</h3>
+          <p class="hito-texto">Su noveno álbum de estudio.</p>
+          <svg class="hito-icono" aria-hidden="true"><use href="#icono-musica"/></svg>
+        </li>
+        <li class="hito" data-anio="2022" data-tipo="premio" data-grammy>
+          <span class="hito-anio">2022</span>
+          <span class="hito-tipo">Grammy</span>
+          <h3 class="hito-titulo">Tercer Grammy</h3>
+          <p class="hito-texto">Mejor Álbum de Rock o Alternativo Latino por <em>Origen</em>.</p>
+          <svg class="hito-icono" aria-hidden="true"><use href="#icono-premio"/></svg>
+        </li>
+        <li class="hito" data-anio="2023" data-tipo="musica" data-disco>
+          <span class="hito-anio">2023</span>
+          <span class="hito-tipo">Álbum</span>
+          <h3 class="hito-titulo">Vida Cotidiana</h3>
+          <p class="hito-texto">Su décimo álbum de estudio.</p>
+          <svg class="hito-icono" aria-hidden="true"><use href="#icono-musica"/></svg>
+        </li>
+        <li class="hito" data-anio="2024" data-tipo="premio" data-grammy>
+          <span class="hito-anio">2024</span>
+          <span class="hito-tipo">Grammy</span>
+          <h3 class="hito-titulo">Cuarto Grammy</h3>
+          <p class="hito-texto">Mejor Álbum Pop Latino por <em>Vida Cotidiana</em>.</p>
+          <svg class="hito-icono" aria-hidden="true"><use href="#icono-premio"/></svg>
+        </li>
+        <li class="hito" data-anio="2026" data-tipo="musica" data-disco>
+          <span class="hito-anio">2026</span>
+          <span class="hito-tipo">Álbum</span>
+          <h3 class="hito-titulo">Juanesteban</h3>
+          <p class="hito-texto">Celebra más de 25 años como solista con un álbum conceptual de 16 canciones.</p>
+          <svg class="hito-icono" aria-hidden="true"><use href="#icono-musica"/></svg>
+        </li>
+      </ol>
 
-      <article class="album-card">
-        <span class="album-year">2010</span>
-        <h4>P.A.R.C.E.</h4>
-        <p>Producido por él mismo; su título resume los valores que ha defendido a lo largo de su carrera: paz, amor, respeto, compromiso y esperanza.</p>
-      </article>
+      <div class="cuerda" id="lineaCuerda" role="slider" tabindex="0"
+           aria-label="Año de la línea de tiempo" aria-valuemin="1972" aria-valuemax="2026"
+           aria-valuenow="1972" aria-valuetext="1972: Nace en Medellín">
+        <div class="cuerda-hilo" aria-hidden="true"></div>
+        <div class="cuerda-puntos" id="lineaPuntos" aria-hidden="true"></div>
+        <div class="cuerda-decadas" aria-hidden="true">
+          <span style="--pos: 0">1972</span>
+          <span style="--pos: 0.148">1980</span>
+          <span style="--pos: 0.333">1990</span>
+          <span style="--pos: 0.519">2000</span>
+          <span style="--pos: 0.704">2010</span>
+          <span style="--pos: 0.889">2020</span>
+          <span style="--pos: 1">2026</span>
+        </div>
+        <svg class="pua" id="lineaPua" viewBox="0 0 40 46" aria-hidden="true">
+          <path d="M20 44 C8 34 2 22 2 12 C2 5 10 2 20 2 C30 2 38 5 38 12 C38 22 32 34 20 44 Z"
+                fill="#c79b27" stroke="#17130e" stroke-width="3.5" stroke-linejoin="round"/>
+          <path d="M11 11 C14 8 18 7 22 7" fill="none" stroke="#fffdf6" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+      </div>
 
-      <article class="album-card">
-        <span class="album-year">2014 / 2017</span>
-        <h4>Loco de Amor · Mis Planes Son Amarte</h4>
-        <p>Dos discos que muestran su exploración continua entre géneros, siempre desde una identidad profundamente colombiana.</p>
-      </article>
     </div>
   </section>
 
-  <section class="music-section" data-reveal>
-    <h3 class="section-title">SU MÚSICA, EN TIEMPO REAL <span>— escúchalo ahora</span></h3>
-
-    <p class="section-lead">
+  <section class="musica" aria-labelledby="musicaTitulo" data-reveal>
+    <h2 class="rotulo" id="musicaTitulo">Su música, en tiempo real</h2>
+    <p class="seccion-nota">
       Antes de seguir leyendo, dale play. La banda sonora de esta historia
       empieza aquí, directo desde su perfil oficial de Spotify.
     </p>
@@ -215,7 +465,7 @@
     </div>
 
     <div class="music-panel">
-      <span class="music-tag">&#9654; PLAY</span>
+      <span class="music-tag">▶ Play</span>
       <iframe
         title="Reproductor de Spotify — Juanes"
         src="https://open.spotify.com/embed/artist/0UWZUmn7sybxMCqrw9tGa7?utm_source=generator&theme=0"
@@ -229,36 +479,35 @@
     </div>
   </section>
 
-  <section class="stats-section" data-reveal>
-    <h3 class="section-title">UNA CARRERA PREMIADA <span>— reconocimientos</span></h3>
-
-    <div class="stats-grid">
-      <div class="stat">
-        <span class="stat-number">26</span>
-        <span class="stat-label">Latin Grammy Awards</span>
-      </div>
-      <div class="stat">
+  <section class="cifras-seccion" aria-labelledby="cifrasTitulo" data-reveal>
+    <h2 class="rotulo" id="cifrasTitulo">Una carrera premiada</h2>
+    <ul class="cifras-grandes">
+      <li class="cifra-grande cifra-grande--rojo">
+        <span class="stat-number">+25</span>
+        <span class="cifra-etiqueta">Latin Grammy</span>
+      </li>
+      <li class="cifra-grande cifra-grande--amarillo">
         <span class="stat-number">4</span>
-        <span class="stat-label">Grammy Awards</span>
-      </div>
-      <div class="stat">
-        <span class="stat-number">+16M</span>
-        <span class="stat-label">Discos vendidos en el mundo</span>
-      </div>
-      <div class="stat">
-        <span class="stat-number">2009</span>
-        <span class="stat-label">Artista latino de la década — Billboard</span>
-      </div>
-    </div>
+        <span class="cifra-etiqueta">Grammy</span>
+      </li>
+      <li class="cifra-grande cifra-grande--azul">
+        <span class="stat-number">+15M</span>
+        <span class="cifra-etiqueta">Discos vendidos en el mundo</span>
+      </li>
+      <li class="cifra-grande cifra-grande--papel">
+        <span class="stat-number">12</span>
+        <span class="cifra-etiqueta">Álbumes publicados</span>
+      </li>
+    </ul>
   </section>
 
   <section class="splash" data-reveal>
     <div class="splash-burst" aria-hidden="true"></div>
-    <p class="splash-kicker">MÁS ALLÁ DE LA MÚSICA</p>
-    <p class="splash-text">UN ARTISTA CON<br><em>CONCIENCIA SOCIAL.</em></p>
+    <p class="splash-kicker">Más allá de la música</p>
+    <p class="splash-text">Un artista con<br><em>conciencia social.</em></p>
     <p class="splash-body">
       En 2008, en medio de una crisis diplomática entre Colombia, Ecuador y
-      Venezuela, impulsó <strong>Paz Sin Fronteras</strong>, un concierto
+      Venezuela, impulsó <strong>Paz sin Fronteras</strong>, un concierto
       masivo en la frontera colombo-venezolana que reunió a artistas de toda
       Latinoamérica y a cientos de miles de personas. Ese gesto resume algo
       constante en su carrera: usar la música como puente, no solo como
@@ -266,12 +515,11 @@
     </p>
   </section>
 
-  <section class="cta-section" data-reveal>
-    <h3 class="section-title">DE LA VIDA REAL AL MITO <span>— a dónde ir desde aquí</span></h3>
+  <section class="cta-section" aria-labelledby="ctaTitulo" data-reveal>
+    <h2 class="rotulo" id="ctaTitulo">De la vida real al mito</h2>
 
     <a class="panel panel-comic" href="../comic/">
       <span class="panel-number">I</span>
-
       <svg class="panel-art" viewBox="0 0 100 100" fill="none" stroke="currentColor"
            stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <path d="M30 36 L18 14"/>
@@ -281,28 +529,39 @@
         <circle cx="85" cy="50" r="5"/>
         <circle cx="85" cy="68" r="5"/>
       </svg>
-
-      <span class="panel-kicker">SU HISTORIA INSPIRA</span>
-      <span class="panel-title">CUERDAS<br>DEL DESTINO</span>
+      <span class="panel-kicker">Su historia inspira</span>
+      <span class="panel-title">Cuerdas<br>del Destino</span>
       <span class="panel-copy">
         El cómic digital interactivo de Helikón toma la esencia de este viaje
         artístico — no como biografía literal, sino como punto de partida para
         una historia de ficción sobre pasión, destino y arte.
       </span>
-      <span class="panel-action">EXPLORAR EL CÓMIC →</span>
-      <span class="burst-text">POW!</span>
+      <span class="panel-action">Explorar el cómic →</span>
+      <span class="burst-text" aria-hidden="true">¡PUM!</span>
     </a>
   </section>
 
-  <footer class="cover-footer">
-    <span>JUANES</span>
-    <span class="rule"></span>
-    <a href="../">INICIO</a>
-    <a href="../helikon/">HELIKÓN</a>
-    <a href="../comic/">CÓMIC</a>
-  </footer>
+  <footer class="fin-numero">
+    <p class="fin-titulo">Fin de la edición especial</p>
 
-  <p class="footer-note">Contenido biográfico con fines informativos y creativos — proyecto multimedia académico.</p>
+    <details class="fuentes">
+      <summary>Fuentes de esta biografía</summary>
+      <ul>
+        <li><a href="https://es.wikipedia.org/wiki/Juanes" target="_blank" rel="noopener">Juanes — Wikipedia en español</a>: nacimiento, infancia, Paz sin Fronteras, Fíjate Bien, «La camisa negra».</li>
+        <li><a href="https://en.wikipedia.org/wiki/Juanes" target="_blank" rel="noopener">Juanes — Wikipedia en inglés</a>: discografía, Time 100, Orden de las Artes y las Letras, Persona del Año, ventas.</li>
+        <li><a href="https://en.wikipedia.org/wiki/List_of_awards_and_nominations_received_by_Juanes" target="_blank" rel="noopener">Premios y nominaciones de Juanes — Wikipedia</a>: Grammy y Latin Grammy por año.</li>
+        <li><a href="https://www.elcolombiano.com/tendencias/fundacion-mi-sangre-juanes-historia-NF35304696" target="_blank" rel="noopener">El Colombiano</a>: creación de la Fundación Mi Sangre en 2006.</li>
+        <li><a href="https://www.larepublica.co/ocio/juanes-lanza-juanesteban-album-con-el-que-celebra-25-anos-de-carrera-como-solista-4344969" target="_blank" rel="noopener">La República</a>: el álbum <em>Juanesteban</em>.</li>
+      </ul>
+      <p>Las fuentes no coinciden en dos datos: el año en que se disolvió Ekhymosis (1997 o 1998) y el total de Latin Grammy (26 o 27). Por eso aquí aparecen como «1997–98» y «+25».</p>
+    </details>
+
+    <p class="fin-pie">
+      <span>Juanes</span><span class="rule"></span>
+      <a href="../">Portada</a><a href="../helikon/">Helikón</a><a href="../comic/">Cómic</a>
+    </p>
+    <p class="footer-note">Contenido biográfico con fines informativos y creativos — proyecto multimedia académico.</p>
+  </footer>
 
 </main>
 
