@@ -17,10 +17,11 @@ README y luego esto.
 | Rama | `main`, al día con el remoto |
 | Publicado en línea | Todavía no |
 | Canales del televisor | 0–8 (nueve en total) |
-| Peso total | ~17 MB, casi todo arte del cómic |
+| Peso total | ~20 MB, casi todo arte del cómic |
 | Personajes | Canal 0: cinco figuras y treinta expresiones |
 | Presentaciones | Canal 1 (capítulo uno) y canal 6 (capítulo dos) |
 | Comentarios en el código | Ninguno: la documentación vive aquí y en el README |
+| Vista previa al compartir | `assets/img/og-portada.jpg`, en las cuatro páginas |
 
 Las cuatro páginas cargan sin errores de consola, sin desborde horizontal en
 móvil a 375 px, y respetan `prefers-reduced-motion`.
@@ -178,7 +179,7 @@ decisión de diseño; quedó solo el logotipo de texto "HELIKÓN" con su subtít
 
 Esto **revierte** la decisión anterior, que limitaba el 3D a renders PNG. Lo
 que no cambia es el motivo por el que existía esa regla: el sitio ya carga
-17 MB y una portada que tarde en abrir espanta al lector. Así que la decisión
+20 MB y una portada que tarde en abrir espanta al lector. Así que la decisión
 viene con condiciones, y hay que respetarlas al implementar:
 
 - **Nada de 3D en la ruta crítica.** El modelo se carga en diferido, después de
@@ -243,6 +244,26 @@ Lo que no convenció fue el resultado visual.
     con caras rectas, sus picos asoman por detrás de las curvas.
 
 Los archivos de las dos pruebas no están en el repositorio.
+
+### La imagen de vista previa se compone, no se captura
+
+*Decidido el 22 de septiembre de 2026.* Faltaba `og:image`, así que al
+compartir un enlace del sitio no se veía nada.
+
+Lo natural habría sido capturar la portada, pero es una **doble página
+apaisada** y recortarla a 1200x630 dejaba fuera la mitad. Se compuso una imagen
+propia en un `<canvas>` reutilizando el material de la portada —el rojo, los
+rayos, el logotipo y la figura de Juanes—, de modo que reconoces el sitio antes
+de abrirlo.
+
+Dos cosas aprendidas al hacerla:
+
+- **En PNG pesaba 651 KB**, seis veces el techo de 300 KB por archivo. El mismo
+  dibujo en JPEG con calidad 0,88 baja a **109 KB** sin diferencia visible: son
+  degradados, no arte de línea, y ahí el JPEG gana.
+- **La ruta quedó relativa**, porque el sitio no tiene dominio todavía. Los
+  lectores de enlaces suelen resolverla, pero la especificación pide URL
+  absoluta: está anotado en los pendientes para el día de la publicación.
 
 ### Los gráficos son SVG en línea, no imágenes
 
@@ -894,9 +915,12 @@ En orden de lo que más aporta:
    cómic. Hace falta un modelador instalado y un `.glb` con el que empezar; las
    condiciones de peso y carga están en *El 3D entra vivo*.
 
-3. **Falta `og:image`.** Las cuatro páginas tienen Open Graph, pero ninguna
-   declara imagen de vista previa. Hace falta una de **1200x630** con la
-   portada definitiva; hasta entonces, compartir el enlace no muestra nada.
+3. **Pasar `og:image` a URL absoluta al publicar.** Ya existe la imagen y las
+   cuatro páginas la declaran, pero con **ruta relativa**, porque el sitio
+   todavía no tiene dominio. Funciona en la mayoría de los lectores de enlaces,
+   aunque la especificación de Open Graph pide una URL absoluta. En cuanto el
+   sitio tenga dirección definitiva, hay que cambiar las cuatro por la ruta
+   completa (`https://…/assets/img/og-portada.jpg`).
 
 4. **Historial y Stop motion**, si se quieren recuperar. Se retiraron por
    estar vacíos; el canal de Personajes sirve de molde para cuando haya
@@ -936,7 +960,7 @@ En orden de lo que más aporta:
 **Decisión cambiada el 16 de septiembre de 2026.** Antes aquí decía que el 3D
 debía usarse solo como fuente de imágenes fijas —modelar, renderizar a PNG con
 transparencia y subir eso—. La razón era el peso: un GLB más su visor pesa entre
-cientos de KB y varios MB, y el cómic ya carga 17 MB.
+cientos de KB y varios MB, y el cómic ya carga 20 MB.
 
 Se decidió ir por **modelos vivos**, con los dos enfoques conviviendo. El
 detalle está arriba, en *El 3D entra vivo*. El argumento de peso sigue siendo

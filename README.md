@@ -64,7 +64,7 @@ Lo que eso implica al trabajar:
 │   ├── js/
 │   │   ├── pulp.js         Revelado al scroll y paralaje del masthead
 │   │   └── home.js         Solo lo propio de la portada
-│   └── img/                Imágenes compartidas (favicon, etc.)
+│   └── img/                favicon.svg y og-portada.jpg (vista previa al compartir)
 │
 ├── helikon/                El estudio: origen, equipo, bitácora
 │   ├── index.html
@@ -498,10 +498,15 @@ producir archivos, y lo que llega al repositorio es el resultado ya optimizado.
 Esa es la manera de mejorar los recursos sin romper la regla de "sin proceso de
 compilación".
 
+**El estado es por máquina, no del proyecto.** Lo que esté instalado en un
+equipo no lo está en otro: comprobado el 22 de septiembre de 2026, en esta
+máquina hay `git` pero **no hay `ffmpeg`**. Antes de dar por hecho que una
+herramienta está, compruébalo con `command -v <herramienta>`.
+
 | Herramienta | Para qué | Estado |
 |---|---|---|
-| `git` | Control de versiones | Instalado (2.55.0) |
-| `ffmpeg` | Comprimir `intro.mp4`, convertir renders | Instalado (9.0.1) |
+| `git` | Control de versiones | Instalado |
+| `ffmpeg` | Comprimir `intro.mp4`, convertir renders | Depende de la máquina |
 | `npx @gltf-transform/cli` | Optimizar modelos `.glb` antes de subirlos | Se ejecuta con `npx`, no se instala |
 | Blender | Modelar y renderizar el 3D | **Falta**, desde <https://blender.org> |
 
@@ -577,6 +582,22 @@ publicación es la raíz.
 
 Hay más detalle sobre esto —incluido qué hacer con elementos 3D— en la
 [bitácora](BITACORA.md).
+
+## La imagen de vista previa
+
+`assets/img/og-portada.jpg` (1200x630, 109 KB) es lo que se ve al pegar un
+enlace del sitio en WhatsApp, Slack o una red. Las cuatro páginas la declaran
+con `og:image`, más `twitter:card` en `summary_large_image` para que salga
+grande y no como miniatura.
+
+**No es una captura de la portada**, es una composición aparte hecha con el
+mismo material: el rojo `--red`, el estallido de rayos, el logotipo
+`presentacion-c1/json/images/img_0.png` y la figura `personajes/juanes.svg`.
+Se dibujó en un `<canvas>` a 1200x630 y se exportó a JPEG con calidad 0,88
+—en PNG pesaba 651 KB, seis veces el techo de 300 KB que fija este README—.
+
+Si la portada cambia de arte, esta imagen **no se actualiza sola**: hay que
+rehacerla.
 
 ## Créditos de imágenes
 
