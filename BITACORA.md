@@ -9,7 +9,7 @@ README y luego esto.
 
 ---
 
-## Estado a 16 de septiembre de 2026
+## Estado a 22 de septiembre de 2026
 
 | | |
 |---|---|
@@ -19,7 +19,8 @@ README y luego esto.
 | Canales del televisor | 0–8 (nueve en total) |
 | Peso total | ~20 MB, casi todo arte del cómic |
 | Personajes | Canal 0: cinco figuras y treinta expresiones |
-| Presentaciones | Canal 1 (capítulo uno) y canal 6 (capítulo dos) |
+| Presentaciones | Canal 1: nombre del cómic y luego capítulo uno · Canal 6: capítulo dos |
+| Fichas de personaje | `assets/js/personajes.js`, compartidas por portada y cómic |
 | Comentarios en el código | Ninguno: la documentación vive aquí y en el README |
 | Vista previa al compartir | `assets/img/og-portada.jpg`, en las cuatro páginas |
 
@@ -264,6 +265,48 @@ Dos cosas aprendidas al hacerla:
 - **La ruta quedó relativa**, porque el sitio no tiene dominio todavía. Los
   lectores de enlaces suelen resolverla, pero la especificación pide URL
   absoluta: está anotado en los pendientes para el día de la publicación.
+
+### El canal 1 encadena dos presentaciones
+
+*Decidido el 22 de septiembre de 2026.* El canal 1 abre con el **nombre del
+cómic** y, sin intervención, sigue con la **presentación del capítulo uno**.
+
+Hasta ahora la carpeta `presentacion-c1/` guardaba el logotipo de *Cuerdas del
+Destino*, no el capítulo uno: el nombre mentía. Se renombró a
+`presentacion-titulo/` y `presentacion-c1/` pasó a ser lo que dice, la pieza
+que llegó de After Effects.
+
+Las dos viven en el mismo canal, apiladas. La fábrica `crearPresentacion`
+aceptó un `alTerminar` opcional: cuando la primera acaba, espera
+`RELEVO_MS` (900 ms, para que el nombre se lea) y entonces desvanece la primera
+y arranca la segunda.
+
+**El relevo no depende de que Lottie emita `complete`.** Si el navegador deja
+de emitir fotogramas —pestaña en segundo plano, ahorro de energía— la red de
+seguridad de `PRES_SAFETY_MS` dispara `finish()` igual, y el relevo ocurre.
+Comprobado con `requestAnimationFrame` muerto: a los 6,5 s el aviso se marca
+terminado y a los 7,4 s la segunda presentación ya está en pantalla.
+
+El aviso de "pulsa el botón derecho" pertenece a la **segunda**, no a la
+primera, y `abrirCapituloUno()` lo esconde al entrar: sin eso quedaba visible
+desde el primer instante al volver al canal.
+
+### Helikón pierde dos secciones y gana la identidad
+
+*Decidido el 22 de septiembre de 2026.* Se retiraron **Extras del taller** y
+**Expedientes del estudio**, y el panel bloqueado de *Próximo capítulo* del
+final. En su lugar entra **Señas de identidad**.
+
+El motivo de qué poner: las secciones que quedaban ya contaban el origen del
+nombre, el manifiesto y quién es quién. Lo que no contaba ninguna era **cómo se
+ve Helikón y por qué**, que es justo lo que lo hace reconocible como marca. La
+sección muestra la paleta con sus cinco tintes y su uso, las tres tipografías
+con una muestra de cada una en su propia letra, y la regla de los dos mundos
+—papel fuera de la pantalla, turquesa dentro—.
+
+Con el panel bloqueado fuera, *Nuestro universo* pasa de tres viñetas a dos, y
+el hover ya no necesita excluir `.panel-locked`. Se retiraron 213 líneas de CSS
+que se quedaron sin uso.
 
 ### Los gráficos son SVG en línea, no imágenes
 
@@ -897,6 +940,23 @@ de `gh auth setup-git`. Ese segundo comando **no es opcional** — sin él git
 sigue sin saber que existe la credencial de `gh` e intenta abrir su propia
 ventana de inicio de sesión. El token queda en el almacén de credenciales de
 Windows; no se escribe en ningún archivo del proyecto y no debe acabar en él.
+
+---
+
+### Ronda 17 — La presentación del capítulo uno, Helikón como marca y el expediente
+
+- **Canal 1**: el nombre del cómic encadena con la presentación del capítulo
+  uno, que llegó de After Effects. `presentacion-c1/` pasa a contener lo que su
+  nombre dice, y el logotipo se muda a `presentacion-titulo/`.
+- **Helikón**: fuera *Extras del taller*, *Expedientes del estudio* y el panel
+  de *Próximo capítulo*; dentro *Señas de identidad*.
+- **Portada**: las cinco tarjetas del reparto abren un expediente a pantalla
+  completa con la ficha entera y las seis expresiones.
+- Las fichas salen de `comic.js` a `assets/js/personajes.js`, compartido por
+  las dos páginas que las usan.
+
+Los fuentes de After Effects e Illustrator del ZIP (8 MB entre los dos) **no
+entran al repositorio**: son material de trabajo, no del sitio.
 
 ---
 

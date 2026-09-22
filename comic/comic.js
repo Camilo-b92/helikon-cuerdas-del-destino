@@ -45,86 +45,7 @@ const channelNames = [
   'Capítulo dos — Presentación', 'Capítulo 2 — Escena I', 'Capítulo 2 — Escena II'
 ];
 
-const PERSONAJES = [
-  {
-    id: 'juanes',
-    gestos: ['alegria', 'tristeza', 'asombro', 'miedo', 'enojo', 'aburrimiento'],
-    nombre: 'Juanes',
-    rol: 'Protagonista — etapa adulta',
-    datos: [
-      ['Nombre', 'Juan Esteban Aristizábal'],
-      ['Edad', '24 años'],
-      ['Origen', 'Carolina del Príncipe'],
-      ['Oficio', 'Músico callejero'],
-      ['Carácter', 'Perseverante, sensible, introspectivo']
-    ],
-    nota: 'Toca para una ciudad que no lo escucha. Su viaje va de la ' +
-          'frustración a la expresión sincera: entiende que la música nace ' +
-          'del amor y la emoción, no de la técnica.'
-  },
-  {
-    id: 'nino',
-    gestos: ['alegria', 'tristeza', 'asombro', 'miedo', 'enojo', 'aburrimiento'],
-    nombre: 'Juanes niño',
-    rol: 'Protagonista — etapa inicial',
-    datos: [
-      ['Edad', '12 años'],
-      ['Origen', 'Carolina del Príncipe'],
-      ['Carácter', 'Curioso, inquieto, espontáneo'],
-      ['Rasgo', 'Exploración del entorno'],
-      ['Aprende', 'De forma intuitiva']
-    ],
-    nota: 'Descubre la guitarra y recibe de su padre la enseñanza que ' +
-          'sostiene toda la historia: la música nace del corazón.'
-  },
-  {
-    id: 'ente',
-    gestos: ['alegria', 'desagrado', 'somnoliento', 'asombro', 'enojo', 'tristeza'],
-    nombre: 'El Ente',
-    rol: 'Personaje simbólico',
-    datos: [
-      ['Estatura', 'Cerca de 2 metros'],
-      ['Rostro', 'Sin rasgos definidos'],
-      ['Carácter', 'Serio, neutral'],
-      ['Presencia', 'Imponente, directa'],
-      ['Aparece', 'En los momentos de crisis']
-    ],
-    nota: 'No es un personaje del mundo real: es el conflicto interno de ' +
-          'Juanes hecho figura. Aparece de repente, dice lo justo y ' +
-          'desaparece. De inquietante pasa a calmante.'
-  },
-  {
-    id: 'padre',
-    gestos: ['alegria', 'tristeza', 'asombro', 'miedo', 'enojo', 'aburrimiento'],
-    nombre: 'El Padre',
-    rol: 'Secundario clave — guía inicial',
-    datos: [
-      ['Edad', 'Entre 50 y 60 años'],
-      ['Origen', 'Carolina del Príncipe'],
-      ['Entorno', 'Vivienda en medio natural'],
-      ['Carácter', 'Tranquilo, reflexivo, sabio'],
-      ['Rasgo', 'Serenidad y paciencia']
-    ],
-    nota: 'Representa las raíces y la tradición. Pone la guitarra en manos ' +
-          'de su hijo y siembra la idea central de la historia: tocar con ' +
-          'el corazón.'
-  },
-  {
-    id: 'madre',
-    gestos: ['alegria', 'tristeza', 'asombro', 'miedo', 'enojo', 'aburrimiento'],
-    nombre: 'La Madre',
-    rol: 'Secundaria clave — punto de cambio',
-    datos: [
-      ['Edad', 'Entre 40 y 50 años'],
-      ['Origen', 'Carolina del Príncipe'],
-      ['Entorno', 'Doméstico y familiar'],
-      ['Carácter', 'Tranquila, comprensiva, sensible'],
-      ['Rasgo', 'Empatía y calma']
-    ],
-    nota: 'Observa antes de intervenir. Cuando Juanes vuelve derrotado, es ' +
-          'ella quien le da la vuelta a todo: la música nace de lo que se ama.'
-  }
-];
+const PERSONAJES = window.PERSONAJES || [];
 
 const castArte = document.getElementById('castArte');
 const castRol = document.getElementById('castRol');
@@ -633,7 +554,7 @@ function stopScene5(){
 const PRES_DELAY_MS = 450;
 const PRES_SAFETY_MS = 6000;
 
-function crearPresentacion({ ruta, imagenes, stageId, containerId, targetId, hintId }){
+function crearPresentacion({ ruta, imagenes, stageId, containerId, targetId, hintId, alTerminar }){
   const stage = document.getElementById(stageId);
   const container = document.getElementById(containerId);
   const target = document.getElementById(targetId);
@@ -656,6 +577,7 @@ function crearPresentacion({ ruta, imagenes, stageId, containerId, targetId, hin
     pres.ended = true;
     clearTimeout(pres.safetyTimer);
     if (hint) hint.classList.add('is-visible');
+    if (alTerminar) alTerminar(pres.token);
   }
 
   function arrancar(token){
@@ -725,16 +647,53 @@ function crearPresentacion({ ruta, imagenes, stageId, containerId, targetId, hin
     if (pres.anim) pres.anim.pause();
   };
 
+  pres.contenedor = container;
+  pres.tokenActual = () => pres.token;
+
   window.addEventListener('resize', () => scaleStage(stage, container));
 
   return pres;
 }
 
-const pres1 = crearPresentacion({
-  ruta: 'assets/presentacion-c1/json', imagenes: 5,
-  stageId: 'pres1Stage', containerId: 'pres1Container',
-  targetId: 'p1-titulo', hintId: 'pres1Hint'
+const RELEVO_MS = 900;
+let relevoTimer = null;
+
+const presTitulo = crearPresentacion({
+  ruta: 'assets/presentacion-titulo/json', imagenes: 5,
+  stageId: 'pres1Stage', containerId: 'presTituloContainer',
+  targetId: 'p1-titulo',
+  alTerminar: (token) => {
+    clearTimeout(relevoTimer);
+    relevoTimer = setTimeout(() => {
+      if (token !== presTitulo.tokenActual()) return;
+      presTitulo.contenedor.classList.add('se-retira');
+      pres1.contenedor.classList.add('is-visible');
+      pres1.play();
+    }, RELEVO_MS);
+  }
 });
+
+const pres1 = crearPresentacion({
+  ruta: 'assets/presentacion-c1/json', imagenes: 6,
+  stageId: 'pres1Stage', containerId: 'pres1Container',
+  targetId: 'p1-capitulo', hintId: 'pres1Hint'
+});
+
+function abrirCapituloUno(){
+  clearTimeout(relevoTimer);
+  presTitulo.contenedor.classList.remove('se-retira');
+  pres1.contenedor.classList.remove('is-visible');
+  const aviso = document.getElementById('pres1Hint');
+  if (aviso) aviso.classList.remove('is-visible');
+  pres1.stop();
+  presTitulo.play();
+}
+
+function cerrarCapituloUno(){
+  clearTimeout(relevoTimer);
+  presTitulo.stop();
+  pres1.stop();
+}
 
 const pres2 = crearPresentacion({
   ruta: 'assets/presentacion-c2/json', imagenes: 6,
@@ -749,13 +708,13 @@ function showChannel(index){
 
   if (index === 0) initCast();
 
-  if (index === 0) pres1.prefetch();
+  if (index === 0){ presTitulo.prefetch(); pres1.prefetch(); }
   if (index === 5) pres2.prefetch();
 
   if (index === 1){
-    pres1.play();
-  } else if (pres1.ready){
-    pres1.stop();
+    abrirCapituloUno();
+  } else if (presTitulo.ready || pres1.ready){
+    cerrarCapituloUno();
   }
 
   if (index === 6){
@@ -1009,7 +968,7 @@ function powerOff(){
     if (s3.ready) stopScene3();
     if (s4.ready) stopScene4();
     if (s5.ready) stopScene5();
-    pres1.stop();
+    cerrarCapituloUno();
     pres2.stop();
     tvCaption.textContent = 'Televisor apagado';
   }, 560);

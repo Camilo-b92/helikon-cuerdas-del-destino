@@ -63,6 +63,7 @@ Lo que eso implica al trabajar:
 │   │   └── home.css        Solo lo propio de la portada
 │   ├── js/
 │   │   ├── pulp.js         Revelado al scroll y paralaje del masthead
+│   │   ├── personajes.js   Las cinco fichas, compartidas por portada y cómic
 │   │   └── home.js         Solo lo propio de la portada
 │   └── img/                favicon.svg y og-portada.jpg (vista previa al compartir)
 │
@@ -173,6 +174,23 @@ se guarda y se distribuye es el original sin tocar — el tramado lo aplica el
 navegador al pintar. Ver la nota sobre CC BY-SA en
 [créditos de imágenes](#créditos-de-imágenes).
 
+### `assets/js/personajes.js` — las fichas, en un solo sitio
+
+Define `window.PERSONAJES`: las cinco fichas con su `id`, `color`, `nombre`,
+`rol`, la lista de `gestos`, la tabla de `datos` y la `nota`.
+
+**Lo cargan las dos páginas que las necesitan**, y siempre antes de su propio
+script: la portada para el expediente a pantalla completa, y el cómic para el
+canal 0. Antes vivían dentro de `comic.js`; al sacarlas, un cambio en una ficha
+se refleja en los dos sitios a la vez.
+
+`comic.js` las lee con `window.PERSONAJES || []`: si el archivo no llegara, el
+canal 0 queda vacío pero el televisor sigue funcionando.
+
+Los gestos **no son los mismos para todos**. El Ente tiene *desagrado* y
+*somnoliento* donde los demás tienen *miedo* y *aburrimiento*, así que la lista
+se lee de cada ficha y nunca se da por supuesta.
+
 ### `assets/js/home.js` — portada
 
 - `playClickSound()` — clic sintetizado con Web Audio. Reutiliza **un único
@@ -244,9 +262,31 @@ dejaría las viñetas rectas.
 
 - `bindTilt(selector, strength, lift)` — la misma inclinación, parametrizada
   en grados de giro y en cuánto se levanta la tarjeta. Se aplica dos veces:
-  a las viñetas (`2.5`, `4`) y a las fichas del equipo (`6`, `4`). El
-  selector excluye `.panel-locked`, que es la viñeta de "Próximo capítulo",
-  bloqueada a propósito.
+  a las viñetas (`2.5`, `4`) y a las fichas del equipo (`6`, `4`).
+
+### El expediente de personaje, en la portada
+
+Las cinco tarjetas de *El reparto* son botones. Al pulsar una se abre un
+diálogo a pantalla completa —`#expediente`— con la ficha entera: rol, tabla de
+datos, la nota manuscrita y las seis expresiones del personaje, que se cambian
+sin cerrar.
+
+El marcado del diálogo está vacío en el HTML; lo rellena `home.js` a partir de
+`window.PERSONAJES`. El orden de la tira es el del reparto, no el del archivo
+de datos: `ORDEN_REPARTO` lo fija.
+
+Lo que hay que respetar si se toca:
+
+- **Es un `role="dialog"` con `aria-modal`.** Se cierra con la ✕, con Escape y
+  pulsando el fondo. Las flechas ← y → cambian de personaje.
+- **El foco vuelve a la tarjeta que lo abrió.** Se guarda en `devolverFocoA`
+  antes de abrir; sin eso, quien navega con teclado se queda al principio de la
+  página.
+- **El foco queda atrapado dentro** mientras está abierto: el Tab da la vuelta
+  entre el primer y el último control.
+- **El fondo no se desplaza**: `body.con-expediente` le pone `overflow: hidden`.
+- Al cambiar de personaje **se vuelve a la figura completa**, porque no todos
+  comparten la misma lista de gestos.
 
 ### La página de Helikón: el Nº 0
 
@@ -263,17 +303,19 @@ arriba abajo:
 4. **Manifiesto** como página de impacto, con la lira.
 5. **Quién es quién**: fichas del equipo al estilo del *Who's Who* de los
    cómics.
-6. **Extras del taller**: la hoja de modelo real con las seis expresiones de
-   Juanes, el proceso de producción en cuatro pasos y el cómic en cifras.
-7. **Expedientes**, **tablero de ideas**, **nuestro universo** y cierre
-   "Fin del Nº 0".
+6. **Señas de identidad**: la paleta con sus cinco tintes y su uso, las tres
+   tipografías con muestra en su propia letra, y la regla de los dos mundos
+   —papel fuera de la pantalla, turquesa dentro—.
+7. **Tablero de ideas**, **nuestro universo** y cierre "Fin del Nº 0".
 
 Reglas de esta página:
 
 - **Nada inventado sobre personas reales.** Sin retratos, sin frases que no
   dijeron y sin estadísticas de "poderes". Las fichas dicen el oficio y lo que
-  cada uno aporta al cómic; el proceso y las cifras salen de este README y de
-  la bitácora.
+  cada uno aporta al cómic.
+- **La paleta y las tipografías de *Señas de identidad* son las de verdad.**
+  Los hexadecimales salen de `pulp.css` y cada muestra se escribe con la fuente
+  que anuncia. Si la paleta cambia, esa sección cambia con ella.
 - **El dibujo del monte usa `preserveAspectRatio="xMidYMax slice"`** con la
   cima centrada en un lienzo de 1000×260, de la misma proporción que la viñeta.
   Así, en móvil se recortan los lados pero la cima y el templo siempre se ven.

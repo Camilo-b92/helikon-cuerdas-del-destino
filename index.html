@@ -120,24 +120,44 @@
       <h2 class="rotulo" id="repartoTitulo">El reparto</h2>
       <ul class="reparto-tira">
         <li class="personaje personaje--azul">
-          <img src="comic/assets/personajes/nino.svg" width="760" height="1000" loading="lazy" alt="">
-          <p class="personaje-ficha"><strong>Juanes niño</strong> Descubre la guitarra</p>
+          <button type="button" class="personaje-boton" data-personaje="nino"
+                  aria-haspopup="dialog">
+            <img src="comic/assets/personajes/nino.svg" width="760" height="1000" loading="lazy" alt="">
+            <span class="personaje-ficha"><strong>Juanes niño</strong> Descubre la guitarra</span>
+            <span class="personaje-lupa" aria-hidden="true">Ver ficha</span>
+          </button>
         </li>
         <li class="personaje personaje--amarillo">
-          <img src="comic/assets/personajes/padre.svg" width="760" height="1000" loading="lazy" alt="">
-          <p class="personaje-ficha"><strong>El Padre</strong> Toca con el corazón</p>
+          <button type="button" class="personaje-boton" data-personaje="padre"
+                  aria-haspopup="dialog">
+            <img src="comic/assets/personajes/padre.svg" width="760" height="1000" loading="lazy" alt="">
+            <span class="personaje-ficha"><strong>El Padre</strong> Toca con el corazón</span>
+            <span class="personaje-lupa" aria-hidden="true">Ver ficha</span>
+          </button>
         </li>
         <li class="personaje personaje--rojo">
-          <img src="comic/assets/personajes/juanes.svg" width="760" height="1000" loading="lazy" alt="">
-          <p class="personaje-ficha"><strong>Juanes</strong> Músico callejero</p>
+          <button type="button" class="personaje-boton" data-personaje="juanes"
+                  aria-haspopup="dialog">
+            <img src="comic/assets/personajes/juanes.svg" width="760" height="1000" loading="lazy" alt="">
+            <span class="personaje-ficha"><strong>Juanes</strong> Músico callejero</span>
+            <span class="personaje-lupa" aria-hidden="true">Ver ficha</span>
+          </button>
         </li>
         <li class="personaje personaje--azul">
-          <img src="comic/assets/personajes/madre.svg" width="760" height="1000" loading="lazy" alt="">
-          <p class="personaje-ficha"><strong>La Madre</strong> El punto de cambio</p>
+          <button type="button" class="personaje-boton" data-personaje="madre"
+                  aria-haspopup="dialog">
+            <img src="comic/assets/personajes/madre.svg" width="760" height="1000" loading="lazy" alt="">
+            <span class="personaje-ficha"><strong>La Madre</strong> El punto de cambio</span>
+            <span class="personaje-lupa" aria-hidden="true">Ver ficha</span>
+          </button>
         </li>
         <li class="personaje personaje--tinta">
-          <img src="comic/assets/personajes/ente.svg" width="760" height="1000" loading="lazy" alt="">
-          <p class="personaje-ficha"><strong>El Ente</strong> Aparece en la crisis</p>
+          <button type="button" class="personaje-boton" data-personaje="ente"
+                  aria-haspopup="dialog">
+            <img src="comic/assets/personajes/ente.svg" width="760" height="1000" loading="lazy" alt="">
+            <span class="personaje-ficha"><strong>El Ente</strong> Aparece en la crisis</span>
+            <span class="personaje-lupa" aria-hidden="true">Ver ficha</span>
+          </button>
         </li>
       </ul>
     </section>
@@ -169,7 +189,45 @@
 
   </main>
 
-  <script src="assets/js/pulp.js"></script>
+  
+<div class="expediente" id="expediente" hidden>
+  <div class="expediente-fondo" data-cerrar></div>
+
+  <div class="expediente-hoja" role="dialog" aria-modal="true"
+       aria-labelledby="expedienteNombre" tabindex="-1">
+
+    <header class="expediente-cabecera">
+      <span class="expediente-sello">Expediente</span>
+      <span class="expediente-indice" id="expedienteIndice"></span>
+      <button type="button" class="expediente-cerrar" data-cerrar
+              aria-label="Cerrar la ficha">&times;</button>
+    </header>
+
+    <div class="expediente-cuerpo">
+      <figure class="expediente-figura">
+        <img class="expediente-arte" id="expedienteArte" src="" alt="">
+        <figcaption class="expediente-gestos" id="expedienteGestos"
+                    aria-label="Expresiones del personaje"></figcaption>
+      </figure>
+
+      <div class="expediente-texto">
+        <p class="expediente-rol" id="expedienteRol"></p>
+        <h2 class="expediente-nombre" id="expedienteNombre"></h2>
+        <dl class="expediente-datos" id="expedienteDatos"></dl>
+        <p class="expediente-nota" id="expedienteNota"></p>
+      </div>
+    </div>
+
+    <nav class="expediente-dial" aria-label="Cambiar de personaje">
+      <button type="button" class="expediente-paso" data-paso="-1">&larr; Anterior</button>
+      <ul class="expediente-tira" id="expedienteTira"></ul>
+      <button type="button" class="expediente-paso" data-paso="1">Siguiente &rarr;</button>
+    </nav>
+  </div>
+</div>
+
+<script src="assets/js/personajes.js"></script>
+<script src="assets/js/pulp.js"></script>
   <script src="assets/js/home.js"></script>
 </body>
 </html>

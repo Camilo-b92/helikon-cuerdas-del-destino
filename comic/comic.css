@@ -452,6 +452,11 @@ a{ color: inherit; }
 }
 .pres-hint.is-visible{ visibility: visible; }
 
+.pres-container{ transition: opacity 0.35s ease; }
+.pres-container--segunda{ opacity: 0; }
+.pres-container--segunda.is-visible{ opacity: 1; }
+.pres-container.se-retira{ opacity: 0; }
+
 .scene1-stage{
   position: absolute;
   inset: 0;

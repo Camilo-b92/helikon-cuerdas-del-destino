@@ -94,3 +94,147 @@ document.querySelectorAll('.panel').forEach(panel => {
     panel.style.zIndex = '';
   });
 });
+
+
+const expediente = document.getElementById('expediente');
+const expHoja = expediente ? expediente.querySelector('.expediente-hoja') : null;
+const expArte = document.getElementById('expedienteArte');
+const expRol = document.getElementById('expedienteRol');
+const expNombre = document.getElementById('expedienteNombre');
+const expDatos = document.getElementById('expedienteDatos');
+const expNota = document.getElementById('expedienteNota');
+const expGestos = document.getElementById('expedienteGestos');
+const expTira = document.getElementById('expedienteTira');
+const expIndice = document.getElementById('expedienteIndice');
+
+const ORDEN_REPARTO = ['nino', 'padre', 'juanes', 'madre', 'ente'];
+const NOMBRE_GESTO = {
+  alegria: 'Alegría', tristeza: 'Tristeza', asombro: 'Asombro', miedo: 'Miedo',
+  enojo: 'Enojo', aburrimiento: 'Aburrimiento', desagrado: 'Desagrado',
+  somnoliento: 'Somnoliento'
+};
+
+const fichas = (window.PERSONAJES || [])
+  .slice()
+  .sort((a, b) => ORDEN_REPARTO.indexOf(a.id) - ORDEN_REPARTO.indexOf(b.id));
+
+let fichaActual = 0;
+let gestoActual = 'figura';
+let devolverFocoA = null;
+
+function rutaFigura(p, gesto){
+  return gesto === 'figura'
+    ? 'comic/assets/personajes/' + p.id + '.svg'
+    : 'comic/assets/personajes/expresiones/' + p.id + '-' + gesto + '.svg';
+}
+
+function pintarGestos(p){
+  expGestos.textContent = '';
+  ['figura'].concat(p.gestos).forEach(g => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'expediente-gesto';
+    b.textContent = g === 'figura' ? 'Figura' : (NOMBRE_GESTO[g] || g);
+    b.setAttribute('aria-pressed', String(g === gestoActual));
+    b.addEventListener('click', () => {
+      gestoActual = g;
+      expArte.src = rutaFigura(p, g);
+      expArte.alt = p.nombre + (g === 'figura' ? ', figura completa' : ', expresión de ' + b.textContent.toLowerCase());
+      [...expGestos.children].forEach(o => o.setAttribute('aria-pressed', String(o === b)));
+    });
+    expGestos.appendChild(b);
+  });
+}
+
+function pintarTira(){
+  expTira.textContent = '';
+  fichas.forEach((p, i) => {
+    const li = document.createElement('li');
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'expediente-mini personaje--' + p.color;
+    b.setAttribute('aria-current', String(i === fichaActual));
+    b.title = p.nombre;
+    const img = document.createElement('img');
+    img.src = 'comic/assets/personajes/' + p.id + '.svg';
+    img.alt = p.nombre;
+    img.width = 760; img.height = 1000;
+    b.appendChild(img);
+    b.addEventListener('click', () => mostrarFicha(i));
+    li.appendChild(b);
+    expTira.appendChild(li);
+  });
+}
+
+function mostrarFicha(i){
+  if (!fichas.length) return;
+  fichaActual = (i + fichas.length) % fichas.length;
+  const p = fichas[fichaActual];
+  gestoActual = 'figura';
+
+  expHoja.dataset.color = p.color;
+  expArte.src = rutaFigura(p, 'figura');
+  expArte.alt = p.nombre + ', figura completa';
+  expRol.textContent = p.rol;
+  expNombre.textContent = p.nombre;
+  expNota.textContent = p.nota;
+  expIndice.textContent = (fichaActual + 1) + ' de ' + fichas.length;
+
+  expDatos.textContent = '';
+  p.datos.forEach(([clave, valor]) => {
+    const dt = document.createElement('dt');
+    dt.textContent = clave;
+    const dd = document.createElement('dd');
+    dd.textContent = valor;
+    expDatos.append(dt, dd);
+  });
+
+  pintarGestos(p);
+  pintarTira();
+}
+
+function abrirExpediente(id, origen){
+  const i = fichas.findIndex(p => p.id === id);
+  if (i < 0) return;
+  devolverFocoA = origen || null;
+  mostrarFicha(i);
+  expediente.hidden = false;
+  document.body.classList.add('con-expediente');
+  expHoja.focus();
+}
+
+function cerrarExpediente(){
+  expediente.hidden = true;
+  document.body.classList.remove('con-expediente');
+  if (devolverFocoA) devolverFocoA.focus();
+  devolverFocoA = null;
+}
+
+if (expediente && fichas.length){
+  document.querySelectorAll('.personaje-boton').forEach(b => {
+    b.addEventListener('click', () => abrirExpediente(b.dataset.personaje, b));
+  });
+
+  expediente.querySelectorAll('[data-cerrar]').forEach(b => {
+    b.addEventListener('click', cerrarExpediente);
+  });
+
+  expediente.querySelectorAll('[data-paso]').forEach(b => {
+    b.addEventListener('click', () => mostrarFicha(fichaActual + Number(b.dataset.paso)));
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (expediente.hidden) return;
+    if (e.key === 'Escape'){ cerrarExpediente(); return; }
+    if (e.key === 'ArrowRight'){ mostrarFicha(fichaActual + 1); return; }
+    if (e.key === 'ArrowLeft'){ mostrarFicha(fichaActual - 1); return; }
+
+    if (e.key === 'Tab'){
+      const focos = expHoja.querySelectorAll('button, [href], [tabindex]:not([tabindex="-1"])');
+      if (!focos.length) return;
+      const primero = focos[0], ultimo = focos[focos.length - 1];
+      if (e.shiftKey && document.activeElement === primero){ e.preventDefault(); ultimo.focus(); }
+      else if (!e.shiftKey && document.activeElement === ultimo){ e.preventDefault(); primero.focus(); }
+    }
+  });
+}
