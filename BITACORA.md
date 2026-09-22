@@ -16,9 +16,9 @@ README y luego esto.
 | Repositorio | `github.com/Camilo-b92/helikon-cuerdas-del-destino` (público) |
 | Rama | `main`, al día con el remoto |
 | Publicado en línea | Todavía no |
-| Canales del televisor | 0–8 (nueve en total) |
+| Canales del televisor | 0–7 (ocho en total), solo cómic |
 | Peso total | ~20 MB, casi todo arte del cómic |
-| Personajes | Canal 0: cinco figuras y treinta expresiones |
+| Personajes | En la portada: expediente a pantalla completa desde *El reparto* |
 | Presentaciones | Canal 1: nombre del cómic y luego capítulo uno · Canal 6: capítulo dos |
 | Fichas de personaje | `assets/js/personajes.js`, compartidas por portada y cómic |
 | Comentarios en el código | Ninguno: la documentación vive aquí y en el README |
@@ -307,6 +307,24 @@ con una muestra de cada una en su propia letra, y la regla de los dos mundos
 Con el panel bloqueado fuera, *Nuestro universo* pasa de tres viñetas a dos, y
 el hover ya no necesita excluir `.panel-locked`. Se retiraron 213 líneas de CSS
 que se quedaron sin uso.
+
+### El televisor es solo el cómic
+
+*Decidido el 22 de septiembre de 2026.* El canal 0 presentaba a los cinco
+personajes. Se retiró: **el televisor queda para leer el cómic y nada más**.
+
+El motivo es que dejó de hacer falta ahí. Desde que la portada abre el
+expediente a pantalla completa —con la misma ficha, la misma tabla y las mismas
+seis expresiones, y además más sitio para leerla— tener lo mismo dentro de una
+pantalla de 1134x658 era repetirlo en el peor de los dos formatos.
+
+El dial pasa de nueve canales a **ocho (0–7)**, y el canal 0 es ahora la
+presentación. Con eso, encender el televisor lleva directo a la historia: video,
+nombre del cómic, capítulo uno y primera escena, sin desvíos.
+
+`assets/js/personajes.js` **se queda**. Ya no lo carga el cómic, solo la
+portada, pero sigue siendo la única fuente de las fichas y está listo para la
+próxima página que las pida. Se retiraron 130 líneas de JavaScript y 181 de CSS.
 
 ### Los gráficos son SVG en línea, no imágenes
 
@@ -957,6 +975,19 @@ Windows; no se escribe en ningún archivo del proyecto y no debe acabar en él.
 
 Los fuentes de After Effects e Illustrator del ZIP (8 MB entre los dos) **no
 entran al repositorio**: son material de trabajo, no del sitio.
+
+---
+
+### Ronda 18 — El televisor se queda solo con el cómic
+
+- **La portada volvía a mostrar el logotipo equivocado.** Al renombrar
+  `presentacion-c1/` en la ronda 17, las dos imágenes de la portada —el
+  logotipo y el anillo— siguieron apuntando a esa ruta, que ya contenía el
+  *Capítulo 1*. El título salía estirado desde un original de 262x84 a 870x436.
+  Corregido a `presentacion-titulo/`, que es donde vive el logotipo.
+- **Fuera el canal de Personajes.** El dial baja a ocho canales (0–7) y el 0 es
+  la presentación. El detalle está arriba, en *El televisor es solo el cómic*.
+- `comic/index.html` ya no carga `personajes.js`.
 
 ---
 

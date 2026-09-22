@@ -179,13 +179,10 @@ navegador al pintar. Ver la nota sobre CC BY-SA en
 Define `window.PERSONAJES`: las cinco fichas con su `id`, `color`, `nombre`,
 `rol`, la lista de `gestos`, la tabla de `datos` y la `nota`.
 
-**Lo cargan las dos páginas que las necesitan**, y siempre antes de su propio
-script: la portada para el expediente a pantalla completa, y el cómic para el
-canal 0. Antes vivían dentro de `comic.js`; al sacarlas, un cambio en una ficha
-se refleja en los dos sitios a la vez.
-
-`comic.js` las lee con `window.PERSONAJES || []`: si el archivo no llegara, el
-canal 0 queda vacío pero el televisor sigue funcionando.
+**Lo carga la portada**, antes de su propio script, para el expediente a
+pantalla completa. Vivían dentro de `comic.js` hasta que los personajes salieron
+del televisor; el archivo se quedó porque las fichas siguen siendo una sola
+fuente y así están listas para la siguiente página que las necesite.
 
 Los gestos **no son los mismos para todos**. El Ente tiene *desagrado* y
 *somnoliento* donde los demás tienen *miedo* y *aburrimiento*, así que la lista
@@ -409,8 +406,8 @@ Máquina de estados con cuatro banderas: `tvOn`, `isAnimating`,
 `introPlaying` e `introEnded`. Mientras `isAnimating` está en `true` los
 botones de canal quedan deshabilitados.
 
-**El dial.** `TOTAL_CHANNELS = 8` es el **último índice**, no la cantidad: los
-canales van de 0 a 8. `showChannel(index)` es el despachador central — marca
+**El dial.** `TOTAL_CHANNELS = 7` es el **último índice**, no la cantidad: los
+canales van de 0 a 7. `showChannel(index)` es el despachador central — marca
 la `<section>` activa, arranca lo que corresponda a ese canal, detiene lo de
 los demás, adelanta la carga del siguiente y actualiza el pie de foto.
 
@@ -429,15 +426,7 @@ proporciones, es decir en modo *cover*: llena la pantalla y recorta lo que
 sobre, sin deformar. Lo usan las cinco escenas y las dos presentaciones, y se
 vuelve a llamar en cada `resize`.
 
-**Canal 0 — Personajes.** La ficha no está en el HTML: la arma `pintarPersonaje()`
-a partir del array `PERSONAJES`, así que **añadir un personaje es añadir una
-entrada**, no repetir marcado. `rutaArte()` decide si toca la figura entera o
-una de las seis expresiones. Al abrir un personaje se precargan sus seis caras
-(120 KB) y, al montar el canal, los otros cuatro retratos. El cambio de
-personaje pasa por un desvanecido de 180 ms que pinta con el contenido ya
-oculto, para que el retrato no se vea a medias.
-
-**Canales 1 y 6 — Presentaciones.** Las dos se comportan igual, así que
+**Canales 0 y 5 — Presentaciones.** Las dos se comportan igual, así que
 comparten la fábrica `crearPresentacion()`. Cosas que hay que respetar al
 tocarlas:
 
@@ -485,11 +474,6 @@ verse.
 - **El televisor tope a 1566 px** — `width: min(1566px, 99vw, calc((100vh - 100px) * 1.6930))`.
   1566x925 es la resolución nativa de `tv.png`: pasar de ahí solo escala hacia
   arriba y se ve borroso.
-- **El retrato del canal 0 usa `object-fit: contain`**, no `max-height: 100%`.
-  Los cinco SVG tienen proporciones distintas y el más alargado se salía sobre
-  las pestañas, porque el alto en porcentaje no llegaba a resolverse en esa
-  cadena de contenedores. Su columna es del **42 %** (38 % en móvil): lo justo
-  para que el lienzo común de 760x1000 quepa a plena altura.
 - **`prefers-reduced-motion` neutraliza la _duración_, no el retraso.** Las
   escenas usan `animation-delay` para escalonar la entrada de cada capa —el
   panel de texto de la escena 2 entra a los 8 s, sincronizado con su Lottie—.
@@ -634,7 +618,7 @@ grande y no como miniatura.
 
 **No es una captura de la portada**, es una composición aparte hecha con el
 mismo material: el rojo `--red`, el estallido de rayos, el logotipo
-`presentacion-c1/json/images/img_0.png` y la figura `personajes/juanes.svg`.
+`presentacion-titulo/json/images/img_0.png` y la figura `personajes/juanes.svg`.
 Se dibujó en un `<canvas>` a 1200x630 y se exportó a JPEG con calidad 0,88
 —en PNG pesaba 651 KB, seis veces el techo de 300 KB que fija este README—.
 
@@ -678,32 +662,27 @@ blanco.
 ## Estado del contenido
 
 El cómic tiene el capítulo uno completo (tres escenas) y las dos primeras
-escenas del capítulo dos, repartidas en nueve canales (0 a 8). Al encender, el
+escenas del capítulo dos, repartidas en ocho canales (0 a 7). Al encender, el
 televisor reproduce el video de introducción y entrega directo al canal 0.
+
+**El televisor es solo el cómic.** Los personajes se conocen en la portada,
+pulsando su tarjeta en *El reparto*.
 
 | Canal | Contenido | Se arma en |
 |---|---|---|
-| 0 | **Personajes** | `PERSONAJES` + `initCast()` |
-| 1 | Presentación del capítulo uno | `pres1` |
-| 2 | Escena I — El llamado | `s1` |
-| 3 | Escena II | `s2` |
-| 4 | Escena III | `s3` |
-| 5 | Fin del capítulo uno | HTML fijo |
-| 6 | Presentación del capítulo dos | `pres2` |
-| 7 | Capítulo dos, escena I | `s4` |
-| 8 | Capítulo dos, escena II | `s5` |
-
-El **canal 0** presenta a los cinco personajes —Juanes, Juanes niño, el Ente,
-el Padre y la Madre— con su retrato y su ficha. Se cambia de personaje con las
-pestañas de abajo, dentro de la pantalla.
-
-Cada uno trae además sus **seis expresiones** del book de ilustración. Los
-botones bajo la ficha las muestran en grande en el hueco del retrato, y
-*Figura* devuelve al cuerpo entero.
+| 0 | Nombre del cómic y presentación del capítulo uno | `presTitulo` + `pres1` |
+| 1 | Escena I — El llamado | `s1` |
+| 2 | Escena II | `s2` |
+| 3 | Escena III | `s3` |
+| 4 | Fin del capítulo uno | HTML fijo |
+| 5 | Presentación del capítulo dos | `pres2` |
+| 6 | Capítulo dos, escena I | `s4` |
+| 7 | Capítulo dos, escena II | `s5` |
 
 Cada capítulo abre con su propia presentación animada, en el canal anterior a
-su primera escena: el **canal 1** presenta *Cuerdas del Destino* y el **canal
-6**, *El Mensaje*. Las dos se reproducen al sintonizar el canal y se quedan
+su primera escena. El **canal 0** encadena dos: primero el nombre del cómic,
+*Cuerdas del Destino*, y a continuación *Capítulo 1 — El Descubrimiento*. El
+**canal 5** presenta *El Mensaje*. Las dos se reproducen al sintonizar el canal y se quedan
 congeladas en su último fotograma, que es la portada completa.
 
 La lista completa de pendientes está en la [bitácora](BITACORA.md).

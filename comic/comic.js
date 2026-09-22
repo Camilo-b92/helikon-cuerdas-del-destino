@@ -1,4 +1,4 @@
-const TOTAL_CHANNELS = 8;
+const TOTAL_CHANNELS = 7;
 let currentChannel = 0;
 let tvOn = false;
 let isAnimating = false;
@@ -39,140 +39,10 @@ const scene5Stage = document.getElementById('scene5Stage');
 const scene5Container = document.getElementById('scene5Container');
 
 const channelNames = [
-  'Personajes',
   'Capítulo uno — Presentación', 'Escena I — El llamado', 'Escena II',
   'Escena III', 'Fin del capítulo uno',
   'Capítulo dos — Presentación', 'Capítulo 2 — Escena I', 'Capítulo 2 — Escena II'
 ];
-
-const PERSONAJES = window.PERSONAJES || [];
-
-const castArte = document.getElementById('castArte');
-const castRol = document.getElementById('castRol');
-const castNombre = document.getElementById('castNombre');
-const castDatos = document.getElementById('castDatos');
-const castNota = document.getElementById('castNota');
-const castSelector = document.getElementById('castSelector');
-const castGestos = document.getElementById('castGestos');
-const castFigura = castArte ? castArte.parentElement : null;
-const castFicha = castNota ? castNota.parentElement : null;
-
-const NOMBRE_GESTO = {
-  alegria: 'Alegría', tristeza: 'Tristeza', asombro: 'Asombro',
-  miedo: 'Miedo', enojo: 'Enojo', aburrimiento: 'Aburrimiento',
-  desagrado: 'Desagrado', somnoliento: 'Somnoliento'
-};
-
-let castActual = -1;
-let castGesto = null;
-let castTimer = null;
-let castArmado = false;
-
-function rutaArte(p, gesto){
-  return gesto ? 'assets/personajes/expresiones/' + p.id + '-' + gesto + '.svg'
-               : 'assets/personajes/' + p.id + '.svg';
-}
-
-function pintarArte(){
-  const p = PERSONAJES[castActual];
-  if (!p || !castArte) return;
-  castArte.src = rutaArte(p, castGesto);
-  castArte.alt = castGesto
-    ? p.nombre + ' — expresión: ' + NOMBRE_GESTO[castGesto]
-    : p.nombre + ' — ' + p.rol;
-  castArte.classList.toggle('es-gesto', Boolean(castGesto));
-  Array.from(castGestos.children).forEach(b => {
-    b.setAttribute('aria-pressed', String(b.dataset.gesto === (castGesto || '')));
-  });
-}
-
-function pintarPersonaje(i){
-  const p = PERSONAJES[i];
-  if (!p) return;
-
-  castRol.textContent = p.rol;
-  castNombre.textContent = p.nombre;
-  castNota.textContent = p.nota;
-
-  castDatos.textContent = '';
-  p.datos.forEach(([clave, valor]) => {
-    const dt = document.createElement('dt');
-    dt.textContent = clave;
-    const dd = document.createElement('dd');
-    dd.textContent = valor;
-    castDatos.append(dt, dd);
-  });
-
-  Array.from(castSelector.children).forEach((b, n) => {
-    b.setAttribute('aria-pressed', String(n === i));
-  });
-
-  castGestos.textContent = '';
-  [['', 'Figura']].concat((p.gestos || []).map(g => [g, NOMBRE_GESTO[g] || g]))
-    .forEach(([gesto, etiqueta]) => {
-      const b = document.createElement('button');
-      b.type = 'button';
-      b.className = 'cast-gesto';
-      b.dataset.gesto = gesto;
-      b.textContent = etiqueta;
-      b.setAttribute('aria-pressed', 'false');
-      b.addEventListener('click', () => {
-        castGesto = gesto || null;
-        pintarArte();
-      });
-      castGestos.append(b);
-    });
-
-  pintarArte();
-
-  (p.gestos || []).forEach(g => {
-    const img = new Image();
-    img.src = rutaArte(p, g);
-  });
-}
-
-function mostrarPersonaje(i){
-  if (i === castActual || !castArte) return;
-  const primero = castActual === -1;
-  castActual = i;
-  castGesto = null;
-
-  if (primero){
-    pintarPersonaje(i);
-    return;
-  }
-
-  clearTimeout(castTimer);
-  castFigura.classList.add('is-cambiando');
-  castFicha.classList.add('is-cambiando');
-  castTimer = setTimeout(() => {
-    pintarPersonaje(i);
-    castFigura.classList.remove('is-cambiando');
-    castFicha.classList.remove('is-cambiando');
-  }, 180);
-}
-
-function initCast(){
-  if (castArmado || !castSelector) return;
-  castArmado = true;
-
-  PERSONAJES.forEach((p, i) => {
-    const b = document.createElement('button');
-    b.type = 'button';
-    b.className = 'cast-chip';
-    b.textContent = p.nombre;
-    b.setAttribute('aria-pressed', 'false');
-    b.addEventListener('click', () => mostrarPersonaje(i));
-    castSelector.append(b);
-  });
-
-  PERSONAJES.slice(1).forEach(p => {
-    const img = new Image();
-    img.src = 'assets/personajes/' + p.id + '.svg';
-  });
-
-  mostrarPersonaje(0);
-}
 
 let s1 = { humo: null, puerta: null, juanesCorre: null, ready: false, played: false };
 
@@ -706,24 +576,21 @@ function showChannel(index){
     ch.classList.toggle('is-active', Number(ch.dataset.channel) === index);
   });
 
-  if (index === 0) initCast();
+  if (index === 4) pres2.prefetch();
 
-  if (index === 0){ presTitulo.prefetch(); pres1.prefetch(); }
-  if (index === 5) pres2.prefetch();
-
-  if (index === 1){
+  if (index === 0){
     abrirCapituloUno();
   } else if (presTitulo.ready || pres1.ready){
     cerrarCapituloUno();
   }
 
-  if (index === 6){
+  if (index === 5){
     pres2.play();
   } else if (pres2.ready){
     pres2.stop();
   }
 
-  if (index === 2){
+  if (index === 1){
     initScene1();
     resetScene1();
     requestAnimationFrame(scaleScene1);
@@ -733,7 +600,7 @@ function showChannel(index){
     s1.humo.pause();
   }
 
-  if (index === 3){
+  if (index === 2){
     initScene2();
     requestAnimationFrame(scaleScene2);
     clearTimeout(s2.playTimer);
@@ -743,7 +610,7 @@ function showChannel(index){
     stopScene2();
   }
 
-  if (index === 4){
+  if (index === 3){
     initScene3();
     resetScene3();
     requestAnimationFrame(scaleScene3);
@@ -752,7 +619,7 @@ function showChannel(index){
     stopScene3();
   }
 
-  if (index === 7){
+  if (index === 6){
     initScene4();
     requestAnimationFrame(scaleScene4);
     clearTimeout(s4.playTimer);
@@ -762,7 +629,7 @@ function showChannel(index){
     stopScene4();
   }
 
-  if (index === 8){
+  if (index === 7){
     initScene5();
     requestAnimationFrame(scaleScene5);
     clearTimeout(s5.playTimer);
@@ -864,6 +731,9 @@ function playIntro(){
   setButtonsDisabled(true);
 
   tvCaption.textContent = 'Reproduciendo introducción…';
+
+  presTitulo.prefetch();
+  pres1.prefetch();
 
   introVideo.currentTime = 0;
   const playPromise = introVideo.play();

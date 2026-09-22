@@ -220,197 +220,18 @@ a{ color: inherit; }
   margin: 0 auto;
 }
 
-.cast{
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  padding: 3% 4.5% 0;
-  text-align: left;
-  background: radial-gradient(ellipse 70% 60% at 28% 40%,
-              rgba(9,203,187,0.13), transparent 70%);
-}
 
-.cast-cuerpo{
-  flex: 1;
-  min-height: 0;
-  display: grid;
-  grid-template-columns: minmax(0, 42%) minmax(0, 1fr);
-  gap: 3%;
-  align-items: stretch;
-}
 
-.cast-figura{
-  min-height: 0;
-  padding-bottom: 0.4em;
-}
-.cast-arte{
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  object-position: bottom center;
-  filter: drop-shadow(0 0.5em 0.7em rgba(0,0,0,0.55));
-}
-.cast-arte.es-gesto{ object-position: center; }
 
-.cast-rol{
-  margin: 0 0 0.35em;
-  font-family: var(--font-sub);
-  font-weight: 500;
-  font-size: 0.78em;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--turquoise);
-}
-.cast-ficha{ align-self: center; }
 
-.cast-nombre{
-  margin: 0 0 0.55em;
-  font-family: var(--font-tv);
-  font-weight: 400;
-  font-size: 2.6em;
-  line-height: 0.95;
-  color: var(--beige);
-  text-shadow: 0 0 0.5em rgba(9,203,187,0.3);
-}
 
-.cast-datos{
-  margin: 0;
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  gap: 0.3em 1.1em;
-}
-.cast-datos dt{
-  font-family: var(--font-sub);
-  font-weight: 600;
-  font-size: 0.72em;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--turquoise);
-  white-space: nowrap;
-}
-.cast-datos dd{
-  margin: 0;
-  font-size: 0.82em;
-  line-height: 1.35;
-  color: var(--mist);
-}
 
-.cast-nota{
-  margin: 1em 0 0;
-  font-size: 0.8em;
-  line-height: 1.6;
-  color: var(--mist-dim);
-  border-left: 2px solid rgba(9,203,187,0.45);
-  padding-left: 0.8em;
-}
 
-.cast-gestos{
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.3em;
-  margin-top: 0.9em;
-}
-.cast-gesto{
-  border: 1px solid rgba(9,203,187,0.3);
-  background: transparent;
-  color: var(--mist-dim);
-  font-family: var(--font-sub);
-  font-weight: 500;
-  font-size: 0.62em;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  padding: 0.3em 0.65em;
-  border-radius: 999px;
-  cursor: pointer;
-  transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
-}
-.cast-gesto:hover,
-.cast-gesto:focus-visible{
-  color: var(--beige);
-  border-color: var(--turquoise);
-  outline: none;
-}
-.cast-gesto[aria-pressed="true"]{
-  background: rgba(9,203,187,0.22);
-  border-color: var(--turquoise);
-  color: var(--beige);
-}
 
-.cast-selector{
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.45em;
-  justify-content: center;
-  padding: 0.8em 0 1em;
-}
-.cast-chip{
-  border: 1px solid rgba(9,203,187,0.35);
-  background: rgba(9,203,187,0.08);
-  color: var(--mist);
-  font-family: var(--font-sub);
-  font-weight: 500;
-  font-size: 0.72em;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  padding: 0.45em 1em;
-  border-radius: 999px;
-  cursor: pointer;
-  transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease;
-}
-.cast-chip:hover,
-.cast-chip:focus-visible{
-  border-color: var(--turquoise);
-  color: var(--beige);
-  outline: none;
-}
-.cast-chip[aria-selected="true"]{
-  background: var(--turquoise);
-  border-color: var(--turquoise);
-  color: #06282b;
-  font-weight: 600;
-}
 
-.cast-figura.is-cambiando .cast-arte,
-.cast-ficha.is-cambiando{
-  opacity: 0;
-  transform: translateY(0.5em);
-}
-.cast-arte,
-.cast-ficha{
-  opacity: 1;
-  transform: translateY(0);
-  transition: opacity 0.28s ease, transform 0.28s ease;
-}
 
 @media (max-width: 760px){
-  .cast{ padding: 2.5% 3.5% 0; }
-  .cast-cuerpo{ grid-template-columns: minmax(0, 38%) minmax(0, 1fr); gap: 2.5%; }
-  .cast-nota{ display: none; }
-  .cast-gestos{ margin-top: 0.6em; gap: 0.22em; }
-  .cast-gesto{ font-size: 0.55em; padding: 0.25em 0.5em; letter-spacing: 0.03em; }
-  .cast-rol{ font-size: 0.66em; letter-spacing: 0.12em; }
-  .cast-nombre{ font-size: 1.9em; margin-bottom: 0.4em; }
-  .cast-datos{ gap: 0.2em 0.7em; }
-  .cast-datos dt{ font-size: 0.62em; }
-  .cast-datos dd{ font-size: 0.7em; line-height: 1.25; }
 
-  .cast-selector{
-    flex-wrap: nowrap;
-    justify-content: flex-start;
-    gap: 0.3em;
-    padding: 0.5em 0 0.7em;
-    overflow-x: auto;
-    scrollbar-width: none;
-  }
-  .cast-selector::-webkit-scrollbar{ display: none; }
-  .cast-chip{
-    flex: 0 0 auto;
-    font-size: 0.62em;
-    padding: 0.35em 0.7em;
-    letter-spacing: 0.04em;
-  }
 }
 
 .pres-stage{
@@ -916,6 +737,4 @@ a{ color: inherit; }
   #s5-fondoSky{
     animation: none !important;
   }
-  .cast-figura.is-cambiando .cast-arte,
-  .cast-ficha.is-cambiando{ opacity: 1; transform: none; }
 }
