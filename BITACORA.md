@@ -1233,6 +1233,57 @@ propios en consola (solo falla la descarga de las tipografías de Google, que el
 entorno de pruebas bloquea). No se recorrió el cómic completo: la barra no toca
 su código.
 
+### Ronda 22 — El primer minuto del cómic (fase 2 del plan de UX)
+
+Segunda fase del plan de navegación. El problema: quien llega al cómic ve un
+televisor negro, con un punto rojo de 17 px que es el único modo de encenderlo,
+un contador que dice "Canal 0 / 10" y, en un celular, ni una forma de mover a
+Juan en la escena IV ni de cambiar de canal con comodidad.
+
+- **Cartel sobre la pantalla apagada.** *Toca la pantalla para encender*, y abajo
+  a la derecha, *o pulsa el botón rojo →*. Es un `<button>` que cubre la pantalla,
+  así que tocar en cualquier parte enciende. Se desvanece al encender y
+  vuelve al apagar. Con movimiento reducido no parpadea.
+- **El botón rojo mide 44 px mientras el televisor está apagado.** En un celular
+  de 360 px el punto era de 16 px. Se descartó dejar los 44 px también
+  encendido: se solapaba con la perilla "anterior" y un toque de más apagaba el
+  televisor en plena lectura.
+- **La leyenda deja de decir "Canal".** Ahora: *Capítulo 2 — Escena I · 6 de
+  11*. El total sale de `TOTAL_CHANNELS`, así que no se desactualiza al sumar
+  escenas. Los nombres se unificaron ("Capítulo 1 — Escena I: El llamado", etc.).
+  Hasta el primer cambio de canal, la leyenda añade cómo cambiar: *usa ← → o las
+  perillas* (teclado) o *desliza o usa las perillas* (táctil).
+- **Se puede deslizar el dedo** sobre la pantalla para cambiar de canal. No estaba
+  en el plan: lo añadí porque a 360 px las perillas miden unos 40 px y están
+  casi pegadas. Hace falta un gesto horizontal de 60 px o más, más horizontal
+  que vertical y en menos de 700 ms, así que no interfiere con los toques de las
+  escenas.
+- **Botón Correr en la escena IV.** Mantenerlo pulsado hace correr a Juan, con
+  ratón o con el dedo. Al llegar al final cambia a *Siguiente escena →*. El
+  aviso de la escena dice, con pantalla táctil, *Mantén pulsado el botón Correr*.
+  Es un cambio de control, no de animación: la velocidad y el límite son los
+  mismos. Como esa escena la dibujó el equipo de animación, conviene que la vean.
+- **Aviso "Mejor en horizontal"** bajo la leyenda, solo en vertical y con
+  ancho de hasta 640 px. Girar el teléfono agranda el televisor en torno a un
+  20 %, porque el menú y la leyenda también ocupan alto; por eso es un aviso y
+  no un bloqueo.
+- **El televisor pierde 8 px de alto** (`calc((100vh - 108px) * 1.6930)`) para
+  dejar sitio a la barra común. La altura de la página a 1366x768 queda en 782
+  px, que es lo que tenía.
+
+Pendiente de esta fase, a propósito: las perillas del televisor siguen siendo
+pequeñas en un celular (el gesto de deslizar es el camino cómodo). Se podrían
+agrandar, pero la imagen del televisor las dibuja de ese tamaño.
+
+Probado en un navegador: escritorio (cartel, encendido por el cartel, leyenda
+con y sin ayuda, flecha derecha por todos los canales hasta la escena IV, el
+botón Correr con ratón —avanza mientras se pulsa y se detiene al soltar—, la
+etiqueta *Siguiente escena →* y el cambio de canal que provoca) y un celular
+simulado de 360x740 con pantalla táctil (cartel, toque que enciende, deslizar
+a izquierda y derecha, deslizar corto sin efecto, aviso de giro, tamaño del
+botón rojo). Sin errores de consola. No se probó en un teléfono real ni se
+recorrió cada escena con el nuevo botón.
+
 ---
 
 ## Pendientes
@@ -1261,8 +1312,8 @@ En orden de lo que más aporta:
    estar vacíos; el canal de Personajes sirve de molde para cuando haya
    material que poner.
 
-5. **Fases 2 a 5 del plan de UX** (ronda 21 hizo la fase 1): el primer minuto
-   del cómic, la portada, las páginas largas y la accesibilidad. Esperan las
+5. **Fases 3 a 5 del plan de UX** (la ronda 21 hizo la fase 1 y la 22 la fase 2):
+   la portada, las páginas largas y la accesibilidad. Esperan las
    decisiones del equipo sobre cuántos capítulos hay y qué se muestra del
    reparto.
 

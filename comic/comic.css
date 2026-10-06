@@ -266,6 +266,12 @@ a{ color: inherit; }
   animation: blinkHint 2s ease-in-out infinite;
 }
 .scene-hint.is-hidden{ display: none; }
+#scene7Hint{
+  left: 4%;
+  transform: none;
+  white-space: normal;
+  max-width: 55%;
+}
 
 .scene1-stage{
   position: absolute;
@@ -727,6 +733,93 @@ a{ color: inherit; }
 }
 .static-canvas.is-active{ opacity: 0.92; }
 
+.tv-screen{ touch-action: pan-y pinch-zoom; }
+
+.tv-cartel{
+  position: absolute;
+  inset: 0;
+  z-index: 9;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6em;
+  padding: 1em;
+  border: none;
+  background: transparent;
+  color: var(--mist, #cfe8eb);
+  font-family: var(--font-sub);
+  text-align: center;
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease 0.2s;
+}
+.tv.is-off .tv-cartel{
+  opacity: 1;
+  pointer-events: auto;
+}
+.tv-cartel-titulo{
+  font-family: var(--font-title);
+  font-weight: 600;
+  font-size: max(1.9em, 15px);
+  line-height: 1.2;
+  letter-spacing: 0.02em;
+  animation: cartelPulso 2.4s ease-in-out infinite;
+}
+@keyframes cartelPulso{ 0%,100%{ opacity: 1; } 50%{ opacity: 0.55; } }
+.tv-cartel-sub{
+  position: absolute;
+  right: 4%;
+  bottom: 5%;
+  font-size: max(1em, 11px);
+  letter-spacing: 0.04em;
+  color: var(--tv-accent);
+}
+.tv-cartel:focus-visible{
+  outline: 3px solid var(--turquoise);
+  outline-offset: -6px;
+}
+
+.solo-tactil{ display: none; }
+@media (hover: none){
+  .solo-teclado{ display: none; }
+  .solo-tactil{ display: inline; }
+}
+
+.scene-run{
+  position: absolute;
+  right: 4%;
+  bottom: 5%;
+  z-index: 3;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0.5em 1.3em;
+  border: 2px solid var(--turquoise);
+  border-radius: 999px;
+  background: rgba(0,0,0,0.6);
+  color: var(--mist, #cfe8eb);
+  font-family: var(--font-sub);
+  font-weight: 600;
+  font-size: max(0.95em, 13px);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  cursor: pointer;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+.scene-run:active,
+.scene-run.is-pressed{
+  background: var(--turquoise);
+  color: #04201d;
+}
+.scene-run:focus-visible{
+  outline: 3px solid var(--turquoise);
+  outline-offset: 3px;
+}
+
 .tv-btn{
   position: absolute;
   transform: translate(-50%, -50%);
@@ -749,6 +842,8 @@ a{ color: inherit; }
 .tv-btn--power{ left: 89.5%; top: 88.6%; width: 3.6%; aspect-ratio: 1; }
 
 .tv.is-off .tv-btn--power{
+  min-width: 44px;
+  min-height: 44px;
   animation: powerInvite 1.8s ease-in-out infinite;
   border-radius: 50%;
 }
@@ -765,8 +860,21 @@ a{ color: inherit; }
   min-height: 1.4em;
 }
 
+.tv-giro{
+  display: none;
+  margin: 0;
+  max-width: 28em;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  color: var(--text-dim);
+  text-align: center;
+}
+@media (max-width: 640px) and (orientation: portrait){
+  .tv-giro{ display: block; }
+}
+
 @media (max-width: 560px){
-  .tv-btn--next, .tv-btn--prev{ width: 11%; }
+  .tv-btn--next, .tv-btn--prev{ width: 12%; }
   .tv-btn--power{ width: 4.4%; }
 }
 
@@ -778,6 +886,7 @@ a{ color: inherit; }
   }
   .pres-hint,
   .scene-hint,
+  .tv-cartel-titulo,
   .crt-flicker,
   .tv.is-off .tv-btn--power,
   #s1-nubes,

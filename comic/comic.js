@@ -16,6 +16,8 @@ const tvCaption = document.getElementById('tvCaption');
 const btnNext = document.getElementById('btnNext');
 const btnPrev = document.getElementById('btnPrev');
 const btnPower = document.getElementById('btnPower');
+const tvCartel = document.getElementById('tvCartel');
+const s7Boton = document.getElementById('s7Boton');
 
 const introLayer = document.getElementById('introLayer');
 const introVideo = document.getElementById('introVideo');
@@ -53,11 +55,23 @@ const scene8Container = document.getElementById('scene8Container');
 const scene8Hint = document.getElementById('scene8Hint');
 
 const channelNames = [
-  'Capítulo uno — Presentación', 'Escena I — El llamado', 'Escena II', 'Escena III',
-  'Capítulo dos — Presentación', 'Capítulo 2 — Escena I', 'Capítulo 2 — Escena II',
+  'Capítulo 1 — Presentación', 'Capítulo 1 — Escena I: El llamado',
+  'Capítulo 1 — Escena II', 'Capítulo 1 — Escena III',
+  'Capítulo 2 — Presentación', 'Capítulo 2 — Escena I', 'Capítulo 2 — Escena II',
   'Capítulo 2 — Escena III', 'Capítulo 2 — Escena IV',
-  'Capítulo tres — Presentación', 'Capítulo 3 — Escena I'
+  'Capítulo 3 — Presentación', 'Capítulo 3 — Escena I'
 ];
+
+const esTactil = window.matchMedia('(hover: none)').matches;
+const AYUDA_CAMBIO = esTactil
+  ? 'desliza o usa las perillas para cambiar de escena'
+  : 'usa ← → o las perillas para cambiar de escena';
+let ayudaVista = false;
+
+function leyendaCanal(index){
+  const base = `${channelNames[index]} · ${index + 1} de ${TOTAL_CHANNELS + 1}`;
+  return ayudaVista ? base : `${base} — ${AYUDA_CAMBIO}`;
+}
 
 let s1 = { humo: null, puerta: null, juanesCorre: null, ready: false, played: false };
 
@@ -616,10 +630,16 @@ function s7Mover(timestamp){
   document.getElementById('s7-juanRun').style.transform = `translateX(${s7.pos}px)`;
 
   if (s7.pos >= S7_LIMITE){
+    s7Etiqueta(true);
     s7Soltar();
     return;
   }
   s7.raf = requestAnimationFrame(s7Mover);
+}
+
+function s7Etiqueta(fin){
+  s7Boton.innerHTML = fin ? 'Siguiente escena &rarr;' : 'Correr &#9654;';
+  s7Boton.classList.remove('is-pressed');
 }
 
 function s7Correr(){
@@ -653,6 +673,7 @@ function resetScene7(){
   if (s7.juanRun) s7.juanRun.goToAndStop(0, true);
   if (s7.text) s7.text.goToAndStop(0, true);
   scene7Hint.classList.remove('is-hidden');
+  s7Etiqueta(false);
 }
 
 function stopScene7(){
@@ -665,6 +686,27 @@ function stopScene7(){
 function s7ControlaFlecha(){
   return tvOn && !isAnimating && !introPlaying && currentChannel === 8;
 }
+
+s7Boton.addEventListener('pointerdown', (e) => {
+  if (!s7ControlaFlecha()) return;
+  e.preventDefault();
+  if (s7.pos >= S7_LIMITE){
+    changeChannel(1);
+    return;
+  }
+  s7Boton.setPointerCapture(e.pointerId);
+  s7Boton.classList.add('is-pressed');
+  s7Correr();
+});
+['pointerup', 'pointercancel', 'lostpointercapture'].forEach((tipo) => {
+  s7Boton.addEventListener(tipo, () => {
+    s7Boton.classList.remove('is-pressed');
+    s7Soltar();
+  });
+});
+s7Boton.addEventListener('click', (e) => {
+  if (e.detail === 0 && s7ControlaFlecha() && s7.pos >= S7_LIMITE) changeChannel(1);
+});
 
 let s8 = { anims: {}, ready: false, playTimer: null };
 
@@ -990,7 +1032,7 @@ function showChannel(index){
     stopScene8();
   }
 
-  tvCaption.textContent = `Canal ${index} / ${TOTAL_CHANNELS} — ${channelNames[index]}`;
+  tvCaption.textContent = leyendaCanal(index);
 }
 
 const ctx = staticCanvas.getContext('2d');
@@ -1133,6 +1175,7 @@ function changeChannel(delta){
   const next = currentChannel + delta;
   if (next < 0 || next > TOTAL_CHANNELS) return;
 
+  ayudaVista = true;
   isAnimating = true;
   setButtonsDisabled(true);
 
@@ -1201,8 +1244,28 @@ function powerOff(){
 }
 
 btnPower.addEventListener('click', () => { tvOn ? powerOff() : powerOn(); });
+tvCartel.addEventListener('click', powerOn);
 btnNext.addEventListener('click', () => changeChannel(1));
 btnPrev.addEventListener('click', () => changeChannel(-1));
+
+const SWIPE_MIN_PX = 60;
+const SWIPE_MAX_MS = 700;
+let swipe = null;
+
+tvScreen.addEventListener('pointerdown', (e) => {
+  if (e.pointerType !== 'touch' || e.target.closest('.scene-run')) return;
+  swipe = { x: e.clientX, y: e.clientY, t: performance.now() };
+});
+tvScreen.addEventListener('pointerup', (e) => {
+  if (!swipe) return;
+  const dx = e.clientX - swipe.x;
+  const dy = e.clientY - swipe.y;
+  const dt = performance.now() - swipe.t;
+  swipe = null;
+  if (Math.abs(dx) < SWIPE_MIN_PX || Math.abs(dx) < Math.abs(dy) * 2 || dt > SWIPE_MAX_MS) return;
+  changeChannel(dx < 0 ? 1 : -1);
+});
+tvScreen.addEventListener('pointercancel', () => { swipe = null; });
 
 document.addEventListener('keydown', (e) => {
   if (e.key === 'ArrowRight'){

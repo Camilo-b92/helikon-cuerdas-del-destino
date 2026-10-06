@@ -498,7 +498,7 @@ hace lo que piden, y cada escena los restablece al sintonizarla.
 | 5 | Capítulo dos, escena I | Automática | — |
 | 6 | Capítulo dos, escena II | Clic en Juanes, cuantas veces quiera | *Toca a Juanes* |
 | 7 | Capítulo dos, escena III | Dos clics, en orden: el recuadro y luego el fantasma | *Toca el recuadro*, y después *Toca al fantasma* |
-| 8 | Capítulo dos, escena IV | Mantener la flecha derecha | *Mantén la flecha → para correr* |
+| 8 | Capítulo dos, escena IV | Mantener la flecha derecha, o el botón *Correr* | *Mantén la flecha → para correr* (con pantalla táctil: *Mantén pulsado el botón Correr*) |
 | 10 | Capítulo tres, escena I | Clic en Juanes, y opcionalmente en la puerta, la cortina y los libros | *Toca a Juanes y explora el cuarto* |
 
 **Canal 7 — Escena III del capítulo dos.** Es una secuencia de dos pasos, que
@@ -512,6 +512,15 @@ equipo de animación: el texto corre 6 s antes de retirarse el primer bloque.
 flecha derecha y se detiene al soltarla (`s7Correr()` y `s7Soltar()`), a
 360 px/s hasta `S7_LIMITE`. El movimiento va por `requestAnimationFrame` con el
 tiempo real entre cuadros, así que la velocidad no depende del monitor.
+
+El botón **Correr** (`#s7Boton`) hace lo mismo con el ratón o el dedo: al
+pulsarlo llama a `s7Correr()` y al soltarlo, a `s7Soltar()`. Usa
+`setPointerCapture` para que seguir sosteniéndolo aunque el dedo se salga del
+botón no deje a Juan parado. Cuando Juan llega al final, el botón pasa a
+decir *Siguiente escena →* y al pulsarlo cambia de canal, así nadie tiene que
+buscar la perilla pequeña del televisor. Se restablece al sintonizar el canal.
+El aviso de la escena tiene dos textos (`.solo-teclado` y `.solo-tactil`), y
+una media query `(hover: none)` elige cuál se ve.
 
 **Canal 10 — Escena I del capítulo tres.** El cuarto de Juanes: un fondo
 (`fondo.jpg`, pintado como `background-image` del propio `#scene8Container`) y
@@ -550,6 +559,30 @@ encienden o apagan, **salvo si el foco está dentro del televisor**
 (`tv.contains(document.activeElement)`): sin ese guard, pulsar Enter sobre
 "canal siguiente" o sobre "Saltar" apagaba el aparato.
 
+**Primer minuto.** Con el televisor apagado, un cartel que ocupa toda la
+pantalla (`#tvCartel`, un `<button>`) dice *Toca la pantalla para encender* y
+*o pulsa el botón rojo →*. Tocar cualquier punto de la pantalla enciende
+(`powerOn()`), igual que el botón rojo. El cartel solo se ve con `.tv.is-off`
+y se desvanece al encender. Mientras el televisor está apagado, el botón rojo
+tiene un área táctil de al menos 44 px; encendido vuelve a su tamaño, porque en
+un celular se solapaba con la perilla de "canal anterior" y un toque de más
+podía apagar el aparato.
+
+**Leyenda bajo el televisor.** Ya no dice "Canal 3 / 10": `leyendaCanal()` arma
+*Capítulo 2 — Escena I · 6 de 11*, con el nombre de `channelNames` y el
+contador calculado desde `TOTAL_CHANNELS`, así que no se desactualiza al añadir
+escenas. Hasta que el lector cambia de canal por primera vez (`ayudaVista`), la
+leyenda añade cómo hacerlo: *usa ← → o las perillas* con teclado y *desliza o
+usa las perillas* con pantalla táctil.
+
+**Celular.** Deslizar el dedo horizontalmente sobre la pantalla cambia de
+canal: a la izquierda avanza y a la derecha retrocede
+(`SWIPE_MIN_PX` = 60 px, más horizontal que vertical, en menos de 700 ms). Va
+con eventos de puntero y solo reacciona a `pointerType === 'touch'`; el botón
+*Correr* queda fuera. En vertical y con ancho de hasta 640 px aparece bajo la
+leyenda *Mejor en horizontal: gira el teléfono para ver el televisor más
+grande*.
+
 **Apagado.** `powerOff()` detiene *todas* las escenas y las tres
 presentaciones. Si no, sus animaciones Lottie seguirían consumiendo CPU sin
 verse.
@@ -559,7 +592,7 @@ verse.
 - **La pantalla va por encima del marco.** En `comic/index.html`, `.tv-screen`
   se declara antes que `.tv-frame`, pero el arte del televisor se dibuja
   encima; los botones son zonas activas alineadas sobre ese arte.
-- **El televisor tope a 1566 px** — `width: min(1566px, 99vw, calc((100vh - 100px) * 1.6930))`.
+- **El televisor tope a 1566 px** — `width: min(1566px, 99vw, calc((100vh - 108px) * 1.6930))`.
   1566x925 es la resolución nativa de `tv.png`: pasar de ahí solo escala hacia
   arriba y se ve borroso.
 - **`prefers-reduced-motion` neutraliza la _duración_, no el retraso.** Las
