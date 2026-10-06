@@ -482,7 +482,7 @@ más pequeños de lo que caben.
 
 `1566x925` es la resolución nativa de `tv.png`. Pasar de ahí solo escala hacia
 arriba y se ve borroso, así que el ancho es
-`min(1566px, 99vw, calc((100vh - 100px) * 1.6930))`.
+`min(1566px, 99vw, calc((100vh - 112px) * 1.6930))`.
 
 ### Un solo `AudioContext` en la portada
 
@@ -1189,11 +1189,8 @@ ronda es solo la primera.
 - **La barra es fija** (`position: sticky`) y cada botón mide 44 px de alto,
   por el dedo. En celular se oculta el nombre "Cuerdas del Destino" y los
   cuatro botones se centran; a 360 px caben sin desbordar.
-- **El cómic conserva su paleta.** `menu.css` lee variables y `comic.css` las
-  redefine en turquesa, con el borde más fino. Se quitó `.topnav`. Para no
-  empujar el televisor fuera de la pantalla se afinó su ancho (`100vh - 108px`
-  en lugar de `100vh - 100px`): la altura total del cómic a 1366x768 queda en
-  782 px contra 781 antes.
+- **El cómic usa la misma barra que las demás.** Se quitó `.topnav`. (Esta
+  ronda la dejó con paleta turquesa; la ronda 22 la pasó al estilo de papel.)
 - **Fuera "Nº", "Edición" y "Bio".** Se quitó la cabecera de revista de
   Helikón y de Juanes (HTML y CSS), el "Nº 1" de la caja editorial de la
   portada, el folio "1" de la hoja derecha y las frases "Fin del Nº 0", "Fin
@@ -1267,9 +1264,18 @@ Juan en la escena IV ni de cambiar de canal con comodidad.
   ancho de hasta 640 px. Girar el teléfono agranda el televisor en torno a un
   20 %, porque el menú y la leyenda también ocupan alto; por eso es un aviso y
   no un bloqueo.
-- **El televisor pierde 8 px de alto** (`calc((100vh - 108px) * 1.6930)`) para
-  dejar sitio a la barra común. La altura de la página a 1366x768 queda en 782
-  px, que es lo que tenía.
+- **La página del cómic pasa al tema de papel**, a pedido del equipo. Antes tenía
+  fondo turquesa claro y una barra propia; ahora lleva el mismo fondo (degradado
+  de papel, trama de puntos y viñeta) y el mismo encabezado que portada,
+  Juanes y Helikón. El caption y el aviso de girar usan Special Elite, y la
+  sombra del televisor pasa de verdosa a marrón. Se añadieron Bangers y
+  Special Elite a las tipografías de la página. El interior del televisor no
+  cambia. Para que la trama no empañe la pantalla, `.tv-stage` va por encima
+  (`z-index: 2`). No se enlazó `pulp.css` completa porque redefine `--ink` y
+  `*`, y `comic.css` usa `--ink` con otro valor.
+- **El televisor pierde 12 px de alto** (`calc((100vh - 112px) * 1.6930)`)
+  para dejar sitio a la barra común, que mide 56 px. La altura de la página a
+  1366x768 queda en 782 px, que es lo que tenía (781 antes de la ronda 21).
 
 Pendiente de esta fase, a propósito: las perillas del televisor siguen siendo
 pequeñas en un celular (el gesto de deslizar es el camino cómodo). Se podrían

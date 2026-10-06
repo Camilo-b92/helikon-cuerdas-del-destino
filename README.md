@@ -128,8 +128,8 @@ de navegación**, definida en `assets/css/menu.css`: `Inicio · El cómic · Jua
   relativas de esa carpeta. Al añadir una página nueva, hay que sumarla a las
   cuatro barras.
 - El color sale de variables (`--menu-fondo`, `--menu-texto`, `--menu-linea`,
-  `--menu-activo-fondo`…). El cómic las redefine en `comic.css` con su paleta
-  turquesa; las otras tres usan los valores de papel por defecto.
+  `--menu-activo-fondo`…) con valores de papel por defecto, que son los de las
+  cuatro páginas. Si una página necesitara otra paleta, las redefine en su CSS.
 - `menu.css` también trae el bloque `.sigue` ("Sigue explorando"): tarjetas con
   los destinos que quedan, al final de Juanes.
 
@@ -587,12 +587,20 @@ grande*.
 presentaciones. Si no, sus animaciones Lottie seguirían consumiendo CPU sin
 verse.
 
+**Marco de la página.** La página del cómic comparte el lenguaje del resto del
+sitio: fondo de papel con trama de puntos y viñeta (`body`, `body::before` y
+`body::after`, copiados de `pulp.css`) y el menú común con su estilo por
+defecto. No se enlaza `pulp.css` entera porque redefine `--ink` y `*`, y
+`comic.css` usa esos nombres para otra cosa. `.tv-stage` lleva `z-index: 2`
+para que la trama de papel quede *debajo* del televisor y no empañe la
+pantalla. El interior del televisor conserva su propia paleta turquesa.
+
 ### Puntos no obvios del CSS
 
 - **La pantalla va por encima del marco.** En `comic/index.html`, `.tv-screen`
   se declara antes que `.tv-frame`, pero el arte del televisor se dibuja
   encima; los botones son zonas activas alineadas sobre ese arte.
-- **El televisor tope a 1566 px** — `width: min(1566px, 99vw, calc((100vh - 108px) * 1.6930))`.
+- **El televisor tope a 1566 px** — `width: min(1566px, 99vw, calc((100vh - 112px) * 1.6930))`.
   1566x925 es la resolución nativa de `tv.png`: pasar de ahí solo escala hacia
   arriba y se ve borroso.
 - **`prefers-reduced-motion` neutraliza la _duración_, no el retraso.** Las
