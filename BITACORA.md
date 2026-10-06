@@ -1308,6 +1308,29 @@ recorrió cada escena con el nuevo botón.
   oculta tras 80 px de scroll. Probada a 1366x768, 768x1024 y 360x740: sin
   desbordes ni errores de consola, y el enlace baja hasta el reparto.
 
+### Ronda 24 — Las páginas largas (fase 4 del plan de UX)
+
+- **Índice "En esta página"** en Helikón y en Juanes (`.indice` en
+  `menu.css`): saltos a cada sección, enlaces de 44 px. Hicieron falta `id` en
+  las secciones que no lo tenían (`quien`, `detras`, `universo`, `musica`,
+  `premios`, `mito`). Probado: todos los saltos llegan a su sección a 1366,
+  768 y 360 px.
+- **Helikón dice qué es.** La entradilla del titular ahora empieza por "Helikón
+  es el estudio que dibuja, anima y programa *Cuerdas del Destino*, un cómic
+  digital hecho para verse en un televisor retro".
+- **"Detrás de cámaras"** agrupa *Señas de identidad* y *Tablero de ideas*.
+  **Decisión que quedó a criterio mío, no del equipo:** se agruparon en vez de
+  retirarlas, porque el contenido es bueno y es lo que más enseña del oficio;
+  si el equipo prefiere quitarlas, basta borrar esa sección.
+- **Sigue explorando (Helikón):** tenía una rejilla de tres columnas para dos
+  tarjetas y quedaban pegadas a la izquierda; ahora son dos, centradas, igual que su rótulo.
+- **Juanes: aviso de página no oficial**, visible bajo la entradilla (borde
+  discontinuo, "Página no oficial. La hace el equipo de Helikón, inspirada en la
+  historia de Juanes. No tiene relación con él ni con su equipo."). **El equipo
+  debe confirmar que ese texto es cierto tal cual** antes de publicar.
+- El desborde horizontal a 768 px de Juanes (16 px) y Helikón (2 px) sigue
+  igual que antes de estas rondas.
+
 ---
 
 ## Pendientes
@@ -1336,8 +1359,8 @@ En orden de lo que más aporta:
    estar vacíos; el canal de Personajes sirve de molde para cuando haya
    material que poner.
 
-5. **Fases 4 y 5 del plan de UX** (las rondas 21, 22 y 23 hicieron las fases
-   1, 2 y 3): las páginas largas y la accesibilidad.
+5. **Fase 5 del plan de UX** (las rondas 21 a 24 hicieron las fases 1 a 4):
+   accesibilidad y cierre.
 
 6. **Comprimir `comic/assets/intro.mp4`** (7.6 MB). Ya hay `ffmpeg` instalado
    para hacerlo. También `caja.json` (2.6 MB) es pesado, aunque ya está

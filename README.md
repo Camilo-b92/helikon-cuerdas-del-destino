@@ -132,6 +132,11 @@ de navegación**, definida en `assets/css/menu.css`: `Inicio · El cómic · Jua
   cuatro páginas. Si una página necesitara otra paleta, las redefine en su CSS.
 - `menu.css` también trae el bloque `.sigue` ("Sigue explorando"): tarjetas con
   los destinos que quedan, al final de Juanes.
+- Y el **índice de página** (`.indice`: "En esta página" con saltos a cada
+  sección), que usan las dos páginas largas, Juanes y Helikón. Cada enlace
+  mide 44 px de alto y apunta a un `id` de sección; `menu.css` fija
+  `scroll-padding-top` para que la barra fija no tape el título al saltar.
+  Si se añade o se cambia el `id` de una sección, hay que tocar su índice.
 
 **Nombres del sitio.** Ya no se usa "Nº 0", "Nº 1", "Edición especial" ni "Bio".
 Cada página se llama por lo que es: *El cómic*, *Juanes* y *Helikón (el
@@ -331,19 +336,24 @@ Lo que hay que respetar si se toca:
 Cuenta el origen del estudio que hace el cómic. Se lee de arriba abajo:
 
 1. **Menú común**, con "Helikón" resaltado.
-2. **Titular y sello**: el lema gira alrededor de un círculo con
-   `textPath`, estirado con `textLength` para que dé la vuelta completa.
+2. **Titular y sello**: la entradilla dice qué es Helikón (el estudio que
+   dibuja, anima y programa el cómic) antes de contar su origen. El lema gira
+   alrededor de un círculo con `textPath`, estirado con `textLength` para que
+   dé la vuelta completa. Debajo, el **índice de la página**.
 3. **El origen en cuatro viñetas** (`.vineta-origen`): el Monte Helicón,
    Pegaso golpeando la roca, la fuente Hipocrene con las nueve musas y el
    nombre HELIKÓN. Los dibujos son SVG en línea con trazo de tinta.
 4. **Manifiesto** como página de impacto, con la lira.
 5. **Quién es quién**: fichas del equipo al estilo del *Who's Who* de los
    cómics.
-6. **Señas de identidad**: la paleta con sus cinco tintes y su uso, las tres
+6. **Detrás de cámaras** (`#detras`), que agrupa dos secciones para curiosos,
+   con su propio rótulo y los dos subtítulos más pequeños. **Señas de
+   identidad**: la paleta con sus cinco tintes y su uso, las tres
    tipografías con muestra en su propia letra, y la regla de los dos mundos
    —papel fuera de la pantalla, turquesa dentro—.
-7. **Tablero de ideas**, **sigue explorando** (las tarjetas hacia Juanes y el
-   cómic) y un cierre con enlace para volver al inicio.
+7. **Tablero de ideas** (también en *Detrás de cámaras*), **sigue explorando**
+   (dos tarjetas centradas, hacia Juanes y el cómic) y un cierre con enlace
+   para volver al inicio.
 
 Reglas de esta página:
 
@@ -378,7 +388,8 @@ Reglas de esta página:
 ### La página de Juanes: "Basado en hechos reales"
 
 La biografía contada como un cómic: menú común, titular con
-el retrato tramado y un sello, el origen, **la línea de tiempo**, su música,
+el retrato tramado y un sello, **un aviso de que es una página no oficial**
+(`.aviso-no-oficial`, justo bajo la entradilla), el índice de la página, el origen, **la línea de tiempo**, su música,
 cifras en estallidos, el activismo, el paso al cómic, un bloque **Sigue explorando** y las **fuentes**.
 
 **Esta página habla de una persona real, así que cada dato está contrastado**

@@ -530,9 +530,6 @@
   gap: 26px;
   align-items: stretch;
 }
-html{
-  scroll-padding-top: 64px;
-}
 .baja-pista{
   position: fixed;
   left: 50%;

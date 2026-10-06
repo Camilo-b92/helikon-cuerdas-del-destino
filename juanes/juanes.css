@@ -113,6 +113,18 @@ html{
   font-size: 0.9rem;
   line-height: 1.6;
 }
+.aviso-no-oficial{
+  max-width: 58ch;
+  margin-top: 16px;
+  padding: 8px 14px;
+  border: 3px dashed var(--ink);
+  font-family: 'Special Elite', serif;
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+.aviso-no-oficial strong{
+  color: var(--red);
+}
 .boton-comic{
   display: inline-block;
   margin-top: 26px;
