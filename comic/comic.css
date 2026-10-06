@@ -620,6 +620,21 @@ a{ color: inherit; }
 #s7-juanRun{ position: absolute; width: 230px; left: -250px; top: 258px; }
 #s7-text{ position: absolute; width: 250px; left: 90px; top: -130px; }
 
+#scene8Container{
+  background-image: url(assets/capitulo-n3/scene1/img/fondo.jpg);
+  background-size: 100% 100%;
+}
+#s8-mama{ position: absolute; left: 985.1px; top: 268.07px; width: 68.51px; pointer-events: none; }
+#s8-puerta{ position: absolute; left: 897.75px; top: 179.12px; width: 163.01px; height: 430.14px; cursor: pointer; }
+#s8-cortina{ position: absolute; left: 567px; top: 182.78px; width: 259.88px; cursor: pointer; }
+#s8-libros{ position: absolute; left: 330.75px; top: 194.96px; width: 153.56px; cursor: pointer; }
+#s8-juanes{ position: absolute; left: 330.75px; top: 304.63px; width: 200.81px; cursor: pointer; }
+#s8-cortina.is-locked,
+#s8-libros.is-locked{ cursor: default; }
+#scene8Hint{ left: 66%; }
+#s8-txt{ position: absolute; left: 400px; top: 150px; width: 300px; opacity: 1; transition: opacity 0.3s ease-out; pointer-events: none; }
+#s8-txt.s8-oculto{ opacity: 0; }
+
 .scanlines{
   position: absolute;
   inset: 0;

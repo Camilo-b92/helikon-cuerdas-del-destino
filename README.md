@@ -90,7 +90,8 @@ Lo que eso implica al trabajar:
         ├── presentacion-c2/ Presentación animada del capítulo dos
         ├── presentacion-c3/ Presentación animada del capítulo tres
         ├── capitulo-n1/     Escenas 1 a 3, cada una con su img/ y su json/
-        └── capitulo-n2/     Escenas 1 a 4, cada una con su img/ y su json/
+        ├── capitulo-n2/     Escenas 1 a 4, cada una con su img/ y su json/
+        └── capitulo-n3/     Escena 1, con su img/ y su json/
 ```
 
 Cada sección es autocontenida: su HTML, su CSS y su JS viven juntos. Lo que
@@ -407,8 +408,8 @@ Máquina de estados con cuatro banderas: `tvOn`, `isAnimating`,
 `introPlaying` e `introEnded`. Mientras `isAnimating` está en `true` los
 botones de canal quedan deshabilitados.
 
-**El dial.** `TOTAL_CHANNELS = 9` es el **último índice**, no la cantidad: los
-canales van de 0 a 9. `showChannel(index)` es el despachador central — marca
+**El dial.** `TOTAL_CHANNELS = 10` es el **último índice**, no la cantidad: los
+canales van de 0 a 10. `showChannel(index)` es el despachador central — marca
 la `<section>` activa, arranca lo que corresponda a ese canal, detiene lo de
 los demás, adelanta la carga del siguiente y actualiza el pie de foto.
 
@@ -424,15 +425,16 @@ los demás, adelanta la carga del siguiente y actualiza el pie de foto.
 **Escalado.** `scaleStage(stage, container)` encaja el lienzo de diseño fijo
 de **1134x658** dentro del hueco de la pantalla usando `Math.max` de las dos
 proporciones, es decir en modo *cover*: llena la pantalla y recorta lo que
-sobre, sin deformar. Lo usan las siete escenas y las tres presentaciones, y se
+sobre, sin deformar. Lo usan las ocho escenas y las tres presentaciones, y se
 vuelve a llamar en cada `resize`.
 
 **Numeración de escenas en el código.** `SceneN` cuenta las escenas de todo el
 cómic, no las de cada capítulo: `Scene1` a `Scene3` son el capítulo uno y
-`Scene4` a `Scene7` son las cuatro escenas del capítulo dos. Las dos últimas
-(`Scene6` y `Scene7`) usan las clases compartidas `.scene-stage` y
-`.scene-container`; las anteriores conservan las suyas, idénticas entre sí, y
-pueden pasarse a las compartidas cuando convenga.
+`Scene4` a `Scene7` son las cuatro escenas del capítulo dos y `Scene8` es la
+primera del capítulo tres. Las tres últimas (`Scene6`, `Scene7` y `Scene8`)
+usan las clases compartidas `.scene-stage` y `.scene-container`; las
+anteriores conservan las suyas, idénticas entre sí, y pueden pasarse a las
+compartidas cuando convenga.
 
 **Canales 0, 4 y 9 — Presentaciones.** Las tres se comportan igual, así que
 comparten la fábrica `crearPresentacion()`. Cosas que hay que respetar al
@@ -449,11 +451,12 @@ tocarlas:
 - El número de imágenes de cada presentación es **explícito** (cinco en el
   nombre del cómic, seis en cada capítulo) porque pedir una que no existe
   dejaría un 404.
-- `hintId` es **opcional**. La presentación del capítulo tres no lleva aviso
-  para avanzar porque todavía no hay un canal que le siga: el aviso diría
-  "presiona el botón derecho" y no pasaría nada. Al agregar la primera escena
-  del capítulo tres, se añade `<p class="pres-hint" id="pres3Hint">` en su
-  `<section>` y se pasa `hintId: 'pres3Hint'` a `crearPresentacion()`.
+- `hintId` es **opcional**. Solo lo llevan las presentaciones que tienen un
+  canal siguiente al que avanzar: la del capítulo uno (`pres1Hint`), la del
+  dos (`pres2Hint`) y la del tres (`pres3Hint`). El nombre del cómic, que
+  encadena con la del capítulo uno, no lleva aviso. Una presentación sin canal
+  siguiente no debe llevarlo: diría "presiona el botón derecho" y no pasaría
+  nada.
 - Cada capítulo reutiliza el nombre de archivo `titulo.json`, que es el que
   espera la fábrica. El de la presentación del capítulo tres llegó de After
   Effects como `tituloTres.json` y se renombró al copiarlo.
@@ -472,6 +475,7 @@ hace lo que piden, y cada escena los restablece al sintonizarla.
 | 6 | Capítulo dos, escena II | Clic en Juanes, cuantas veces quiera | *Toca a Juanes* |
 | 7 | Capítulo dos, escena III | Dos clics, en orden: el recuadro y luego el fantasma | *Toca el recuadro*, y después *Toca al fantasma* |
 | 8 | Capítulo dos, escena IV | Mantener la flecha derecha | *Mantén la flecha → para correr* |
+| 10 | Capítulo tres, escena I | Clic en Juanes, y opcionalmente en la puerta, la cortina y los libros | *Toca a Juanes y explora el cuarto* |
 
 **Canal 7 — Escena III del capítulo dos.** Es una secuencia de dos pasos, que
 guarda en `s6.paso` (`recuadro`, `texto`, `fantasma`). El clic en el recuadro
@@ -484,6 +488,18 @@ equipo de animación: el texto corre 6 s antes de retirarse el primer bloque.
 flecha derecha y se detiene al soltarla (`s7Correr()` y `s7Soltar()`), a
 360 px/s hasta `S7_LIMITE`. El movimiento va por `requestAnimationFrame` con el
 tiempo real entre cuadros, así que la velocidad no depende del monitor.
+
+**Canal 10 — Escena I del capítulo tres.** El cuarto de Juanes: un fondo
+(`fondo.jpg`, pintado como `background-image` del propio `#scene8Container`) y
+cinco animaciones encima. Mamá, asomada, corre en bucle y solo se deja ver
+cuando se abre la puerta. La puerta se puede tocar cuantas veces se quiera y
+reinicia su animación. La cortina y los libros reaccionan **una sola vez** y
+se quedan en su estado final (clase `is-locked`, que también quita el cursor
+de mano). Juanes, al tocarlo, sigue escribiendo en bucle y dispara el globo de
+texto (`txt.json`, unos 14 s), que se desvanece solo al terminar. El globo
+lleva `pointer-events: none`: se superpone a la cortina y a los libros y, aun
+invisible, se comería sus clics. El aviso se oculta al tocar a Juanes y se
+coloca a la derecha (`#scene8Hint`) para no tapar al personaje.
 
 **Estática del cambio de canal.** `runStatic(duration, onMid, done)` dibuja
 ruido en un buffer **seis veces más pequeño** y lo escala hacia arriba sin
@@ -710,9 +726,9 @@ blanco.
 ## Estado del contenido
 
 El cómic tiene el capítulo uno completo (tres escenas), las cuatro escenas del
-capítulo dos y la presentación del capítulo tres, repartidos en diez canales
-(0 a 9). Al encender, el televisor reproduce el video de introducción y entrega
-directo al canal 0.
+capítulo dos, la presentación del capítulo tres y la primera escena del
+capítulo tres, repartidos en once canales (0 a 10). Al encender, el televisor
+reproduce el video de introducción y entrega directo al canal 0.
 
 **El televisor es solo el cómic.** Los personajes se conocen en la portada,
 pulsando su tarjeta en *El reparto*. Tampoco hay canales de cierre entre
@@ -730,6 +746,7 @@ capítulos: cada capítulo empieza con su presentación y la historia sigue.
 | 7 | Capítulo dos, escena III | `s6` |
 | 8 | Capítulo dos, escena IV | `s7` |
 | 9 | Presentación del capítulo tres | `pres3` |
+| 10 | Capítulo tres, escena I | `s8` |
 
 Cada capítulo abre con su propia presentación animada, en el canal anterior a
 su primera escena. El **canal 0** encadena dos: primero el nombre del cómic,

@@ -16,8 +16,8 @@ README y luego esto.
 | Repositorio | `github.com/Camilo-b92/helikon-cuerdas-del-destino` (público) |
 | Rama | `main` |
 | Publicado en línea | Todavía no |
-| Canales del televisor | 0–9 (diez en total), solo cómic |
-| Peso total | ~20 MB, casi todo arte del cómic |
+| Canales del televisor | 0–10 (once en total), solo cómic |
+| Peso total | ~21 MB, casi todo arte del cómic |
 | Personajes | En la portada: expediente a pantalla completa desde *El reparto* |
 | Presentaciones | Canal 0: nombre del cómic y luego capítulo uno · Canal 4: capítulo dos · Canal 9: capítulo tres |
 | Fichas de personaje | `assets/js/personajes.js`, compartidas por portada y cómic |
@@ -1109,6 +1109,69 @@ encontrar la escena desde el principio, la carrera hasta el final y el paso al
 canal siguiente, el tope del dial y el apagado. Sin errores de consola. No se
 probó en móvil.
 
+### Ronda 20 — Primera escena del capítulo tres
+
+Un encargo del equipo, hecho desde otra máquina, sobre el repositorio tal como
+quedó en `df06066`.
+
+- **Escena I del capítulo tres** (canal 10). Llegó como una carpeta suelta,
+  `Escena 1-C3`, con su página de prueba, los fuentes de After Effects
+  (`.aep`) y de Illustrator (`.ai`), un fondo y seis animaciones. Al repositorio
+  entran solo `fondo.jpg` y los seis `.json`, en
+  `comic/assets/capitulo-n3/scene1/`; los fuentes no entran, igual que en las
+  rondas anteriores.
+- **El dial pasa a 0–10.** `TOTAL_CHANNELS = 10`, y el código la llama
+  `Scene8` porque la numeración cuenta las escenas de todo el cómic.
+- **La presentación del capítulo tres ya lleva su aviso.** Era el pendiente
+  que quedó abierto en la ronda 19: ahora que hay un canal siguiente,
+  `pres3Hint` dice *Presiona el botón derecho para continuar*, como las otras
+  dos.
+- **Aviso de la escena:** *Toca a Juanes y explora el cuarto*. Se oculta al
+  tocar a Juanes, que es el paso de la historia; los otros tres objetos son
+  extras. Se coloca a la derecha (`#scene8Hint { left: 66% }`) porque en el
+  centro, donde van los demás, quedaba sobre el zapato de Juanes.
+
+Lo que hubo que decidir al pasar la escena de su página de prueba al
+televisor:
+
+- **El globo de texto no puede recibir clics.** En la página de prueba `#txt`
+  ocupa 300x200 px sobre la cortina, los libros y la cabeza de Juanes, y
+  cuando no se ve solo está transparente (`opacity: 0`), que no impide que
+  siga tapando lo que tiene debajo. Se comprobó: el clic en el centro de la
+  cortina y en la cabeza de Juanes caía en `#txt` y no hacía nada. Aquí
+  lleva `pointer-events: none`.
+- **Qué se repite y qué no.** La puerta reinicia su animación en cada clic
+  (`goToAndPlay(0, true)`), porque termina en el mismo estado en que empezó. La
+  cortina y los libros cambian la escena —queda abierta la cortina y los libros
+  caídos—, así que reaccionan una vez y se quedan así hasta volver a sintonizar
+  el canal. En la página de prueba, tocarlos de nuevo no hacía nada, porque
+  `play()` no reinicia una animación de Lottie que ya llegó a su último
+  cuadro (se comprobó con la cortina: sigue en el cuadro 24). El bloqueo hace
+  explícito ese comportamiento y quita el cursor de mano.
+- **Todo se rebobina al sintonizar el canal** (`resetScene8()`), con el mismo
+  criterio que las escenas 6 y 7: el globo vuelve a quedar oculto, la cortina
+  y los libros se desbloquean y el aviso reaparece.
+- **Mamá arranca un segundo después de sintonizar**, con la misma espera de
+  1000 ms que las demás escenas, y se pausa al salir y al apagar.
+- **Las seis animaciones van en el renderizador `svg`.** Traen sus gráficos
+  como trazos, sin imágenes incrustadas, así que no hace falta `assetsPath`.
+- **No se tocó ningún archivo de animación.** Los nombres son los del equipo
+  (`mamaAsomada.json`, `puertaAbriendo.json`, `cortinaAbriendo.json`,
+  `libros.json`, `juanesSentado.json`, `txt.json`).
+
+`fondo.jpg` se copió tal cual (92 KB; en disco quedó en 98 KB porque al
+entregarla se le añadió un bloque de metadatos de procedencia, sin tocar los
+píxeles). `txt.json` es el archivo pesado de la
+escena, con casi 900 KB; se carga por adelantado desde el canal de la
+presentación del capítulo tres (`prefetchScene8()`).
+
+Probado en un navegador: los once canales en orden, el aviso de la
+presentación del capítulo tres, la escena sin clics, cada objeto por separado,
+la cortina y los libros bloqueados tras el primer clic, el globo de Juanes
+completo y su desvanecimiento, salir y volver encontrando la escena desde el
+principio, y el tope del dial en el canal 10. Sin errores de consola. No se
+probó en móvil.
+
 ---
 
 ## Pendientes
@@ -1142,7 +1205,8 @@ En orden de lo que más aporta:
 
 6. **Comprimir `comic/assets/intro.mp4`** (7.6 MB). Ya hay `ffmpeg` instalado
    para hacerlo. También `caja.json` (2.6 MB) es pesado, aunque ya está
-   mitigado con el renderizador `canvas` y `setSubframe(false)`.
+   mitigado con el renderizador `canvas` y `setSubframe(false)`, y `txt.json`
+   de la escena I del capítulo tres (casi 900 KB).
 
 7. **La escena IV del capítulo dos no se puede jugar sin teclado.** Hace correr
    a Juan con la flecha derecha, así que en un móvil o una tableta no hay
@@ -1150,16 +1214,12 @@ En orden de lo que más aporta:
    mantener pulsada la pantalla. Es decisión del equipo de animación, porque
    cambia cómo se siente la escena.
 
-8. **El aviso de la presentación del capítulo tres.** Hoy no lleva porque no
-   hay canal siguiente. Cuando entre la primera escena del capítulo tres, se
-   añade (ver el README, *Canales 0, 4 y 9 — Presentaciones*).
-
-9. **Unificar las escenas en `.scene-stage` y `.scene-container`.** Las escenas
+8. **Unificar las escenas en `.scene-stage` y `.scene-container`.** Las escenas
    1 a 5 tienen un par de reglas propias, casi idénticas entre sí; las
-   escenas 6 y 7 ya usan las compartidas. Solo se ahorra CSS, no cambia nada a
-   la vista.
+   escenas 6, 7 y 8 ya usan las compartidas. Solo se ahorra CSS, no cambia nada
+   a la vista.
 
-10. **Dos archivos sin usar.** Ninguno lo referencia ningún HTML, CSS ni JS.
+9. **Dos archivos sin usar.** Ninguno lo referencia ningún HTML, CSS ni JS.
    Decidir si se usan o se retiran:
    - `comic/assets/capitulo-n1/scene3/json/fonemas.json` (47 KB)
    - `comic/assets/capitulo-n1/scene3/img/fondoGuitarra.png` (156 KB) — el
