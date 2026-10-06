@@ -6,89 +6,6 @@
   padding-block: 22px 72px;
 }
 
-.ordinal{
-  display: inline-block;
-  margin-left: 0.08em;
-  font-size: 0.5em;
-  vertical-align: 0.75em;
-  text-decoration: underline;
-  text-decoration-thickness: 0.12em;
-  text-underline-offset: 0.08em;
-}
-
-.cabecera{
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  align-items: stretch;
-  background: var(--paper);
-  border: 5px solid var(--ink);
-  box-shadow: 7px 7px 0 var(--ink);
-}
-.cabecera-caja{
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 8px 18px 6px;
-  background: #fffdf6;
-  border-right: 5px solid var(--ink);
-  color: var(--ink);
-  text-decoration: none;
-}
-.cabecera-sello{
-  font-family: 'Special Elite', serif;
-  font-size: 0.66rem;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-}
-.cabecera-numero{
-  font-family: Bangers, cursive;
-  font-size: 2.3rem;
-  line-height: 0.95;
-  color: var(--red);
-}
-.cabecera-caja:hover .cabecera-numero,
-.cabecera-caja:focus-visible .cabecera-numero{
-  color: var(--blue);
-}
-.cabecera-serie{
-  align-self: center;
-  padding-inline: 20px;
-  font-family: Bangers, cursive;
-  font-size: clamp(1.1rem, 2.4vw, 1.7rem);
-  letter-spacing: 1px;
-  line-height: 1;
-  text-transform: uppercase;
-}
-.cabecera-serie span{
-  display: inline-block;
-  margin-left: 8px;
-  padding: 2px 10px 0;
-  rotate: -2deg;
-  background: var(--yellow);
-  border: 3px solid var(--ink);
-}
-.cabecera-nav{
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding-inline: 20px;
-  border-left: 5px solid var(--ink);
-  font-family: 'Special Elite', serif;
-  font-size: 0.72rem;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-}
-.cabecera-nav a{
-  color: var(--ink);
-  text-decoration: none;
-  border-bottom: 2px solid transparent;
-}
-.cabecera-nav a:hover,
-.cabecera-nav a:focus-visible{
-  border-bottom-color: var(--ink);
-}
-
 .titular{
   position: relative;
   display: grid;
@@ -113,16 +30,12 @@
 }
 .sello-numero{
   font-family: Bangers, cursive;
-  font-size: 40px;
+  font-size: 32px;
   letter-spacing: 1px;
   fill: #fffdf6;
   stroke: #17130e;
   stroke-width: 1.5px;
   paint-order: stroke;
-}
-.sello-ordinal{
-  font-size: 22px;
-  text-decoration: underline;
 }
 .titular-antetitulo{
   font-family: 'Special Elite', serif;
@@ -585,21 +498,11 @@
   letter-spacing: 3px;
   line-height: 1;
 }
-.fin-sigue{
-  margin-top: 24px;
-  font-family: 'Special Elite', serif;
-  font-size: 0.9rem;
-}
-.fin-sigue a{
-  color: var(--ink);
-  font-weight: 700;
-  text-decoration-thickness: 2px;
-  text-underline-offset: 3px;
-}
 .fin-pie{
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 18px;
+  gap: 14px 18px;
   margin-top: 46px;
   font-family: 'Special Elite', serif;
   font-size: 0.62rem;
@@ -607,10 +510,12 @@
   letter-spacing: 2px;
   text-transform: uppercase;
 }
-
-.cabecera-caja:focus-visible,
-.cabecera-nav a:focus-visible,
-.fin-sigue a:focus-visible{
+.fin-pie a{
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 2px solid var(--ink);
+}
+.fin-pie a:focus-visible{
   outline: 3px solid var(--blue);
   outline-offset: 3px;
 }
@@ -645,14 +550,6 @@
   .sello{
     grid-row: 1;
     width: min(62vw, 240px);
-  }
-  .cabecera{ grid-template-columns: auto 1fr; }
-  .cabecera-nav{
-    grid-column: 1 / -1;
-    justify-content: center;
-    padding-block: 8px;
-    border-left: 0;
-    border-top: 5px solid var(--ink);
   }
   .origen-pagina{
     grid-template-columns: 1fr;

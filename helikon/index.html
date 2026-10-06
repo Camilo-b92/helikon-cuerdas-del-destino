@@ -3,55 +3,53 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Helikón Nº 0, edición especial: el origen del estudio detrás de Cuerdas del Destino, su equipo, su taller y su forma de fusionar ilustración, animación y código.">
+<meta name="description" content="Helikón, el estudio detrás de Cuerdas del Destino: su origen, su equipo, su taller y su forma de fusionar ilustración, animación y código.">
 <meta name="theme-color" content="#c79b27">
 <link rel="icon" type="image/svg+xml" href="../assets/img/favicon.svg">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="es_CO">
 <meta property="og:site_name" content="Helikón">
-<meta property="og:title" content="Helikón Nº 0 — El origen">
+<meta property="og:title" content="Helikón, el estudio — Cuerdas del Destino">
 <meta property="og:description" content="Construimos historias que nacen del mito, se mueven con la música y se vuelven experiencia.">
 <meta property="og:image" content="../assets/img/og-portada.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Portada del Nº 1 de Cuerdas del Destino: el título sobre un estallido rojo, con Juanes dibujado a la derecha.">
+<meta property="og:image:alt" content="Portada de Cuerdas del Destino: el título sobre un estallido rojo, con Juanes dibujado a la derecha.">
 <meta name="twitter:card" content="summary_large_image">
-<title>Helikón Nº 0 — El origen</title>
+<title>Helikón, el estudio — Cuerdas del Destino</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Special+Elite&family=Patrick+Hand+SC&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/css/pulp.css">
+<link rel="stylesheet" href="../assets/css/menu.css">
 <link rel="stylesheet" href="helikon.css">
 </head>
 <body>
 <div class="paper-grain"></div>
 
-<main class="numero-cero">
+<nav class="menu" aria-label="Menú principal">
+  <span class="menu-marca">Cuerdas del Destino</span>
+  <ul class="menu-lista">
+    <li><a class="menu-enlace" href="../">Inicio</a></li>
+    <li><a class="menu-enlace" href="../comic/">El cómic</a></li>
+    <li><a class="menu-enlace" href="../juanes/">Juanes</a></li>
+    <li><a class="menu-enlace" href="./" aria-current="page">Helikón</a></li>
+  </ul>
+</nav>
 
-  <header class="cabecera">
-    <a class="cabecera-caja" href="../" aria-label="Volver a la portada del Nº 1">
-      <span class="cabecera-sello">Helikón</span>
-      <span class="cabecera-numero">N<span class="ordinal">o</span> 0</span>
-    </a>
-    <p class="cabecera-serie">Edición especial <span>El origen</span></p>
-    <nav class="cabecera-nav" aria-label="Secciones del sitio">
-      <a href="../">Portada</a>
-      <a href="../juanes/">Juanes</a>
-      <a href="../comic/">Cómic</a>
-    </nav>
-  </header>
+<main class="numero-cero">
 
   <section class="titular">
     <div class="titular-texto">
       <p class="titular-antetitulo">El estudio detrás de <em>Cuerdas del Destino</em></p>
       <h1 class="titular-titulo">El origen de <span>Helikón</span></h1>
       <p class="titular-entradilla">
-        Todo estudio tiene un número cero: el que cuenta de dónde viene el nombre,
-        quién sostiene el lápiz y cómo se construye cada página. Este es el nuestro.
+        Todo estudio empieza en algún lugar. Aquí contamos de dónde viene el nombre,
+        quién sostiene el lápiz y cómo se construye cada página.
       </p>
     </div>
 
-    <svg class="sello" viewBox="0 0 300 300" role="img" aria-label="Sello de edición especial: Helikón, el monte donde nacen las musas">
+    <svg class="sello" viewBox="0 0 300 300" role="img" aria-label="Sello de Helikón, el monte donde nacen las musas">
       <defs>
         <path id="selloAnillo" d="M150 150 m-116 0 a116 116 0 1 1 232 0 a116 116 0 1 1 -232 0"/>
       </defs>
@@ -69,12 +67,12 @@
           <path d="M160 110 V118 M168 110 V118 M176 110 V118" fill="none"/>
         </g>
       </g>
-      <text class="sello-numero" x="150" y="238" text-anchor="middle">N<tspan class="sello-ordinal" dy="-15">o</tspan><tspan dy="15"> 0</tspan></text>
+      <text class="sello-numero" x="150" y="234" text-anchor="middle">Estudio</text>
     </svg>
   </section>
 
   <section class="origen" aria-labelledby="origenTitulo">
-    <h2 class="rotulo" id="origenTitulo">Capítulo único · El monte de las musas</h2>
+    <h2 class="rotulo" id="origenTitulo">El monte de las musas</h2>
 
     <div class="origen-pagina">
 
@@ -359,7 +357,7 @@
   </section>
 
   <section class="universo" aria-labelledby="universoTitulo" data-reveal>
-    <h2 class="rotulo" id="universoTitulo">Nuestro universo</h2>
+    <h2 class="rotulo" id="universoTitulo">Sigue explorando</h2>
     <div class="panels">
 
       <a class="panel panel-juanes" href="../juanes/">
@@ -401,9 +399,8 @@
   </section>
 
   <footer class="fin-numero">
-    <p class="fin-titulo">Fin del N<span class="ordinal">o</span> 0</p>
-    <p class="fin-sigue">La historia continúa en el <a href="../">Nº 1: Cuerdas del Destino</a></p>
-    <p class="fin-pie"><span>Helikón</span><span class="rule"></span><span>Un cómic digital interactivo</span></p>
+    <p class="fin-titulo">Gracias por visitarnos</p>
+    <p class="fin-pie"><span>Helikón</span><span class="rule"></span><span>Un cómic digital interactivo</span><span class="rule"></span><a href="../">Volver al inicio</a></p>
   </footer>
 
 </main>

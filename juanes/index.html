@@ -9,24 +9,35 @@
 <meta property="og:type" content="article">
 <meta property="og:locale" content="es_CO">
 <meta property="og:site_name" content="Helikón">
-<meta property="og:title" content="Juanes — Basado en hechos reales">
-<meta property="og:description" content="De Ekhymosis a Juanesteban: la carrera de Juanes contada como un cómic, número a número.">
+<meta property="og:title" content="Juanes, basado en hechos reales — Helikón">
+<meta property="og:description" content="De Ekhymosis a Juanesteban: la carrera de Juanes contada como un cómic, año a año.">
 <meta property="og:image" content="../assets/img/og-portada.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Portada del Nº 1 de Cuerdas del Destino: el título sobre un estallido rojo, con Juanes dibujado a la derecha.">
+<meta property="og:image:alt" content="Portada de Cuerdas del Destino: el título sobre un estallido rojo, con Juanes dibujado a la derecha.">
 <meta name="twitter:card" content="summary_large_image">
-<title>Juanes — Basado en hechos reales</title>
+<title>Juanes, basado en hechos reales — Helikón</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Special+Elite&family=Patrick+Hand+SC&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/css/pulp.css">
+<link rel="stylesheet" href="../assets/css/menu.css">
 <link rel="stylesheet" href="juanes.css">
 </head>
 <body>
 <div class="paper-grain"></div>
 
 <div class="ink-rail" aria-hidden="true"><div class="ink-fill" id="inkFill"></div></div>
+
+<nav class="menu" aria-label="Menú principal">
+  <span class="menu-marca">Cuerdas del Destino</span>
+  <ul class="menu-lista">
+    <li><a class="menu-enlace" href="../">Inicio</a></li>
+    <li><a class="menu-enlace" href="../comic/">El cómic</a></li>
+    <li><a class="menu-enlace" href="./" aria-current="page">Juanes</a></li>
+    <li><a class="menu-enlace" href="../helikon/">Helikón</a></li>
+  </ul>
+</nav>
 
 <svg class="sprite" aria-hidden="true" focusable="false">
   <symbol id="icono-musica" viewBox="0 0 100 100">
@@ -61,19 +72,6 @@
 </svg>
 
 <main class="especial">
-
-  <header class="cabecera">
-    <a class="cabecera-caja" href="../" aria-label="Volver a la portada">
-      <span class="cabecera-sello">Helikón</span>
-      <span class="cabecera-numero">Bio</span>
-    </a>
-    <p class="cabecera-serie">Edición especial <span>Basado en hechos reales</span></p>
-    <nav class="cabecera-nav" aria-label="Secciones del sitio">
-      <a href="../">Portada</a>
-      <a href="../helikon/">Helikón</a>
-      <a href="../comic/">Cómic</a>
-    </nav>
-  </header>
 
   <section class="titular">
     <div class="titular-texto">
@@ -197,7 +195,7 @@
   </section>
 
   <section class="linea" id="linea" aria-labelledby="lineaTitulo">
-    <h2 class="rotulo" id="lineaTitulo">La carrera, número a número</h2>
+    <h2 class="rotulo" id="lineaTitulo">La carrera, año a año</h2>
     <p class="seccion-nota">
       Arrastra la púa por la cuerda, desliza las viñetas o dale a reproducir.
       Cada punto de la cuerda es un momento de su historia.
@@ -547,7 +545,14 @@
   </section>
 
   <footer class="fin-numero">
-    <p class="fin-titulo">Fin de la edición especial</p>
+    <p class="fin-titulo">Sigue explorando</p>
+
+    <nav class="sigue" aria-label="Sigue explorando">
+      <ul class="sigue-lista">
+        <li><a class="sigue-enlace" href="../helikon/"><strong>Helikón</strong><span>El estudio que dibuja y programa esta historia.</span></a></li>
+        <li><a class="sigue-enlace" href="../"><strong>Inicio</strong><span>Vuelve a la portada de Cuerdas del Destino.</span></a></li>
+      </ul>
+    </nav>
 
     <details class="fuentes">
       <summary>Fuentes de esta biografía</summary>
@@ -562,8 +567,7 @@
     </details>
 
     <p class="fin-pie">
-      <span>Juanes</span><span class="rule"></span>
-      <a href="../">Portada</a><a href="../helikon/">Helikón</a><a href="../comic/">Cómic</a>
+      <span>Juanes</span><span class="rule"></span><span>Un cómic digital interactivo</span>
     </p>
     <p class="footer-note">Contenido biográfico con fines informativos y creativos — proyecto multimedia académico.</p>
   </footer>

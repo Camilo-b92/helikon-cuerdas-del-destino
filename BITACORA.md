@@ -1172,6 +1172,67 @@ completo y su desvanecimiento, salir y volver encontrando la escena desde el
 principio, y el tope del dial en el canal 10. Sin errores de consola. No se
 probó en móvil.
 
+### Ronda 21 — Navegación y nombres (fase 1 del plan de UX)
+
+Sale de dos fuentes: la devolución del profesor ("Edición 0", "Edición 1" y
+"Nº" confunden; el encabezado debería ser permanente) y una revisión del sitio
+como si fuera la primera visita. El plan completo tiene cinco fases; esta
+ronda es solo la primera.
+
+- **Una sola barra para las cuatro páginas.** Antes, la portada no tenía
+  encabezado; Helikón y Juanes tenían uno de revista que omitía su propio
+  botón; y el cómic tenía otra barra distinta, sin Juanes. Ahora todas llevan
+  `Inicio · El cómic · Juanes · Helikón`, definidas en `assets/css/menu.css`.
+- **La página actual no desaparece.** Se queda en la barra, resaltada y con
+  `aria-current="page"`. Su enlace apunta a sí misma (`./`): al pulsarla solo
+  recarga, así que nada cambia de sitio.
+- **La barra es fija** (`position: sticky`) y cada botón mide 44 px de alto,
+  por el dedo. En celular se oculta el nombre "Cuerdas del Destino" y los
+  cuatro botones se centran; a 360 px caben sin desbordar.
+- **El cómic conserva su paleta.** `menu.css` lee variables y `comic.css` las
+  redefine en turquesa, con el borde más fino. Se quitó `.topnav`. Para no
+  empujar el televisor fuera de la pantalla se afinó su ancho (`100vh - 108px`
+  en lugar de `100vh - 100px`): la altura total del cómic a 1366x768 queda en
+  782 px contra 781 antes.
+- **Fuera "Nº", "Edición" y "Bio".** Se quitó la cabecera de revista de
+  Helikón y de Juanes (HTML y CSS), el "Nº 1" de la caja editorial de la
+  portada, el folio "1" de la hoja derecha y las frases "Fin del Nº 0", "Fin
+  de la edición especial" y "La historia continúa en el Nº 1". El sello de
+  Helikón dice ahora "Estudio" en lugar de "Nº 0", un poco más pequeño (32 px)
+  porque la palabra es más larga y el texto está en la parte baja del
+  círculo. "Capítulo único · El monte de las musas" pasa a "El monte de las
+  musas", porque ya hay tres capítulos en el cómic; y "La carrera, número a
+  número" pasa a "año a año".
+- **Finales con "a dónde sigo".** Helikón: "Nuestro universo" se llama ahora
+  "Sigue explorando", y cierra con "Gracias por visitarnos" y un enlace para
+  volver al inicio. Juanes: cierra con "Sigue explorando" y dos tarjetas
+  (Helikón e Inicio; el cómic ya tiene su propia viñeta justo encima). Son las
+  tarjetas `.sigue` de `menu.css`.
+- **Títulos y vistas previas distintos por página.** Antes la portada y el
+  cómic se llamaban igual en la pestaña. Ahora: *Cuerdas del Destino —
+  Helikón*, *El cómic: Cuerdas del Destino — Helikón*, *Juanes, basado en
+  hechos reales — Helikón* y *Helikón, el estudio — Cuerdas del Destino*. Los
+  `og:title`, las descripciones y el texto alternativo de la imagen
+  ("Portada de Cuerdas del Destino…", sin "Nº 1") se corrigieron igual.
+
+Lo que se dejó para las fases siguientes, a propósito: la contradicción
+"¡2 capítulos!" frente a "Continuará… capítulo dos" y el "Capítulos 1 y 2" de
+la viñeta del cómic (fase 3, depende de cuántos capítulos haya), el cartel de
+encendido del televisor y el contador "Canal" (fase 2), el material interno de
+Helikón y el aviso de página no oficial en Juanes (fase 4), y el enlace de
+salto al contenido y una imagen de vista previa por página (fase 5).
+
+Lo que ya estaba así y no se tocó: a 768 px de ancho, Juanes y Helikón
+desbordan unos píxeles en horizontal (784 y 770 px contra 768); se midió en la
+versión anterior y era igual.
+
+Probado en un navegador a 1366x768, 768x900 y 360x740: las cuatro páginas
+cargan, la barra aparece en cada una con su botón resaltado y los cuatro
+enlaces correctos, queda fija al bajar, los botones miden 44 px y no hay errores
+propios en consola (solo falla la descarga de las tipografías de Google, que el
+entorno de pruebas bloquea). No se recorrió el cómic completo: la barra no toca
+su código.
+
 ---
 
 ## Pendientes
@@ -1200,8 +1261,10 @@ En orden de lo que más aporta:
    estar vacíos; el canal de Personajes sirve de molde para cuando haya
    material que poner.
 
-5. **Unificar el marco de la página del Cómic** con el lenguaje pulp,
-   conservando el interior del televisor como está.
+5. **Fases 2 a 5 del plan de UX** (ronda 21 hizo la fase 1): el primer minuto
+   del cómic, la portada, las páginas largas y la accesibilidad. Esperan las
+   decisiones del equipo sobre cuántos capítulos hay y qué se muestra del
+   reparto.
 
 6. **Comprimir `comic/assets/intro.mp4`** (7.6 MB). Ya hay `ffmpeg` instalado
    para hacerlo. También `caja.json` (2.6 MB) es pesado, aunque ya está

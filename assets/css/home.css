@@ -21,7 +21,7 @@
 
 .doble-pagina{
   --proporcion: 0.66;
-  --alto: min(1040px, calc(100svh - 32px), calc(96vw / (2 * var(--proporcion) + 0.04)));
+  --alto: min(1040px, calc(100svh - 92px), calc(96vw / (2 * var(--proporcion) + 0.04)));
   --ancho-hoja: calc(var(--alto) * var(--proporcion));
   display: flex;
   justify-content: center;
@@ -81,7 +81,7 @@
 }
 .caja-editorial{
   display: grid;
-  grid-template-rows: 1fr auto auto;
+  grid-template-rows: 1fr auto;
   justify-items: center;
   align-items: end;
   padding: calc(0.8 * var(--u)) calc(0.6 * var(--u)) calc(0.7 * var(--u));
@@ -100,21 +100,6 @@
   letter-spacing: calc(0.3 * var(--u));
   text-transform: uppercase;
   line-height: 1;
-}
-.caja-numero{
-  font-family: Bangers, cursive;
-  font-size: calc(5.4 * var(--u));
-  line-height: 0.95;
-  color: var(--red);
-}
-.caja-ordinal{
-  display: inline-block;
-  margin-left: 0.1em;
-  font-size: 0.5em;
-  vertical-align: 0.75em;
-  text-decoration: underline;
-  text-decoration-thickness: 0.12em;
-  text-underline-offset: 0.08em;
 }
 .franja-serie{
   align-self: center;
@@ -455,15 +440,6 @@
 .vineta:hover .vineta-figura,
 .vineta:focus-visible .vineta-figura{
   translate: 0 -3%;
-}
-
-.folio{
-  position: absolute;
-  right: 4.2cqi;
-  bottom: 2.4cqi;
-  font-family: Bangers, cursive;
-  font-size: 4.6cqi;
-  line-height: 1;
 }
 
 .rotulo{

@@ -60,6 +60,7 @@ Lo que eso implica al trabajar:
 ├── assets/                 Recursos compartidos por todo el sitio
 │   ├── css/
 │   │   ├── pulp.css        Base visual común: paleta, papel, viñetas
+│   │   ├── menu.css        Menú común de las cuatro páginas y bloque "Sigue explorando"
 │   │   └── home.css        Solo lo propio de la portada
 │   ├── js/
 │   │   ├── pulp.js         Revelado al scroll y paralaje del masthead
@@ -109,8 +110,32 @@ suyo y solo redefine lo que le es propio:
 
 ```html
 <link rel="stylesheet" href="../assets/css/pulp.css">
+<link rel="stylesheet" href="../assets/css/menu.css">
 <link rel="stylesheet" href="helikon.css">
 ```
+
+### El menú común
+
+Las cuatro páginas (portada, cómic, Juanes, Helikón) comparten **la misma barra
+de navegación**, definida en `assets/css/menu.css`: `Inicio · El cómic · Juanes
+· Helikón`. Reglas:
+
+- **Los cuatro botones están siempre.** La página actual no desaparece: lleva
+  `aria-current="page"`, se ve resaltada y su enlace apunta a sí misma (`./`).
+- **La barra es fija** (`position: sticky`), así que acompaña al scroll.
+- **Cada botón mide al menos 44 px de alto** para que se pueda tocar con el dedo.
+- Se escribe a mano en cada HTML (no hay motor de plantillas), con las rutas
+  relativas de esa carpeta. Al añadir una página nueva, hay que sumarla a las
+  cuatro barras.
+- El color sale de variables (`--menu-fondo`, `--menu-texto`, `--menu-linea`,
+  `--menu-activo-fondo`…). El cómic las redefine en `comic.css` con su paleta
+  turquesa; las otras tres usan los valores de papel por defecto.
+- `menu.css` también trae el bloque `.sigue` ("Sigue explorando"): tarjetas con
+  los destinos que quedan, al final de Juanes.
+
+**Nombres del sitio.** Ya no se usa "Nº 0", "Nº 1", "Edición especial" ni "Bio".
+Cada página se llama por lo que es: *El cómic*, *Juanes* y *Helikón (el
+estudio)*, y cada título de pestaña es distinto.
 
 Lo mismo con el JavaScript:
 
@@ -200,7 +225,7 @@ se lee de cada ficha y nunca se da por supuesta.
 - Inclinación 3D de los paneles siguiendo el cursor, más una luz radial que
   se mueve con él. El panel bajo el cursor sube a `z-index: 10` para que su
   sombra dura no quede tapada por el vecino.
-- `initPortada()` — paralaje de la portada del Nº 1. Cada elemento con clase
+- `initPortada()` — paralaje de la portada. Cada elemento con clase
   `.capa` se desplaza según su `data-profundidad`: positivo sigue al cursor,
   negativo va al contrario, y así el título, los anillos y Juanes parecen
   estar a distinta distancia. Escribe la propiedad `translate`, se agrupa en un
@@ -209,13 +234,13 @@ se lee de cada ficha y nunca se da por supuesta.
 
 ### La portada: un cómic abierto por la primera doble página
 
-`index.html` no es una web con tres botones: es el **Nº 1 de un cómic**,
+`index.html` no es una web con tres botones: es **la portada de un cómic**,
 abierto. En escritorio se ven dos hojas enfrentadas; en móvil (≤ 760 px) se
 apilan en vertical, como un webtoon.
 
 - **Hoja izquierda, la portada** (`.portada`). Lleva lo que tiene la portada de
-  un cómic impreso: caja editorial en la esquina con la cara del niño, número,
-  fecha, precio y código de barras. El título es el **logotipo oficial** y los
+  un cómic impreso: caja editorial en la esquina con la cara del niño y el sello
+  Helikón, fecha, precio y código de barras. El título es el **logotipo oficial** y los
   anillos rojos vienen de la presentación animada del capítulo uno. Juanes se
   sale del marco por abajo.
 - **Hoja derecha, la página 1** (`.pagina`). Un cartucho de narrador y tres
@@ -287,14 +312,12 @@ Lo que hay que respetar si se toca:
 - Al cambiar de personaje **se vuelve a la figura completa**, porque no todos
   comparten la misma lista de gestos.
 
-### La página de Helikón: el Nº 0
+### La página de Helikón: el estudio
 
-Si la portada es el Nº 1, Helikón es el **Nº 0**: el número especial que las
-editoriales de cómics publican para contar el origen de una serie. Se lee de
-arriba abajo:
+Cuenta el origen del estudio que hace el cómic. Se lee de arriba abajo:
 
-1. **Cabecera de edición especial**, con caja "Nº 0" que vuelve a la portada.
-2. **Titular y sello** de edición: el lema gira alrededor de un círculo con
+1. **Menú común**, con "Helikón" resaltado.
+2. **Titular y sello**: el lema gira alrededor de un círculo con
    `textPath`, estirado con `textLength` para que dé la vuelta completa.
 3. **El origen en cuatro viñetas** (`.vineta-origen`): el Monte Helicón,
    Pegaso golpeando la roca, la fuente Hipocrene con las nueve musas y el
@@ -305,7 +328,8 @@ arriba abajo:
 6. **Señas de identidad**: la paleta con sus cinco tintes y su uso, las tres
    tipografías con muestra en su propia letra, y la regla de los dos mundos
    —papel fuera de la pantalla, turquesa dentro—.
-7. **Tablero de ideas**, **nuestro universo** y cierre "Fin del Nº 0".
+7. **Tablero de ideas**, **sigue explorando** (las tarjetas hacia Juanes y el
+   cómic) y un cierre con enlace para volver al inicio.
 
 Reglas de esta página:
 
@@ -324,8 +348,8 @@ Reglas de esta página:
 - **Las sombras del título van en `em`**, no en píxeles. Con desplazamientos
   fijos, a tamaño de móvil las capas de papel y tinta se separaban y dejaban
   franjas claras entre las letras.
-- **Bangers no tiene "º"**, también dentro del SVG: el "Nº 0" del sello lleva la
-  "o" en un `<tspan>` pequeño, elevado y subrayado.
+- **El sello dice "Estudio"** en la parte baja, en Bangers a 32 px, para que no
+  roce el borde del círculo rojo.
 
 ### `juanes/juanes.js`
 
@@ -337,11 +361,11 @@ Reglas de esta página:
   si el usuario pidió movimiento reducido.
 - `initLinea()` — la línea de tiempo interactiva. Ver abajo.
 
-### La página de Juanes: edición "Basado en hechos reales"
+### La página de Juanes: "Basado en hechos reales"
 
-La biografía contada como un cómic: cabecera de edición especial, titular con
+La biografía contada como un cómic: menú común, titular con
 el retrato tramado y un sello, el origen, **la línea de tiempo**, su música,
-cifras en estallidos, el activismo, el paso al cómic y las **fuentes**.
+cifras en estallidos, el activismo, el paso al cómic, un bloque **Sigue explorando** y las **fuentes**.
 
 **Esta página habla de una persona real, así que cada dato está contrastado**
 y citado en la sección de fuentes al final. Antes de añadir o cambiar un dato,
