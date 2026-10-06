@@ -12,9 +12,7 @@ window.PERSONAJES = [
       ['Oficio', 'Músico callejero'],
       ['Carácter', 'Perseverante, sensible, introspectivo']
     ],
-    nota: 'Toca para una ciudad que no lo escucha. Su viaje va de la ' +
-          'frustración a la expresión sincera: entiende que la música nace ' +
-          'del amor y la emoción, no de la técnica.'
+    nota: 'Toca para una ciudad que no lo escucha.'
   },
   {
     id: 'nino',
@@ -43,11 +41,10 @@ window.PERSONAJES = [
       ['Rostro', 'Sin rasgos definidos'],
       ['Carácter', 'Serio, neutral'],
       ['Presencia', 'Imponente, directa'],
-      ['Aparece', 'En los momentos de crisis']
+      ['Origen', 'Desconocido']
     ],
-    nota: 'No es un personaje del mundo real: es el conflicto interno de ' +
-          'Juanes hecho figura. Aparece de repente, dice lo justo y ' +
-          'desaparece. De inquietante pasa a calmante.'
+    nota: 'Nadie sabe de dónde viene. Aparece de repente, dice lo justo y ' +
+          'desaparece.'
   },
   {
     id: 'padre',
@@ -71,7 +68,7 @@ window.PERSONAJES = [
     color: 'azul',
     gestos: ['alegria', 'tristeza', 'asombro', 'miedo', 'enojo', 'aburrimiento'],
     nombre: 'La Madre',
-    rol: 'Secundaria clave — punto de cambio',
+    rol: 'Secundaria clave — el hogar',
     datos: [
       ['Edad', 'Entre 40 y 50 años'],
       ['Origen', 'Carolina del Príncipe'],
@@ -79,7 +76,6 @@ window.PERSONAJES = [
       ['Carácter', 'Tranquila, comprensiva, sensible'],
       ['Rasgo', 'Empatía y calma']
     ],
-    nota: 'Observa antes de intervenir. Cuando Juanes vuelve derrotado, es ' +
-          'ella quien le da la vuelta a todo: la música nace de lo que se ama.'
+    nota: 'Observa antes de intervenir.'
   }
 ];

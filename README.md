@@ -206,6 +206,9 @@ navegador al pintar. Ver la nota sobre CC BY-SA en
 Define `window.PERSONAJES`: las cinco fichas con su `id`, `color`, `nombre`,
 `rol`, la lista de `gestos`, la tabla de `datos` y la `nota`.
 
+Las notas **no adelantan la trama** (son una frase o dos). Para el Ente, el
+dato "Aparece" pasó a "Origen: Desconocido".
+
 **Lo carga la portada**, antes de su propio script, para el expediente a
 pantalla completa. Vivían dentro de `comic.js` hasta que los personajes salieron
 del televisor; el archivo se quedó porque las fichas siguen siendo una sola
@@ -248,7 +251,18 @@ apilan en vertical, como un webtoon.
   reales del cómic hablando en globos (`.globo`). La viñeta del cómic es la más
   grande porque es la entrada principal.
 - **Debajo**, el reparto con los cinco personajes y la contraportada: "Continuará
-  en *El Mensaje*", con su rótulo real, y los créditos del equipo.
+  en el capítulo tres", con el rótulo real de *El Desenlace*, y los créditos del
+  equipo.
+- **Una pista de scroll** (`.baja-pista`): un enlace fijo "Sigue bajando ▼" que
+  lleva a `#reparto`. La doble página ocupa casi toda la ventana y no se ve
+  que haya más debajo; la pista se oculta sola en cuanto se baja 80 px
+  (`initPistaBajar()` en `home.js`). En escritorio se coloca sobre el margen de
+  la hoja derecha, para no tapar el código de barras; en celular va centrada. La
+  flecha solo se mueve si no hay preferencia de movimiento reducido.
+
+**La portada no cuenta la historia.** Las fichas y las tarjetas del reparto
+dicen quién es cada personaje, no qué le pasa: nada de crisis, derrota ni
+"punto de cambio". Eso se descubre en el televisor.
 
 No se duplicó ningún archivo gráfico: todo se enlaza desde `comic/assets/` y
 `juanes/img/`.

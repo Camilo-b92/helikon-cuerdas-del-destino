@@ -1290,6 +1290,24 @@ a izquierda y derecha, deslizar corto sin efecto, aviso de giro, tamaño del
 botón rojo). Sin errores de consola. No se probó en un teléfono real ni se
 recorrió cada escena con el nuevo botón.
 
+### Ronda 23 — La portada (fase 3 del plan de UX)
+
+- **El "Continuará" decía capítulo dos y el sello "¡2 capítulos!" ya lo
+  contaba como hecho.** Ahora apunta al capítulo tres, con el rótulo de *El
+  Desenlace* (`presentacion-c3/json/images/img_1.png`, 745x206). El sello
+  "¡2 capítulos!" se queda: es lo que hay en el cómic hoy.
+- **Sin spoilers en el reparto.** Las tarjetas decían "El punto de cambio" y
+  "Aparece en la crisis"; ahora "Observa antes de intervenir" y "Aparece de
+  repente". En `personajes.js`: la nota de Juanes queda en su primera frase;
+  la del Ente en "Nadie sabe de dónde viene. Aparece de repente, dice lo justo
+  y desaparece." (antes revelaba qué es) y su dato "Aparece" pasó a "Origen:
+  Desconocido"; la de la Madre queda en "Observa antes de intervenir." y su rol
+  pasa a "Secundaria clave — el hogar". **Decisión del equipo si se quiere
+  recuperar algo de esto:** el texto anterior sigue en el historial de git.
+- **Pista de scroll** "Sigue bajando ▼", fija, que lleva a `#reparto` y se
+  oculta tras 80 px de scroll. Probada a 1366x768, 768x1024 y 360x740: sin
+  desbordes ni errores de consola, y el enlace baja hasta el reparto.
+
 ---
 
 ## Pendientes
@@ -1318,10 +1336,8 @@ En orden de lo que más aporta:
    estar vacíos; el canal de Personajes sirve de molde para cuando haya
    material que poner.
 
-5. **Fases 3 a 5 del plan de UX** (la ronda 21 hizo la fase 1 y la 22 la fase 2):
-   la portada, las páginas largas y la accesibilidad. Esperan las
-   decisiones del equipo sobre cuántos capítulos hay y qué se muestra del
-   reparto.
+5. **Fases 4 y 5 del plan de UX** (las rondas 21, 22 y 23 hicieron las fases
+   1, 2 y 3): las páginas largas y la accesibilidad.
 
 6. **Comprimir `comic/assets/intro.mp4`** (7.6 MB). Ya hay `ffmpeg` instalado
    para hacerlo. También `caja.json` (2.6 MB) es pesado, aunque ya está

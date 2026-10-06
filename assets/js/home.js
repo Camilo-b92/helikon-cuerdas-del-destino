@@ -66,6 +66,19 @@ function initPortada(){
 
 initPortada();
 
+function initPistaBajar(){
+  const pista = document.querySelector('.baja-pista');
+  if (!pista) return;
+
+  function actualizar(){
+    pista.classList.toggle('baja-oculta', window.scrollY > 80);
+  }
+
+  window.addEventListener('scroll', actualizar, { passive: true });
+  actualizar();
+}
+initPistaBajar();
+
 document.querySelectorAll('.panel').forEach(panel => {
 
   panel.addEventListener('click', playClickSound);
