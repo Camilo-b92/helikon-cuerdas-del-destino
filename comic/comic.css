@@ -179,60 +179,10 @@ a{ color: inherit; }
   position: absolute;
   inset: 0;
   display: none;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 8% 10%;
 }
-.channel.is-active{ display: flex; }
-.channel[data-channel="0"].is-active,
-.channel[data-channel="1"].is-active,
-.channel[data-channel="2"].is-active,
-.channel[data-channel="6"].is-active{ display: block; padding: 0; }
-
-.ch-eyebrow{
-  font-family: var(--font-sub);
-  font-weight: 500;
-  font-size: 0.85em;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--turquoise);
-  margin: 0 0 0.9em;
-}
+.channel.is-active{ display: block; }
 
 @keyframes blinkHint{ 0%,100%{ opacity: 1; } 50%{ opacity: 0.25; } }
-
-.ch-title{
-  font-family: var(--font-tv);
-  font-weight: 400;
-  font-size: clamp(1.5rem, 4.6vw, 2.5rem);
-  line-height: 1.05;
-  margin: 0 0 0.6em;
-  color: var(--beige);
-}
-
-.ch-text{
-  font-size: 0.95em;
-  line-height: 1.7;
-  color: var(--mist);
-  max-width: 32ch;
-  margin: 0 auto;
-}
-
-
-
-
-
-
-
-
-
-
-
-@media (max-width: 760px){
-
-}
 
 .pres-stage{
   position: absolute;
@@ -251,7 +201,8 @@ a{ color: inherit; }
 }
 
 #p1-titulo,
-#p2-titulo{ position: absolute; inset: 0; width: 1134px; height: 658px; }
+#p2-titulo,
+#p3-titulo{ position: absolute; inset: 0; width: 1134px; height: 658px; }
 
 .pres-hint{
   position: absolute;
@@ -277,6 +228,41 @@ a{ color: inherit; }
 .pres-container--segunda{ opacity: 0; }
 .pres-container--segunda.is-visible{ opacity: 1; }
 .pres-container.se-retira{ opacity: 0; }
+
+.scene-stage{
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: #000;
+}
+
+.scene-container{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1134px;
+  height: 658px;
+  transform-origin: top left;
+  overflow: hidden;
+}
+
+.scene-hint{
+  position: absolute;
+  bottom: 5%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  font-size: 0.8em;
+  letter-spacing: 0.03em;
+  color: var(--mist);
+  background: rgba(0,0,0,0.5);
+  padding: 0.35em 0.9em;
+  border-radius: 20px;
+  white-space: nowrap;
+  pointer-events: none;
+  animation: blinkHint 2s ease-in-out infinite;
+}
+.scene-hint.is-hidden{ display: none; }
 
 .scene1-stage{
   position: absolute;
@@ -323,23 +309,6 @@ a{ color: inherit; }
 }
 #s1-puerta.is-locked{ cursor: default; }
 
-.scene1-hint{
-  position: absolute;
-  bottom: 5%;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 2;
-  font-size: 0.8em;
-  letter-spacing: 0.03em;
-  color: var(--mist);
-  background: rgba(0,0,0,0.5);
-  padding: 0.35em 0.9em;
-  border-radius: 20px;
-  white-space: nowrap;
-  pointer-events: none;
-  animation: blinkHint 2s ease-in-out infinite;
-}
-.scene1-hint.is-hidden{ display: none; }
 
 .scene2-stage{
   position: absolute;
@@ -469,23 +438,6 @@ a{ color: inherit; }
 }
 #s3-juanesEmocion.s3-entrar{ transform: scale(1); }
 
-.scene3-hint{
-  position: absolute;
-  bottom: 5%;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 2;
-  font-size: 0.8em;
-  letter-spacing: 0.03em;
-  color: var(--mist);
-  background: rgba(0,0,0,0.5);
-  padding: 0.35em 0.9em;
-  border-radius: 20px;
-  white-space: nowrap;
-  pointer-events: none;
-  animation: blinkHint 2s ease-in-out infinite;
-}
-.scene3-hint.is-hidden{ display: none; }
 
 .scene4-stage{
   position: absolute;
@@ -585,6 +537,88 @@ a{ color: inherit; }
   transition: opacity 0.3s ease-out;
 }
 #s5-textVine.is-visible{ opacity: 1; }
+
+#s6-cajaUno{
+  position: absolute; width: 705px; height: 380px; left: 0; top: 278px;
+  transform: translateY(380px);
+  transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+#s6-cajaUno.s6-entrar{ transform: translateY(0); }
+
+#s6-recuadroUnoEntrada{
+  position: absolute; width: 705px; height: 380px; left: 0; top: 0;
+  transform: scale(0);
+  transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+#s6-recuadroUnoEntrada.s6-entrar{ transform: scale(1); }
+
+#s6-recuadroUno{ position: absolute; width: 700px; height: 380px; left: 0; top: 0; cursor: pointer; }
+
+#s6-fondoTextoOne{
+  position: absolute; width: 520px; height: 256.15px; left: 0; top: 0;
+  background-image: url(assets/capitulo-n2/scene3/img/fondoTextoOne.jpg);
+  background-size: 100.1% 100%;
+  transform: translateY(-256.15px);
+  transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+#s6-fondoTextoOne.s6-entrar{ transform: translateY(0); }
+
+#s6-textoOne{ position: absolute; width: 523.54px; height: 256.15px; left: 0; top: 0; }
+
+#s6-fondoDos{
+  position: absolute; width: 700px; height: 311px; left: 430px; top: 0;
+  background-image: url(assets/capitulo-n2/scene3/img/fondoDos.jpg);
+  background-size: 100% 100%;
+  transform: scale(0);
+  transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+#s6-fondoDos.s6-entrar{ transform: scale(1); }
+
+#s6-juanAsustao{ position: absolute; width: 440px; left: 110px; top: -4px; }
+
+#s6-fondoTres{
+  position: absolute; width: 551px; height: 324px; left: 583px; top: 334px;
+  background-image: url(assets/capitulo-n2/scene3/img/fondoTres.jpg);
+  background-size: 100% 100%;
+  transform: translateY(324px);
+  transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+#s6-fondoTres.s6-entrar{ transform: translateY(0); }
+
+#s6-fantasmaEsc{
+  position: absolute; width: 600px; height: 312px; left: 30px; top: 12px;
+  background-image: url(assets/capitulo-n2/scene3/img/fantasmaEsc.png);
+  background-size: 100% 100%;
+  cursor: pointer;
+  animation: s6PulsoFantasma 2.8s ease-in-out infinite;
+}
+@keyframes s6PulsoFantasma{ 0%, 100%{ transform: scale(1); } 50%{ transform: scale(1.08); } }
+
+#s6-textoFantas{
+  position: absolute; width: 789px; height: 678px; left: 0; top: 0;
+  opacity: 1;
+  pointer-events: none;
+  transition: opacity 0.3s ease-out;
+}
+#s6-textoFantas.s6-oculto{ opacity: 0; }
+
+#s7-sky{
+  position: absolute; left: 0; top: 0; width: 1133px; height: 166px;
+  background-image: url(assets/capitulo-n2/scene4/img/sky.jpg);
+  background-size: auto 100%;
+  background-repeat: repeat-x;
+  animation: s7MoverSky 40s linear infinite;
+}
+@keyframes s7MoverSky{ from{ background-position-x: 0px; } to{ background-position-x: 1133px; } }
+
+#s7-fondoCorre{
+  position: absolute; width: 1134px; height: 658px; left: 0; top: 0;
+  background-image: url(assets/capitulo-n2/scene4/img/fondoCorre.png);
+  background-size: 100% 100%;
+}
+
+#s7-juanRun{ position: absolute; width: 230px; left: -250px; top: 258px; }
+#s7-text{ position: absolute; width: 250px; left: 90px; top: -130px; }
 
 .scanlines{
   position: absolute;
@@ -725,8 +759,7 @@ a{ color: inherit; }
     transition-duration: 0.001ms !important;
   }
   .pres-hint,
-  .scene1-hint,
-  .scene3-hint,
+  .scene-hint,
   .crt-flicker,
   .tv.is-off .tv-btn--power,
   #s1-nubes,
@@ -734,7 +767,9 @@ a{ color: inherit; }
   #s4-nubes,
   #s4-nubes2,
   #s4-juanCaminando.s4-pulso,
-  #s5-fondoSky{
+  #s5-fondoSky,
+  #s6-fantasmaEsc,
+  #s7-sky{
     animation: none !important;
   }
 }

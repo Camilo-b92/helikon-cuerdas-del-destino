@@ -1,4 +1,4 @@
-const TOTAL_CHANNELS = 7;
+const TOTAL_CHANNELS = 9;
 let currentChannel = 0;
 let tvOn = false;
 let isAnimating = false;
@@ -37,11 +37,22 @@ const scene4Container = document.getElementById('scene4Container');
 
 const scene5Stage = document.getElementById('scene5Stage');
 const scene5Container = document.getElementById('scene5Container');
+const scene5Hint = document.getElementById('scene5Hint');
+
+const scene6Stage = document.getElementById('scene6Stage');
+const scene6Container = document.getElementById('scene6Container');
+const scene6HintRecuadro = document.getElementById('scene6HintRecuadro');
+const scene6HintFantasma = document.getElementById('scene6HintFantasma');
+
+const scene7Stage = document.getElementById('scene7Stage');
+const scene7Container = document.getElementById('scene7Container');
+const scene7Hint = document.getElementById('scene7Hint');
 
 const channelNames = [
-  'Capítulo uno — Presentación', 'Escena I — El llamado', 'Escena II',
-  'Escena III', 'Fin del capítulo uno',
-  'Capítulo dos — Presentación', 'Capítulo 2 — Escena I', 'Capítulo 2 — Escena II'
+  'Capítulo uno — Presentación', 'Escena I — El llamado', 'Escena II', 'Escena III',
+  'Capítulo dos — Presentación', 'Capítulo 2 — Escena I', 'Capítulo 2 — Escena II',
+  'Capítulo 2 — Escena III', 'Capítulo 2 — Escena IV',
+  'Capítulo tres — Presentación'
 ];
 
 let s1 = { humo: null, puerta: null, juanesCorre: null, ready: false, played: false };
@@ -103,8 +114,12 @@ function scaleScene2(){ scaleStage(scene2Stage, scene2Container); }
 function scaleScene3(){ scaleStage(scene3Stage, scene3Container); }
 function scaleScene4(){ scaleStage(scene4Stage, scene4Container); }
 function scaleScene5(){ scaleStage(scene5Stage, scene5Container); }
+function scaleScene6(){ scaleStage(scene6Stage, scene6Container); }
+function scaleScene7(){ scaleStage(scene7Stage, scene7Container); }
 
-window.addEventListener('resize', () => { scaleScene1(); scaleScene2(); scaleScene3(); scaleScene4(); scaleScene5(); });
+window.addEventListener('resize', () => {
+  scaleScene1(); scaleScene2(); scaleScene3(); scaleScene4(); scaleScene5(); scaleScene6(); scaleScene7();
+});
 
 let s2 = { juanesBusca: null, caja: null, texto: null, ready: false, textoTimer: null, playTimer: null };
 
@@ -183,6 +198,32 @@ function prefetchScene5(){
   });
   ['juanTocaGuita', 'musica', 'npcUno', 'npcDos', 'npcTres', 'npcCuatro', 'textDias', 'textVine'].forEach(name => {
     fetch(`assets/capitulo-n2/scene2/json/${name}.json`).catch(() => {});
+  });
+}
+
+let scene6Prefetched = false;
+function prefetchScene6(){
+  if (scene6Prefetched) return;
+  scene6Prefetched = true;
+  ['fondoTextoOne', 'fondoDos', 'fondoTres', 'fantasmaEsc'].forEach(name => {
+    const img = new Image();
+    img.src = `assets/capitulo-n2/scene3/img/${name}.${name === 'fantasmaEsc' ? 'png' : 'jpg'}`;
+  });
+  ['recuadroUno', 'textoOne', 'juanAsustao', 'textoFantas'].forEach(name => {
+    fetch(`assets/capitulo-n2/scene3/json/${name}.json`).catch(() => {});
+  });
+}
+
+let scene7Prefetched = false;
+function prefetchScene7(){
+  if (scene7Prefetched) return;
+  scene7Prefetched = true;
+  ['sky', 'fondoCorre'].forEach(name => {
+    const img = new Image();
+    img.src = `assets/capitulo-n2/scene4/img/${name}.${name === 'sky' ? 'jpg' : 'png'}`;
+  });
+  ['juanRun', 'text'].forEach(name => {
+    fetch(`assets/capitulo-n2/scene4/json/${name}.json`).catch(() => {});
   });
 }
 
@@ -391,6 +432,7 @@ function initScene5(){
     document.getElementById('s5-textVine').classList.remove('is-visible');
   });
   document.getElementById('s5-juanTocaGuita').addEventListener('click', () => {
+    if (scene5Hint) scene5Hint.classList.add('is-hidden');
     document.getElementById('s5-textVine').classList.add('is-visible');
     s5.anims.textVine.goToAndPlay(0, true);
   });
@@ -421,6 +463,193 @@ function stopScene5(){
   Object.values(s5.anims).forEach(a => a && a.pause());
 }
 
+const S6_CAPAS = ['s6-cajaUno', 's6-recuadroUnoEntrada', 's6-fondoTextoOne', 's6-fondoDos', 's6-fondoTres'];
+
+let s6 = { anims: {}, timers: [], ready: false, playTimer: null, token: 0, paso: 'recuadro' };
+
+function s6Programar(accion, ms){
+  s6.timers.push(setTimeout(accion, ms));
+}
+
+function s6Entrar(id){
+  document.getElementById(id).classList.add('s6-entrar');
+}
+
+function s6Salir(id){
+  document.getElementById(id).classList.remove('s6-entrar');
+}
+
+function initScene6(){
+  if (s6.ready || typeof lottie === 'undefined') return;
+
+  const load = (name, elId, loop) => lottie.loadAnimation({
+    container: document.getElementById(elId),
+    renderer: 'svg', loop, autoplay: false,
+    path: `assets/capitulo-n2/scene3/json/${name}.json`
+  });
+
+  s6.anims.recuadroUno = load('recuadroUno', 's6-recuadroUno', false);
+  s6.anims.textoOne = load('textoOne', 's6-textoOne', false);
+  s6.anims.juanAsustao = load('juanAsustao', 's6-juanAsustao', true);
+  s6.anims.textoFantas = load('textoFantas', 's6-textoFantas', false);
+
+  s6.anims.textoFantas.addEventListener('complete', () => {
+    document.getElementById('s6-textoFantas').classList.add('s6-oculto');
+  });
+
+  document.getElementById('s6-recuadroUno').addEventListener('click', () => {
+    if (s6.paso !== 'recuadro') return;
+    s6.paso = 'texto';
+    scene6HintRecuadro.classList.add('is-hidden');
+
+    s6Entrar('s6-fondoTextoOne');
+    s6Programar(() => s6.anims.textoOne.play(), 500);
+    s6Programar(() => {
+      S6_CAPAS.forEach(s6Salir);
+    }, 6500);
+    s6Programar(() => {
+      s6Entrar('s6-fondoDos');
+      s6.anims.juanAsustao.play();
+    }, 7000);
+    s6Programar(() => s6Entrar('s6-fondoTres'), 7500);
+    s6Programar(() => {
+      s6.paso = 'fantasma';
+      scene6HintFantasma.classList.remove('is-hidden');
+    }, 8000);
+  });
+
+  document.getElementById('s6-fantasmaEsc').addEventListener('click', () => {
+    if (s6.paso !== 'fantasma') return;
+    scene6HintFantasma.classList.add('is-hidden');
+    document.getElementById('s6-textoFantas').classList.remove('s6-oculto');
+    s6.anims.textoFantas.goToAndPlay(0, true);
+  });
+
+  s6.ready = true;
+}
+
+function resetScene6(){
+  s6.token++;
+  s6.timers.forEach(clearTimeout);
+  s6.timers = [];
+  s6.paso = 'recuadro';
+
+  Object.values(s6.anims).forEach(a => a && a.goToAndStop(0, true));
+  S6_CAPAS.forEach(s6Salir);
+  document.getElementById('s6-textoFantas').classList.add('s6-oculto');
+
+  scene6HintRecuadro.classList.add('is-hidden');
+  scene6HintFantasma.classList.add('is-hidden');
+}
+
+function playScene6(){
+  const token = ++s6.token;
+
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      if (token !== s6.token) return;
+      s6Entrar('s6-cajaUno');
+      s6Entrar('s6-recuadroUnoEntrada');
+      s6.anims.recuadroUno.goToAndPlay(0, true);
+      scene6HintRecuadro.classList.remove('is-hidden');
+    });
+  });
+}
+
+function stopScene6(){
+  s6.token++;
+  clearTimeout(s6.playTimer);
+  s6.timers.forEach(clearTimeout);
+  s6.timers = [];
+  Object.values(s6.anims).forEach(a => a && a.pause());
+}
+
+const S7_LIMITE = 1360;
+const S7_VELOCIDAD = 360;
+
+let s7 = {
+  juanRun: null, text: null, ready: false, timers: [],
+  pos: 0, moviendo: false, ultimo: null, raf: null, primeraVez: true
+};
+
+function initScene7(){
+  if (s7.ready || typeof lottie === 'undefined') return;
+
+  s7.juanRun = lottie.loadAnimation({
+    container: document.getElementById('s7-juanRun'),
+    renderer: 'svg', loop: true, autoplay: false,
+    path: 'assets/capitulo-n2/scene4/json/juanRun.json'
+  });
+  s7.text = lottie.loadAnimation({
+    container: document.getElementById('s7-text'),
+    renderer: 'svg', loop: false, autoplay: false,
+    path: 'assets/capitulo-n2/scene4/json/text.json'
+  });
+
+  s7.ready = true;
+}
+
+function s7Mover(timestamp){
+  if (!s7.moviendo) return;
+
+  if (s7.ultimo === null) s7.ultimo = timestamp;
+  const delta = (timestamp - s7.ultimo) / 1000;
+  s7.ultimo = timestamp;
+
+  s7.pos = Math.min(S7_LIMITE, s7.pos + S7_VELOCIDAD * delta);
+  document.getElementById('s7-juanRun').style.transform = `translateX(${s7.pos}px)`;
+
+  if (s7.pos >= S7_LIMITE){
+    s7Soltar();
+    return;
+  }
+  s7.raf = requestAnimationFrame(s7Mover);
+}
+
+function s7Correr(){
+  if (!s7.ready || s7.moviendo || s7.pos >= S7_LIMITE) return;
+
+  s7.moviendo = true;
+  s7.ultimo = null;
+  s7.juanRun.play();
+  s7.raf = requestAnimationFrame(s7Mover);
+  scene7Hint.classList.add('is-hidden');
+
+  if (s7.primeraVez){
+    s7.primeraVez = false;
+    s7.timers.push(setTimeout(() => s7.text.play(), 1000));
+  }
+}
+
+function s7Soltar(){
+  s7.moviendo = false;
+  cancelAnimationFrame(s7.raf);
+  if (s7.juanRun) s7.juanRun.pause();
+}
+
+function resetScene7(){
+  s7.timers.forEach(clearTimeout);
+  s7.timers = [];
+  s7Soltar();
+  s7.pos = 0;
+  s7.primeraVez = true;
+  document.getElementById('s7-juanRun').style.transform = '';
+  if (s7.juanRun) s7.juanRun.goToAndStop(0, true);
+  if (s7.text) s7.text.goToAndStop(0, true);
+  scene7Hint.classList.remove('is-hidden');
+}
+
+function stopScene7(){
+  s7.timers.forEach(clearTimeout);
+  s7.timers = [];
+  s7Soltar();
+  if (s7.text) s7.text.pause();
+}
+
+function s7ControlaFlecha(){
+  return tvOn && !isAnimating && !introPlaying && currentChannel === 8;
+}
+
 const PRES_DELAY_MS = 450;
 const PRES_SAFETY_MS = 6000;
 
@@ -428,7 +657,7 @@ function crearPresentacion({ ruta, imagenes, stageId, containerId, targetId, hin
   const stage = document.getElementById(stageId);
   const container = document.getElementById(containerId);
   const target = document.getElementById(targetId);
-  const hint = document.getElementById(hintId);
+  const hint = hintId ? document.getElementById(hintId) : null;
 
   const pres = {
     anim: null,
@@ -571,12 +800,16 @@ const pres2 = crearPresentacion({
   targetId: 'p2-titulo', hintId: 'pres2Hint'
 });
 
+const pres3 = crearPresentacion({
+  ruta: 'assets/presentacion-c3/json', imagenes: 6,
+  stageId: 'pres3Stage', containerId: 'pres3Container',
+  targetId: 'p3-titulo'
+});
+
 function showChannel(index){
   channels.forEach(ch => {
     ch.classList.toggle('is-active', Number(ch.dataset.channel) === index);
   });
-
-  if (index === 4) pres2.prefetch();
 
   if (index === 0){
     abrirCapituloUno();
@@ -584,10 +817,16 @@ function showChannel(index){
     cerrarCapituloUno();
   }
 
-  if (index === 5){
+  if (index === 4){
     pres2.play();
   } else if (pres2.ready){
     pres2.stop();
+  }
+
+  if (index === 9){
+    pres3.play();
+  } else if (pres3.ready){
+    pres3.stop();
   }
 
   if (index === 1){
@@ -615,11 +854,12 @@ function showChannel(index){
     resetScene3();
     requestAnimationFrame(scaleScene3);
     prefetchScene4();
+    pres2.prefetch();
   } else if (s3.ready){
     stopScene3();
   }
 
-  if (index === 6){
+  if (index === 5){
     initScene4();
     requestAnimationFrame(scaleScene4);
     clearTimeout(s4.playTimer);
@@ -629,13 +869,35 @@ function showChannel(index){
     stopScene4();
   }
 
-  if (index === 7){
+  if (index === 6){
     initScene5();
+    if (scene5Hint) scene5Hint.classList.remove('is-hidden');
     requestAnimationFrame(scaleScene5);
     clearTimeout(s5.playTimer);
     s5.playTimer = setTimeout(playScene5, 1000);
+    prefetchScene6();
   } else if (s5.ready){
     stopScene5();
+  }
+
+  if (index === 7){
+    initScene6();
+    resetScene6();
+    requestAnimationFrame(scaleScene6);
+    clearTimeout(s6.playTimer);
+    s6.playTimer = setTimeout(playScene6, 1000);
+    prefetchScene7();
+  } else if (s6.ready){
+    stopScene6();
+  }
+
+  if (index === 8){
+    initScene7();
+    resetScene7();
+    requestAnimationFrame(scaleScene7);
+    pres3.prefetch();
+  } else if (s7.ready){
+    stopScene7();
   }
 
   tvCaption.textContent = `Canal ${index} / ${TOTAL_CHANNELS} — ${channelNames[index]}`;
@@ -838,8 +1100,11 @@ function powerOff(){
     if (s3.ready) stopScene3();
     if (s4.ready) stopScene4();
     if (s5.ready) stopScene5();
+    if (s6.ready) stopScene6();
+    if (s7.ready) stopScene7();
     cerrarCapituloUno();
     pres2.stop();
+    pres3.stop();
     tvCaption.textContent = 'Televisor apagado';
   }, 560);
 }
@@ -849,7 +1114,18 @@ btnNext.addEventListener('click', () => changeChannel(1));
 btnPrev.addEventListener('click', () => changeChannel(-1));
 
 document.addEventListener('keydown', (e) => {
-  if (e.key === 'ArrowRight'){ changeChannel(1); return; }
+  if (e.key === 'ArrowRight'){
+    if (s7ControlaFlecha()){
+      if (e.repeat) return;
+      if (s7.pos < S7_LIMITE){
+        e.preventDefault();
+        s7Correr();
+        return;
+      }
+    }
+    changeChannel(1);
+    return;
+  }
   if (e.key === 'ArrowLeft'){ changeChannel(-1); return; }
 
   if (e.key === ' ' || e.key === 'Enter'){
@@ -858,6 +1134,11 @@ document.addEventListener('keydown', (e) => {
     tvOn ? powerOff() : powerOn();
   }
 });
+
+document.addEventListener('keyup', (e) => {
+  if (e.key === 'ArrowRight') s7Soltar();
+});
+window.addEventListener('blur', s7Soltar);
 
 tv.classList.add('is-off');
 setButtonsDisabled(true);

@@ -9,17 +9,17 @@ README y luego esto.
 
 ---
 
-## Estado a 22 de septiembre de 2026
+## Estado a 6 de octubre de 2026
 
 | | |
 |---|---|
 | Repositorio | `github.com/Camilo-b92/helikon-cuerdas-del-destino` (público) |
-| Rama | `main`, al día con el remoto |
+| Rama | `main` |
 | Publicado en línea | Todavía no |
-| Canales del televisor | 0–7 (ocho en total), solo cómic |
+| Canales del televisor | 0–9 (diez en total), solo cómic |
 | Peso total | ~20 MB, casi todo arte del cómic |
 | Personajes | En la portada: expediente a pantalla completa desde *El reparto* |
-| Presentaciones | Canal 1: nombre del cómic y luego capítulo uno · Canal 6: capítulo dos |
+| Presentaciones | Canal 0: nombre del cómic y luego capítulo uno · Canal 4: capítulo dos · Canal 9: capítulo tres |
 | Fichas de personaje | `assets/js/personajes.js`, compartidas por portada y cómic |
 | Comentarios en el código | Ninguno: la documentación vive aquí y en el README |
 | Vista previa al compartir | `assets/img/og-portada.jpg`, en las cuatro páginas |
@@ -143,6 +143,53 @@ Se reproducen al sintonizar el canal y se quedan congeladas en el último
 fotograma —que es la portada completa, con todas sus capas visibles— así que
 funcionan igual de bien como animación y como portada fija. El aviso para
 avanzar aparece **al terminar**, para no taparla mientras corre.
+
+### No hay canal de cierre entre capítulos
+
+*Decidido el 6 de octubre de 2026, a petición del equipo.* El canal 4 era una
+pantalla de texto —*Fin del capítulo uno · La cuerda sigue sonando*— que cerraba
+el capítulo uno. Se retiró, y **los capítulos que faltan tampoco llevarán una**:
+la última escena de un capítulo pasa directo a la presentación del siguiente.
+
+El motivo es el mismo que ya había retirado las portadas de texto del dial: era
+tipografía diciendo lo que la presentación animada del capítulo siguiente ya
+dice con arte, y obligaba al lector a pasar por un canal sin nada que hacer.
+
+Quitar un canal del medio corre la numeración de todos los siguientes. El
+cambio va completo: `TOTAL_CHANNELS`, los `data-channel`, los índices de
+`showChannel()` y la tabla del README. Se retiraron además `.ch-eyebrow`,
+`.ch-title` y `.ch-text`, que solo usaba ese canal, y el centrado en columna de
+`.channel`, que ya no usa ninguno.
+
+### Toda escena con interacción lleva su aviso, y las automáticas no
+
+*Decidido el 6 de octubre de 2026, a petición del equipo.* Si una escena espera
+un clic o una tecla, dice cuál. Si corre sola, no dice nada. La tabla de qué
+canal tiene qué está en el README, en *Avisos de interacción*.
+
+Al revisarlo faltaba el aviso en el **canal 6** (capítulo dos, escena II), donde
+el clic sobre Juanes saca el globo de texto y nada lo anunciaba. Los de los
+canales 1 y 3 ya existían, con dos clases idénticas (`.scene1-hint` y
+`.scene3-hint`); se unificaron en `.scene-hint`.
+
+La **escena IV del capítulo dos no se maneja con clic sino con la flecha
+derecha**. No encaja en la regla tal cual, pero el espíritu es el mismo: sin
+aviso nadie sabría que Juan corre si se mantiene una tecla. Lleva el suyo.
+
+### La flecha derecha tiene dos dueños en el canal 8
+
+El televisor usa las flechas para cambiar de canal, y la escena IV del capítulo
+dos hace correr a Juan con la flecha derecha. Las dos cosas no caben en la misma
+tecla sin una regla:
+
+- En el canal 8, la flecha derecha **mueve a Juan** hasta que llega al final.
+- Las repeticiones de tecla (mantenerla pulsada) se ignoran en ese canal, para
+  que al llegar al final no salte de canal sin querer.
+- Con Juan ya al final, la siguiente pulsación **sí** cambia de canal.
+- La flecha izquierda y los botones del televisor cambian de canal siempre.
+
+La escena, tal como llegó del equipo de animación, escuchaba el teclado entero
+y no sabía nada del televisor.
 
 ### El revelado al hacer scroll se activa desde JavaScript
 
@@ -361,11 +408,11 @@ vuelta al canal era lo que seguía colgando el navegador.
 
 ### El prefetch no puede crear los objetos Lottie
 
-Las funciones `prefetchEscenaN()` solo hacen `fetch` y `new Image`: calientan
+Las funciones `prefetchSceneN()` solo hacen `fetch` y `new Image`: calientan
 la caché de red, nada más. **No pueden crear todavía las animaciones** porque
 el renderizador `canvas` fija su tamaño según el contenedor en el momento en
 que se crea, y el canal siguiente sigue oculto (`display: none`, es decir 0x0).
-Crearlas de verdad es trabajo de `initEscenaN()`, que solo corre cuando el
+Crearlas de verdad es trabajo de `initSceneN()`, que solo corre cuando el
 canal ya es visible.
 
 ### El aviso para avanzar se oculta con `visibility`, no con `opacity`
@@ -991,6 +1038,79 @@ entran al repositorio**: son material de trabajo, no del sitio.
 
 ---
 
+### Ronda 19 — Capítulo dos completo y presentación del capítulo tres
+
+Tres encargos del equipo, hechos sobre `main` en el commit `c784806`.
+
+- **Escena III del capítulo dos** (canal 7) y **escena IV** (canal 8), más la
+  **presentación del capítulo tres** (canal 9). Llegaron como tres carpetas
+  sueltas, `Escena 3-C2`, `Escena 4-C2` y `Presentación C3`, cada una con su
+  propia página de prueba.
+- **Fuera el canal de cierre del capítulo uno.** Detalle en *No hay canal de
+  cierre entre capítulos*. La numeración quedó así:
+
+  | Antes | Ahora |
+  |---|---|
+  | 0 a 3 | 0 a 3, igual |
+  | 4 · Fin del capítulo uno | *Retirado* |
+  | 5 · Presentación del capítulo dos | 4 |
+  | 6 · Capítulo dos, escena I | 5 |
+  | 7 · Capítulo dos, escena II | 6 |
+  | — | 7 · Capítulo dos, escena III |
+  | — | 8 · Capítulo dos, escena IV |
+  | — | 9 · Presentación del capítulo tres |
+
+  Los números de canal de rondas anteriores en este documento son los de
+  entonces.
+- **Avisos de interacción** revisados en todas las escenas. Detalle en *Toda
+  escena con interacción lleva su aviso, y las automáticas no*.
+
+Lo que hubo que cambiar al pasar las escenas de su página de prueba al
+televisor:
+
+- **El orden lo lleva `setTimeout` y no `transitionend`.** La página de prueba
+  encadenaba la secuencia de la escena III al terminar una transición CSS. En el
+  televisor la escena se abandona y se vuelve a sintonizar, y un evento de
+  transición no se puede cancelar; los temporizadores sí (`s6.timers`), y el
+  tiempo total es el mismo.
+- **Cada escena se rebobina al sintonizarla**, no al salir, porque al salir el
+  canal ya está oculto bajo la estática y al entrar de nuevo se vería el final
+  de la visita anterior durante un segundo.
+- **Las capas de la escena III arrancan fuera de cuadro** y entran con clases
+  `s6-entrar`, con el mismo vocabulario que `s3-entrar`.
+- **Las imágenes se bajaron al doble de su tamaño en pantalla**, como en el
+  resto del cómic. `fondoCorre.png` venía a 4725x2742 —unos 52 MB una vez
+  descomprimida en memoria, para una pantalla de 1134x658— y pasó a 2268x1316.
+
+  | Imagen | Antes | Ahora |
+  |---|---|---|
+  | `fondoCorre.png` | 4725x2742 | 2268x1316 |
+  | `sky.jpg` (escena IV) | 4724x694 | 2266x333 |
+  | `fondoDos.jpg` | 2935x1309 | 1400x622 |
+  | `fondoTres.jpg` | 2298x1353 | 1102x649 |
+  | `fondoTextoOne.jpg` | 2182x1068 | 1040x512 |
+  | `fantasmaEsc.png` | 2298x1353 | 1200x707 |
+
+  Las seis, juntas, pasaron de 1,4 MB a 270 KB. Los originales siguen en las
+  carpetas de trabajo del equipo y **no entran al repositorio**, igual que los
+  fuentes de After Effects e Illustrator.
+- **Los archivos de animación conservan los nombres** que les puso el equipo
+  (`recuadroUno.json`, `textoFantas.json`, `juanRun.json`…) para que Gabriel los
+  reconozca. Solo cambió `tituloTres.json`, que pasó a `titulo.json` porque ese
+  es el nombre que espera `crearPresentacion()`.
+- **`fantasmaHabla.png` no se copió.** Venía en `Escena 3-C2/img/` pero ninguna
+  página lo usa.
+- **Se retiró una `@media` vacía** que quedó en `comic.css` al quitar los
+  comentarios.
+
+Probado en un navegador con las escenas nuevas: los diez canales en orden, los
+dos clics de la escena III en secuencia y fuera de ella, volver a entrar y
+encontrar la escena desde el principio, la carrera hasta el final y el paso al
+canal siguiente, el tope del dial y el apagado. Sin errores de consola. No se
+probó en móvil.
+
+---
+
 ## Pendientes
 
 En orden de lo que más aporta:
@@ -1024,7 +1144,22 @@ En orden de lo que más aporta:
    para hacerlo. También `caja.json` (2.6 MB) es pesado, aunque ya está
    mitigado con el renderizador `canvas` y `setSubframe(false)`.
 
-7. **Dos archivos sin usar.** Ninguno lo referencia ningún HTML, CSS ni JS.
+7. **La escena IV del capítulo dos no se puede jugar sin teclado.** Hace correr
+   a Juan con la flecha derecha, así que en un móvil o una tableta no hay
+   forma de moverlo. Habría que añadir un gesto equivalente, por ejemplo
+   mantener pulsada la pantalla. Es decisión del equipo de animación, porque
+   cambia cómo se siente la escena.
+
+8. **El aviso de la presentación del capítulo tres.** Hoy no lleva porque no
+   hay canal siguiente. Cuando entre la primera escena del capítulo tres, se
+   añade (ver el README, *Canales 0, 4 y 9 — Presentaciones*).
+
+9. **Unificar las escenas en `.scene-stage` y `.scene-container`.** Las escenas
+   1 a 5 tienen un par de reglas propias, casi idénticas entre sí; las
+   escenas 6 y 7 ya usan las compartidas. Solo se ahorra CSS, no cambia nada a
+   la vista.
+
+10. **Dos archivos sin usar.** Ninguno lo referencia ningún HTML, CSS ni JS.
    Decidir si se usan o se retiran:
    - `comic/assets/capitulo-n1/scene3/json/fonemas.json` (47 KB)
    - `comic/assets/capitulo-n1/scene3/img/fondoGuitarra.png` (156 KB) — el

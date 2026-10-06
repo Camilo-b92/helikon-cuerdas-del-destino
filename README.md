@@ -48,7 +48,7 @@ Lo que eso implica al trabajar:
   hace*; la bitácora, para el *por qué se hizo así*.
 - Los nombres cargan con el trabajo que antes hacía el comentario. Las
   funciones del cómic siguen un patrón fijo y legible por sí solo:
-  `initEscenaN` / `playEscenaN` / `resetEscenaN` / `stopEscenaN`.
+  `initSceneN` / `playSceneN` / `resetSceneN` / `stopSceneN`.
 - **La única excepción es `comic/assets/lottie-web-5.13.0.min.js`.** Es
   software de terceros y su cabecera es la licencia MIT: no se toca.
 
@@ -88,8 +88,9 @@ Lo que eso implica al trabajar:
         │   └── expresiones/ Seis gestos por personaje
         ├── presentacion-c1/ Presentación animada del capítulo uno
         ├── presentacion-c2/ Presentación animada del capítulo dos
-        ├── capitulo-n1/
-        └── capitulo-n2/
+        ├── presentacion-c3/ Presentación animada del capítulo tres
+        ├── capitulo-n1/     Escenas 1 a 3, cada una con su img/ y su json/
+        └── capitulo-n2/     Escenas 1 a 4, cada una con su img/ y su json/
 ```
 
 Cada sección es autocontenida: su HTML, su CSS y su JS viven juntos. Lo que
@@ -406,8 +407,8 @@ Máquina de estados con cuatro banderas: `tvOn`, `isAnimating`,
 `introPlaying` e `introEnded`. Mientras `isAnimating` está en `true` los
 botones de canal quedan deshabilitados.
 
-**El dial.** `TOTAL_CHANNELS = 7` es el **último índice**, no la cantidad: los
-canales van de 0 a 7. `showChannel(index)` es el despachador central — marca
+**El dial.** `TOTAL_CHANNELS = 9` es el **último índice**, no la cantidad: los
+canales van de 0 a 9. `showChannel(index)` es el despachador central — marca
 la `<section>` activa, arranca lo que corresponda a ese canal, detiene lo de
 los demás, adelanta la carga del siguiente y actualiza el pie de foto.
 
@@ -415,18 +416,25 @@ los demás, adelanta la carga del siguiente y actualiza el pie de foto.
 
 | Paso | Cuándo corre |
 |---|---|
-| `prefetchEscenaN()` | Desde el canal **anterior**, para calentar la caché de red mientras el lector ve el canal previo. Solo hace `fetch`/`new Image`: **no** crea todavía los objetos Lottie. |
-| `initEscenaN()` | Al sintonizar el canal, ya visible. Crea las animaciones y engancha sus eventos. Es idempotente, gracias a la bandera `ready`. |
-| `playEscenaN()` / `resetEscenaN()` | Arranca o rebobina la escena. |
-| `stopEscenaN()` | Al salir del canal y al apagar el televisor. Pausa las animaciones y limpia los `setTimeout` pendientes. |
+| `prefetchSceneN()` | Desde el canal **anterior**, para calentar la caché de red mientras el lector ve el canal previo. Solo hace `fetch`/`new Image`: **no** crea todavía los objetos Lottie. |
+| `initSceneN()` | Al sintonizar el canal, ya visible. Crea las animaciones y engancha sus eventos. Es idempotente, gracias a la bandera `ready`. |
+| `playSceneN()` / `resetSceneN()` | Arranca o rebobina la escena. |
+| `stopSceneN()` | Al salir del canal y al apagar el televisor. Pausa las animaciones y limpia los `setTimeout` pendientes. |
 
 **Escalado.** `scaleStage(stage, container)` encaja el lienzo de diseño fijo
 de **1134x658** dentro del hueco de la pantalla usando `Math.max` de las dos
 proporciones, es decir en modo *cover*: llena la pantalla y recorta lo que
-sobre, sin deformar. Lo usan las cinco escenas y las dos presentaciones, y se
+sobre, sin deformar. Lo usan las siete escenas y las tres presentaciones, y se
 vuelve a llamar en cada `resize`.
 
-**Canales 0 y 5 — Presentaciones.** Las dos se comportan igual, así que
+**Numeración de escenas en el código.** `SceneN` cuenta las escenas de todo el
+cómic, no las de cada capítulo: `Scene1` a `Scene3` son el capítulo uno y
+`Scene4` a `Scene7` son las cuatro escenas del capítulo dos. Las dos últimas
+(`Scene6` y `Scene7`) usan las clases compartidas `.scene-stage` y
+`.scene-container`; las anteriores conservan las suyas, idénticas entre sí, y
+pueden pasarse a las compartidas cuando convenga.
+
+**Canales 0, 4 y 9 — Presentaciones.** Las tres se comportan igual, así que
 comparten la fábrica `crearPresentacion()`. Cosas que hay que respetar al
 tocarlas:
 
@@ -438,8 +446,44 @@ tocarlas:
   `complete`: sin ella, el aviso para avanzar no aparecería nunca.
 - El contador `token` descarta los arranques huérfanos. Sin él, entrar y salir
   rápido del canal dejaba el aviso encendido sobre otro canal.
-- El número de imágenes de cada presentación es **explícito** (cinco en la
-  primera, seis en la segunda) porque pedir una que no existe dejaría un 404.
+- El número de imágenes de cada presentación es **explícito** (cinco en el
+  nombre del cómic, seis en cada capítulo) porque pedir una que no existe
+  dejaría un 404.
+- `hintId` es **opcional**. La presentación del capítulo tres no lleva aviso
+  para avanzar porque todavía no hay un canal que le siga: el aviso diría
+  "presiona el botón derecho" y no pasaría nada. Al agregar la primera escena
+  del capítulo tres, se añade `<p class="pres-hint" id="pres3Hint">` en su
+  `<section>` y se pasa `hintId: 'pres3Hint'` a `crearPresentacion()`.
+- Cada capítulo reutiliza el nombre de archivo `titulo.json`, que es el que
+  espera la fábrica. El de la presentación del capítulo tres llegó de After
+  Effects como `tituloTres.json` y se renombró al copiarlo.
+
+**Avisos de interacción.** Toda escena que se maneja con el ratón o el teclado
+lleva su aviso, con la clase compartida `.scene-hint`; las escenas que corren
+solas no llevan ninguno. Se ocultan con la clase `is-hidden` en cuanto el lector
+hace lo que piden, y cada escena los restablece al sintonizarla.
+
+| Canal | Escena | Cómo se maneja | Aviso |
+|---|---|---|---|
+| 1 | Capítulo uno, escena I | Clic en la puerta | *Toca la puerta en la pantalla* |
+| 2 | Capítulo uno, escena II | Automática | — |
+| 3 | Capítulo uno, escena III | Clic en el papá | *Toca a papá para continuar* |
+| 5 | Capítulo dos, escena I | Automática | — |
+| 6 | Capítulo dos, escena II | Clic en Juanes, cuantas veces quiera | *Toca a Juanes* |
+| 7 | Capítulo dos, escena III | Dos clics, en orden: el recuadro y luego el fantasma | *Toca el recuadro*, y después *Toca al fantasma* |
+| 8 | Capítulo dos, escena IV | Mantener la flecha derecha | *Mantén la flecha → para correr* |
+
+**Canal 7 — Escena III del capítulo dos.** Es una secuencia de dos pasos, que
+guarda en `s6.paso` (`recuadro`, `texto`, `fantasma`). El clic en el recuadro
+solo cuenta en el primer paso; el del fantasma, solo en el último, y así no se
+puede saltar el orden. Los tiempos de la secuencia (0,5 s, 6,5 s, 7 s, 7,5 s y
+8 s tras el primer clic) están en `s6Programar()` y son los que dibujó el
+equipo de animación: el texto corre 6 s antes de retirarse el primer bloque.
+
+**Canal 8 — Escena IV del capítulo dos.** Juan corre mientras se mantenga la
+flecha derecha y se detiene al soltarla (`s7Correr()` y `s7Soltar()`), a
+360 px/s hasta `S7_LIMITE`. El movimiento va por `requestAnimationFrame` con el
+tiempo real entre cuadros, así que la velocidad no depende del monitor.
 
 **Estática del cambio de canal.** `runStatic(duration, onMid, done)` dibuja
 ruido en un buffer **seis veces más pequeño** y lo escala hacia arriba sin
@@ -457,12 +501,16 @@ autoplay está bloqueado o el archivo falta, `finishIntro()` corre igual para
 no dejar al lector atascado. El botón de saltar aparece al primer segundo
 (`SKIP_DELAY_MS`).
 
-**Teclado.** Flechas izquierda y derecha cambian de canal. Espacio y Enter
+**Teclado.** Flechas izquierda y derecha cambian de canal. **Excepción en el
+canal 8:** ahí la flecha derecha hace correr a Juan (`s7ControlaFlecha()`), y
+las repeticiones de tecla se ignoran para que mantenerla pulsada no salte de
+canal. Cuando Juan ya llegó al final, la siguiente pulsación vuelve a cambiar de
+canal. La flecha izquierda siempre cambia de canal. Espacio y Enter
 encienden o apagan, **salvo si el foco está dentro del televisor**
 (`tv.contains(document.activeElement)`): sin ese guard, pulsar Enter sobre
 "canal siguiente" o sobre "Saltar" apagaba el aparato.
 
-**Apagado.** `powerOff()` detiene *todas* las escenas y las dos
+**Apagado.** `powerOff()` detiene *todas* las escenas y las tres
 presentaciones. Si no, sus animaciones Lottie seguirían consumiendo CPU sin
 verse.
 
@@ -661,28 +709,33 @@ blanco.
 
 ## Estado del contenido
 
-El cómic tiene el capítulo uno completo (tres escenas) y las dos primeras
-escenas del capítulo dos, repartidas en ocho canales (0 a 7). Al encender, el
-televisor reproduce el video de introducción y entrega directo al canal 0.
+El cómic tiene el capítulo uno completo (tres escenas), las cuatro escenas del
+capítulo dos y la presentación del capítulo tres, repartidos en diez canales
+(0 a 9). Al encender, el televisor reproduce el video de introducción y entrega
+directo al canal 0.
 
 **El televisor es solo el cómic.** Los personajes se conocen en la portada,
-pulsando su tarjeta en *El reparto*.
+pulsando su tarjeta en *El reparto*. Tampoco hay canales de cierre entre
+capítulos: cada capítulo empieza con su presentación y la historia sigue.
 
 | Canal | Contenido | Se arma en |
 |---|---|---|
 | 0 | Nombre del cómic y presentación del capítulo uno | `presTitulo` + `pres1` |
-| 1 | Escena I — El llamado | `s1` |
-| 2 | Escena II | `s2` |
-| 3 | Escena III | `s3` |
-| 4 | Fin del capítulo uno | HTML fijo |
-| 5 | Presentación del capítulo dos | `pres2` |
-| 6 | Capítulo dos, escena I | `s4` |
-| 7 | Capítulo dos, escena II | `s5` |
+| 1 | Capítulo uno, escena I — El llamado | `s1` |
+| 2 | Capítulo uno, escena II | `s2` |
+| 3 | Capítulo uno, escena III | `s3` |
+| 4 | Presentación del capítulo dos | `pres2` |
+| 5 | Capítulo dos, escena I | `s4` |
+| 6 | Capítulo dos, escena II | `s5` |
+| 7 | Capítulo dos, escena III | `s6` |
+| 8 | Capítulo dos, escena IV | `s7` |
+| 9 | Presentación del capítulo tres | `pres3` |
 
 Cada capítulo abre con su propia presentación animada, en el canal anterior a
 su primera escena. El **canal 0** encadena dos: primero el nombre del cómic,
 *Cuerdas del Destino*, y a continuación *Capítulo 1 — El Descubrimiento*. El
-**canal 5** presenta *El Mensaje*. Las dos se reproducen al sintonizar el canal y se quedan
-congeladas en su último fotograma, que es la portada completa.
+**canal 4** presenta *El Mensaje* y el **canal 9**, *El Desenlace*. Se
+reproducen al sintonizar el canal y se quedan congeladas en su último
+fotograma, que es la portada completa.
 
 La lista completa de pendientes está en la [bitácora](BITACORA.md).
