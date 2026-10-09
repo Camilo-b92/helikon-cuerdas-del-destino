@@ -23,6 +23,7 @@
 <link rel="stylesheet" href="../assets/css/pulp.css">
 <link rel="stylesheet" href="../assets/css/menu.css">
 <link rel="stylesheet" href="juanes.css">
+<link rel="stylesheet" href="../assets/css/scroll.css">
 </head>
 <body>
 <div class="paper-grain"></div>
@@ -78,7 +79,7 @@
   <section class="titular">
     <div class="titular-texto">
       <p class="titular-antetitulo">¿Quién es Juanes?</p>
-      <h1 class="titular-titulo">Juanes</h1>
+      <h1 class="titular-titulo" data-parallax="-0.04">Juanes</h1>
       <p class="titular-nombre">Juan Esteban Aristizábal Vásquez</p>
       <p class="titular-entradilla">
         Cantante, compositor y guitarrista colombiano. Nació en Medellín en 1972
@@ -94,7 +95,7 @@
       <a class="boton-comic" href="#linea">Recorre su carrera <span aria-hidden="true">↓</span></a>
     </div>
 
-    <figure class="foto foto-retrato">
+    <figure class="foto foto-retrato" data-parallax="0.07">
       <div class="tono">
         <img src="img/juanes-retrato.webp" width="660" height="766"
              alt="Retrato de Juanes, tramado como una viñeta de cómic">
@@ -479,6 +480,19 @@
       empieza aquí, directo desde su perfil oficial de Spotify.
     </p>
 
+    <div class="vinilo" id="vinilo" role="img" aria-label="Disco de vinilo en 3D con la etiqueta de Helikón; gira a medida que bajas por la página">
+      <svg class="vinilo-respaldo" viewBox="0 0 200 200" aria-hidden="true">
+        <circle cx="100" cy="100" r="96" fill="#0e0c0a"/>
+        <circle cx="100" cy="100" r="78" fill="none" stroke="#1d1a17" stroke-width="1.2"/>
+        <circle cx="100" cy="100" r="62" fill="none" stroke="#1d1a17" stroke-width="1.2"/>
+        <circle cx="100" cy="100" r="46" fill="none" stroke="#1d1a17" stroke-width="1.2"/>
+        <circle cx="100" cy="100" r="34" fill="#a92820"/>
+        <circle cx="100" cy="100" r="30" fill="none" stroke="#c79b27" stroke-width="1.6"/>
+        <circle cx="100" cy="100" r="2.6" fill="#17130e"/>
+      </svg>
+      <canvas class="vinilo-lienzo" aria-hidden="true"></canvas>
+    </div>
+
     <div class="equalizer" aria-hidden="true">
       <span></span><span></span><span></span><span></span>
       <span></span><span></span><span></span><span></span>
@@ -499,7 +513,7 @@
     </div>
   </section>
 
-  <section class="cifras-seccion" id="premios" aria-labelledby="cifrasTitulo" data-reveal>
+  <section class="cifras-seccion" id="premios" aria-labelledby="cifrasTitulo" data-reveal data-scroll>
     <h2 class="rotulo" id="cifrasTitulo">Una carrera premiada</h2>
     <ul class="cifras-grandes">
       <li class="cifra-grande cifra-grande--rojo">
@@ -521,7 +535,7 @@
     </ul>
   </section>
 
-  <section class="splash" data-reveal>
+  <section class="splash" data-reveal data-scroll>
     <div class="splash-burst" aria-hidden="true"></div>
     <p class="splash-kicker">Más allá de la música</p>
     <p class="splash-text">Un artista con<br><em>conciencia social.</em></p>
@@ -593,5 +607,7 @@
 
 <script src="../assets/js/pulp.js"></script>
 <script src="juanes.js"></script>
+<script src="../assets/js/scroll.js"></script>
+<script type="module" src="../assets/js/vinilo.js"></script>
 </body>
 </html>
