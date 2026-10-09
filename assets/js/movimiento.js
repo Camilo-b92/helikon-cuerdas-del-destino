@@ -33,10 +33,13 @@
     }
   }
 
-  var apagado = leerGuardado() === 'no';
+  var guardado = leerGuardado();
+  var apagado = guardado === 'no';
+  // El sistema pide menos movimiento, pero el lector eligió activarlo aquí a propósito.
+  var forzado = guardado === 'forzado';
 
   function reducido(){
-    return sistema.matches || apagado;
+    return sistema.matches ? !forzado : apagado;
   }
 
   var consulta = {
@@ -130,11 +133,14 @@
     var activas = !reducido();
     interruptor.setAttribute('aria-pressed', activas ? 'true' : 'false');
     interruptor.querySelector('.menu-animaciones-estado').textContent = activas ? 'sí' : 'no';
+    interruptor.title = sistema.matches
+      ? 'Tu sistema pide menos movimiento. Actívalo aquí si quieres ver las animaciones.'
+      : '';
   }
 
   function crearInterruptor(){
     var lista = document.querySelector('.menu-lista');
-    if (!lista || sistema.matches || document.querySelector('.menu-animaciones')) return;
+    if (!lista || document.querySelector('.menu-animaciones')) return;
 
     var item = document.createElement('li');
     item.className = 'menu-extra';
@@ -149,8 +155,13 @@
     pintarInterruptor();
 
     interruptor.addEventListener('click', function(){
-      apagado = !apagado;
-      guardar(apagado ? 'no' : 'si');
+      if (sistema.matches){
+        forzado = !forzado;
+        guardar(forzado ? 'forzado' : 'si');
+      } else {
+        apagado = !apagado;
+        guardar(apagado ? 'no' : 'si');
+      }
       aplicar();
       avisar();
     });

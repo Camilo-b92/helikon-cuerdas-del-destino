@@ -1584,6 +1584,14 @@ recorrió cada escena con el nuevo botón.
   Con red lenta simulada y CPU a 4× más lenta: LCP 2,1 s en escritorio y 1,5 s en móvil,
   CLS 0,002. El peso nuevo en la ruta inicial es de unos 55 KB comprimidos (límite del plan:
   120 KB).
+- **Por qué una persona veía la versión vieja con el código nuevo:** su Windows tenía
+  apagados los "efectos de animación", así que el navegador declaraba `prefers-reduced-motion:
+  reduce` y el sitio, con razón, arrancaba reducido y sin botón (se descubrió abriendo su
+  Live Server desde el navegador integrado: servía los archivos nuevos). Desde esta ronda el
+  botón **Anim.** aparece también en ese caso y permite activar las animaciones a propósito
+  (valor `forzado` en `localStorage`, que no hace nada si el sistema deja de pedir menos
+  movimiento). Para quitarlo de raíz: Windows → Accesibilidad → Efectos visuales → Efectos de
+  animación.
 - **No se probó** en un teléfono real ni con lector de pantalla, y no se pasó Lighthouse
   completo (se midieron LCP y CLS con el navegador de pruebas). El giro 3D conviene verlo en
   un móvil de gama baja antes de darlo por bueno del todo.

@@ -481,7 +481,11 @@ el script solo lee su posición.
 Una sola señal decide si el sitio se mueve: `<html data-movimiento="completo|reducido">`.
 Es `reducido` si el sistema pide menos movimiento **o** si el lector apagó las
 animaciones con el botón **Anim. sí/no** del menú (se guarda en `localStorage`,
-con `try/catch`; si el sistema ya pide menos movimiento, el botón no aparece).
+con `try/catch`). Si el sistema pide menos movimiento, el sitio arranca reducido, pero
+el botón **sí aparece** y permite activarlo a propósito (se guarda como `forzado`; solo
+vale mientras el sistema siga pidiendo menos movimiento). Ojo: en ese caso lo que
+anima GSAP funciona, pero el CSS que cuelga de `prefers-reduced-motion: no-preference`
+sigue apagado.
 
 - **Se carga en el `<head>` de las cuatro páginas**, antes que cualquier otro
   script, junto con `movimiento.css`, que va el último de las hojas de estilo.
