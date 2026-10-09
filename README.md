@@ -687,6 +687,13 @@ python -m http.server 5500
 
 Y abre <http://localhost:5500>.
 
+## Cómo se trabaja
+
+Toda modificación nueva pasa por un plan antes de convertirse en código, y cada
+plan lleva su **ficha de activación**: qué plugins, conectores, skills y
+herramientas deben estar listos. El método, la plantilla, el catálogo de lo
+que hay y las puertas de calidad están en [`METODO.md`](METODO.md).
+
 ## Herramientas de trabajo
 
 Estas herramientas **no son dependencias del sitio**: corren en tu máquina para
