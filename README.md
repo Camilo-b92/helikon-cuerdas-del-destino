@@ -61,11 +61,15 @@ Lo que eso implica al trabajar:
 │   ├── css/
 │   │   ├── pulp.css        Base visual común: paleta, papel, viñetas
 │   │   ├── menu.css        Menú común de las cuatro páginas y bloque "Sigue explorando"
+│   │   ├── scroll.css      Efectos ligados al scroll y el escenario del vinilo 3D
 │   │   └── home.css        Solo lo propio de la portada
 │   ├── js/
 │   │   ├── pulp.js         Revelado al scroll y paralaje del masthead
 │   │   ├── personajes.js   Las cinco fichas, compartidas por portada y cómic
+│   │   ├── scroll.js       Parallax (data-parallax) y progreso de sección (data-scroll)
+│   │   ├── vinilo.js       El vinilo 3D de Juanes (three.js, carga diferida)
 │   │   └── home.js         Solo lo propio de la portada
+│   ├── vendor/three/       three.js r170 local (módulo ES) y su licencia
 │   └── img/                favicon.svg y las cuatro og-*.jpg (vista previa al compartir)
 │
 ├── helikon/                El estudio: origen, equipo, bitácora
@@ -384,6 +388,18 @@ Reglas de esta página:
   parte numérica; al terminar se restituye el texto original. No se ejecuta
   si el usuario pidió movimiento reducido.
 - `initLinea()` — la línea de tiempo interactiva. Ver abajo.
+
+### Scroll y 3D (`scroll.js`, `vinilo.js`)
+
+- `data-parallax="0.07"` en un elemento lo desplaza según su distancia al
+  centro de la pantalla; el factor puede ser negativo. Escribe `--py`, que
+  `scroll.css` aplica con `translate`.
+- `data-scroll` en una sección publica `--p` (0 a 1) mientras cruza la
+  pantalla; el CSS lo usa con `calc()` para girar, inclinar o escalar.
+- Ambos se apagan con `prefers-reduced-motion`.
+- `vinilo.js` es un módulo ES: importa three.js solo cuando `#vinilo` está cerca
+  de la pantalla, pausa el render fuera de vista y deja el disco SVG si no hay
+  WebGL. Hay que servir el sitio por HTTP.
 
 ### La página de Juanes: "Basado en hechos reales"
 

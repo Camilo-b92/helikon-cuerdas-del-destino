@@ -241,8 +241,10 @@ viene con condiciones, y hay que respetarlas al implementar:
   se sacrifica dentro del televisor, que ya es la zona pesada y donde el lector
   llega dispuesto a esperar.
 
-Cuando el primer modelo esté montado, aquí va lo que se aprendió: pesos reales,
-qué renderizador se usó y qué falló.
+*Primer caso real (ronda 26):* el vinilo de Juanes usa three.js, sin modelos
+descargados —la geometría es de primitivas y las texturas se dibujan en un
+`<canvas>`—, así que el único peso es la librería: 691 KB, 171 KB comprimido,
+cargada en diferido. `<model-viewer>` sigue siendo la opción para modelos `.glb`.
 
 ### El televisor sigue siendo una imagen, por ahora
 
@@ -1366,6 +1368,39 @@ recorrió cada escena con el nuevo botón.
   real ni con un lector de pantalla.**
 - Con esta ronda queda **completo el plan de UX** (fases 1 a 5, rondas 21 a 25).
 
+### Ronda 26 — Scroll y el primer 3D (fase 6)
+
+- **Animaciones ligadas al scroll, sin librerías.** `assets/js/scroll.js` y
+  `assets/css/scroll.css`, compartidos. Dos atributos: `data-parallax="k"`
+  desplaza el elemento según su distancia al centro de la pantalla (variable
+  `--py`, aplicada con la propiedad `translate`, que no choca con los
+  `transform` ni con el revelado) y `data-scroll` publica `--p`, el avance de
+  0 a 1 de la sección al cruzar la pantalla. Solo se calcula lo que está a la
+  vista (IntersectionObserver) y todo va en un único `requestAnimationFrame`.
+- **En Juanes:** el retrato y el título se mueven a distinto ritmo; el estallido
+  de "Más allá de la música" gira y crece con `--p`; las cifras de premios se
+  inclinan y se desplazan en direcciones opuestas.
+- **El primer elemento 3D: un vinilo con la etiqueta de Helikón**
+  (`assets/js/vinilo.js`, en la sección de música de Juanes). three.js
+  r170, **local** en `assets/vendor/three/` (691 KB, 171 KB comprimido), sin
+  CDN. Surcos y etiqueta se dibujan en un `<canvas>`, no hay modelos ni
+  imágenes que descargar. Gira con el scroll, se inclina hacia el puntero y una
+  púa orbita a su alrededor.
+- **Cumple las condiciones de *El 3D entra vivo*:** three.js solo se importa
+  cuando la sección está a 500 px de la pantalla; el render se pausa fuera de
+  vista; si falla el módulo o no hay WebGL se queda un disco dibujado en SVG;
+  con movimiento reducido no hay giro continuo ni parallax y la escena se
+  repinta solo al hacer scroll.
+- **Es un módulo ES (`type="module"`)**, así que, igual que el cómic, hay que
+  verlo por HTTP, no abriendo el archivo con doble clic.
+- Probado en navegador a 1366, 768 y 360: 0 px de desborde, 0 errores propios en
+  consola y axe con 0 violaciones, en tres modos (normal, movimiento reducido y
+  sin WebGL). **No se probó en un teléfono real**, y el rendimiento se midió con
+  render por software.
+- Nota para quien siga: con el 3D en marcha, lo siguiente natural es un
+  reproductor propio con el audio y su visualizador; el vinilo ya está
+  montado para reaccionar a él.
+
 ---
 
 ## Pendientes
@@ -1377,10 +1412,10 @@ En orden de lo que más aporta:
    carpeta raíz. **Netlify** y **Vercel** siguen siendo alternativas válidas, y
    son las únicas si el repositorio vuelve a ser privado.
 
-2. **El primer elemento 3D.** El televisor en CSS 3D se probó y se aparcó (ver
-   *El televisor sigue siendo una imagen, por ahora*). Si se retoma el 3D,
-   mejor por otra pieza que no sea el televisor, porque ahí manda leer el
-   cómic. Hace falta un modelador instalado y un `.glb` con el que empezar; las
+2. **Más 3D.** El primero ya existe: el vinilo de Juanes (ronda 26, three.js
+   local). El televisor en CSS 3D se probó y se aparcó (ver *El televisor sigue
+   siendo una imagen, por ahora*); mejor otra pieza, porque ahí manda leer el
+   cómic. Para un modelo de verdad hace falta un modelador y un `.glb`; las
    condiciones de peso y carga están en *El 3D entra vivo*.
 
 3. **Pasar `og:image` a URL absoluta al publicar.** Ya existe la imagen y las
