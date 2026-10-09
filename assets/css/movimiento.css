@@ -21,7 +21,7 @@ html[data-movimiento="reducido"] .js-reveal [data-reveal]{ opacity: 1; transform
 html[data-movimiento="reducido"] .caption-box{ animation: none; transform: rotate(-2deg); }
 
 html[data-movimiento="reducido"] .vineta:hover .vineta-figura,
-html[data-movimiento="reducido"] .personaje:hover img,
+html[data-movimiento="reducido"] .personaje:hover .personaje-figura,
 html[data-movimiento="reducido"] .expediente-paso:hover{ translate: none; }
 html[data-movimiento="reducido"] .expediente-hoja{ animation: none; }
 

@@ -1,0 +1,323 @@
+/* ==========================================================================
+   El libro que se abre (fase 3)
+   --------------------------------------------------------------------------
+   Sin JavaScript, con movimiento reducido o con el interruptor de animaciones
+   en "no" la portada se ve ya abierta, igual que antes: los envoltorios no
+   dibujan nada y la tapa y el botón no existen.
+
+   Con animaciones, movimiento.js pone `anim-espera` (antes del primer pintado)
+   y luego `anim` en <html>. Esas dos clases son las que encienden el escenario:
+   así la cubierta cerrada sale en el primer cuadro y GSAP solo toma el relevo.
+   ========================================================================== */
+
+:root{
+  --menu-alto: 56px;
+}
+
+.libro-escenario,
+.libro-fijo,
+.libro{
+  display: contents;
+}
+.libro-tapa,
+.libro-abrir{
+  display: none;
+}
+
+/* -------------------------------------------------------------------------
+   Botón "Abrir directo"
+   ------------------------------------------------------------------------- */
+html:is(.anim, .anim-espera) .numero:not(.libro-abierto) .libro-abrir{
+  position: fixed;
+  left: 16px;
+  bottom: 14px;
+  z-index: 21;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 18px;
+  background: var(--yellow);
+  color: var(--ink);
+  border: 3px solid var(--ink);
+  box-shadow: 4px 4px 0 var(--ink);
+  font-family: Bangers, cursive;
+  font-size: 1.2rem;
+  letter-spacing: 1.5px;
+  cursor: pointer;
+  transition: translate 0.15s ease, box-shadow 0.15s ease;
+}
+html:is(.anim, .anim-espera) .numero:not(.libro-abierto) .libro-abrir:hover,
+html:is(.anim, .anim-espera) .numero:not(.libro-abierto) .libro-abrir:focus-visible{
+  translate: -2px -2px;
+  box-shadow: 6px 6px 0 var(--ink);
+}
+html:is(.anim, .anim-espera) .libro-abrir:focus-visible{
+  outline: 4px solid var(--blue);
+  outline-offset: 4px;
+}
+
+/* -------------------------------------------------------------------------
+   Escritorio y tablet: el libro queda fijo en pantalla mientras se abre
+   ------------------------------------------------------------------------- */
+@media (min-width: 761px){
+  html:is(.anim, .anim-espera) .numero{
+    padding-top: 0;
+  }
+  html:is(.anim, .anim-espera) .libro-escenario{
+    display: block;
+    position: relative;
+    /* una pantalla de libro + 130 % de recorrido para abrirlo */
+    height: calc(230svh - var(--menu-alto));
+  }
+  html:is(.anim, .anim-espera) .libro-fijo{
+    position: sticky;
+    top: var(--menu-alto);
+    display: grid;
+    place-items: center;
+    height: calc(100svh - var(--menu-alto));
+  }
+  html:is(.anim, .anim-espera) .libro{
+    position: relative;
+    display: block;
+    perspective: 9000px;
+    perspective-origin: 50% 50%;
+    transform-origin: 75% 50%;
+    /* mismo punto de partida que la línea de tiempo: cubierta centrada y lejos */
+    transform: translateX(-25%) scale(0.74);
+    will-change: transform;
+  }
+
+  html:is(.anim, .anim-espera) .libro-tapa{
+    position: absolute;
+    z-index: 6;
+    top: 0;
+    left: 50%;
+    display: block;
+    width: var(--ancho-hoja);
+    height: var(--alto);
+    transform-origin: 0 50%;
+    transform-style: preserve-3d;
+    cursor: pointer;
+  }
+
+  /* La hoja izquierda real espera, invisible, debajo de la tapa. Se oculta con
+     opacidad y no con visibility para que el h1 siga en el árbol de lectura. */
+  html:is(.anim, .anim-espera) .numero:not(.libro-abierto) .doble-pagina .portada{
+    opacity: 0;
+  }
+  html:is(.anim, .anim-espera) .doble-pagina .portada{
+    transition: opacity 0.18s ease;
+  }
+}
+
+/* -------------------------------------------------------------------------
+   Móvil: las dos hojas van una debajo de la otra, así que no hay giro. La
+   cubierta queda fija sobre la primera hoja y se levanta y se desvanece.
+   ------------------------------------------------------------------------- */
+@media (max-width: 760px){
+  .libro-escenario{
+    --tapa-arriba: max(12px, calc((100svh - var(--menu-alto) - var(--alto)) / 2));
+  }
+  html:is(.anim, .anim-espera) .numero{
+    padding-top: 0;
+  }
+  html:is(.anim, .anim-espera) .libro-escenario,
+  html:is(.anim, .anim-espera) .libro-fijo{
+    display: block;
+  }
+  html:is(.anim, .anim-espera) .libro{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  /* recorrido en el que la cubierta se despide, antes de la primera hoja */
+  html:is(.anim, .anim-espera) .doble-pagina{
+    margin-top: calc(var(--tapa-arriba) + var(--alto) * 0.85);
+  }
+  html:is(.anim, .anim-espera) .libro-tapa{
+    position: sticky;
+    z-index: 6;
+    top: calc(var(--menu-alto) + var(--tapa-arriba));
+    order: -1;
+    display: block;
+    width: var(--ancho-hoja);
+    height: var(--alto);
+    margin: var(--tapa-arriba) 0 calc(-1 * var(--alto));
+    transform-origin: 50% 0;
+    transform: scale(0.88);
+    cursor: pointer;
+  }
+  html:is(.anim, .anim-espera) .numero:not(.libro-abierto) .doble-pagina .portada{
+    opacity: 0;
+  }
+  html:is(.anim, .anim-espera) .tapa-dorso{
+    display: none;
+  }
+  html:is(.anim, .anim-espera) .numero:not(.libro-abierto) .libro-abrir{
+    left: auto;
+    right: 10px;
+    bottom: 66px;
+    min-height: 40px;
+    padding: 0 14px;
+    font-size: 1.05rem;
+  }
+}
+
+/* -------------------------------------------------------------------------
+   Estado abierto: la tapa deja de existir para el puntero y la vista
+   ------------------------------------------------------------------------- */
+.numero.libro-abierto .libro-tapa{
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.18s ease, visibility 0s linear 0.18s;
+}
+
+/* -------------------------------------------------------------------------
+   La cubierta
+   ------------------------------------------------------------------------- */
+.tapa-cara{
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  container-type: size;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+.tapa-dorso{
+  transform: rotateY(180deg);
+}
+.tapa-dorso *,
+.tapa-dorso *::before,
+.tapa-dorso *::after{
+  animation: none !important;
+  transition: none !important;
+}
+.tapa-dorso .hoja{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.tapa-frente{
+  --u: min(1cqi, 0.66cqh);
+  background:
+    radial-gradient(circle at 54% 47%, rgba(199, 155, 39, 0.26), transparent 56%),
+    radial-gradient(rgba(232, 223, 201, 0.08) 28%, transparent 32%) 0 0 / 7px 7px,
+    #1b1612;
+  border: 6px solid var(--ink);
+  /* el canto de las hojas, escalonado como en un cómic grapado */
+  box-shadow:
+    calc(0.5 * var(--u)) calc(0.5 * var(--u)) 0 #efe6cf,
+    calc(1 * var(--u)) calc(1 * var(--u)) 0 var(--ink),
+    calc(1.6 * var(--u)) calc(1.6 * var(--u)) 0 #efe6cf,
+    calc(2.1 * var(--u)) calc(2.1 * var(--u)) 0 var(--ink);
+}
+@media (max-width: 760px){
+  .tapa-frente{ border-width: 5px; }
+}
+
+.tapa-lomo{
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: calc(7 * var(--u));
+  background:
+    repeating-linear-gradient(0deg, transparent 0 calc(3 * var(--u)), rgba(232, 223, 201, 0.7) calc(3 * var(--u)) calc(5.2 * var(--u))) calc(3.2 * var(--u)) 0 / calc(0.5 * var(--u)) 100% no-repeat,
+    linear-gradient(90deg, #070605, #231c15);
+  border-right: calc(0.5 * var(--u)) solid var(--ink);
+}
+
+.tapa-cuerdas{
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+}
+.tapa-cuerdas line{
+  stroke: #d9b34a;
+  stroke-opacity: 0.62;
+  vector-effect: non-scaling-stroke;
+}
+
+.tapa-sello{
+  position: absolute;
+  z-index: 3;
+  top: calc(4 * var(--u));
+  left: calc(11 * var(--u));
+  display: flex;
+  align-items: center;
+  gap: calc(1.6 * var(--u));
+  padding: calc(0.8 * var(--u)) calc(2 * var(--u)) calc(0.8 * var(--u)) calc(1 * var(--u));
+  rotate: -2deg;
+  background: var(--paper);
+  border: calc(0.55 * var(--u)) solid var(--ink);
+  box-shadow: calc(0.8 * var(--u)) calc(0.8 * var(--u)) 0 var(--ink);
+  font-family: 'Special Elite', serif;
+  font-size: calc(2.3 * var(--u));
+  letter-spacing: calc(0.25 * var(--u));
+  text-transform: uppercase;
+  line-height: 1;
+}
+.tapa-sello img{
+  width: calc(6.4 * var(--u));
+  height: auto;
+}
+
+.tapa-emblema{
+  position: absolute;
+  z-index: 2;
+  inset: calc(12 * var(--u)) 0 auto calc(7 * var(--u));
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+}
+.tapa-anillos{
+  grid-area: 1 / 1;
+  width: calc(94 * var(--u));
+  height: auto;
+  margin-top: 7cqh;
+}
+.tapa-titulo{
+  grid-area: 1 / 1;
+  width: calc(94 * var(--u));
+  height: auto;
+  rotate: -5deg;
+  translate: 0 1cqh;
+  filter: drop-shadow(calc(0.8 * var(--u)) calc(0.8 * var(--u)) 0 var(--ink));
+}
+
+.tapa-leyenda{
+  position: absolute;
+  z-index: 3;
+  inset: auto calc(3.5 * var(--u)) calc(3.2 * var(--u)) calc(11 * var(--u));
+  display: flex;
+  justify-content: space-between;
+  gap: calc(2 * var(--u));
+  padding-top: calc(1.6 * var(--u));
+  border-top: calc(0.5 * var(--u)) solid rgba(232, 223, 201, 0.6);
+  color: var(--paper);
+  font-family: 'Special Elite', serif;
+  font-size: calc(2.2 * var(--u));
+  letter-spacing: calc(0.2 * var(--u));
+  text-transform: uppercase;
+  line-height: 1.2;
+}
+.tapa-leyenda span:last-child{
+  font-family: Bangers, cursive;
+  font-size: calc(3.4 * var(--u));
+  letter-spacing: calc(0.3 * var(--u));
+  color: var(--yellow);
+  white-space: nowrap;
+}
+
+/* sombra con la que la línea de tiempo oscurece la cara que se aleja de la luz */
+.tapa-sombra{
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  pointer-events: none;
+  opacity: 0;
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.95), rgba(0, 0, 0, 0.55));
+}

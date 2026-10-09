@@ -1544,6 +1544,50 @@ recorrió cada escena con el nuevo botón.
 - **No se probó** en teléfono real ni con lector de pantalla, y el rendimiento se
   midió con render por software.
 
+### Ronda 30 — La portada: un libro que se abre y cartas de colección (fase 3 del plan)
+
+- **Se hizo directo sobre `main`**, sin rama, por indicación del equipo. El punto de
+  retorno anterior sigue siendo la etiqueta `v1.0-antes-del-plan`.
+- **El libro.** La portada abre con una cubierta cerrada (tapa oscura con seis cuerdas
+  doradas, los anillos y el título, el sello de Helikón y la leyenda de capítulos). Al
+  bajar, en escritorio el libro se acerca, la tapa gira 180° sobre el lomo y deja la doble
+  página; en móvil la cubierta se levanta y se desvanece. Está explicado en el README
+  (*El libro que se abre y las cartas*).
+- **Las cartas del reparto** entran en abanico, se inclinan con el puntero con un brillo de
+  tramado, y al pasar el ratón o enfocar con el teclado la figura cambia por un rostro con
+  gesto (nino: asombro; padre: alegría; Juanes: asombro; madre: alegría; Ente: desagrado).
+  No se pidió arte nuevo: son las expresiones que ya estaban. Siguen abriendo la misma
+  ficha de siempre. Los textos no adelantan nada de la historia.
+- **Decisión de diseño:** el dorso de la tapa es una copia de la hoja izquierda creada por
+  JavaScript, para no duplicar HTML ni ids y no tocar el DOM que leen los lectores de
+  pantalla. La hoja real espera debajo con `opacity: 0` y toma el relevo al abrirse.
+- **Trampas encontradas y resueltas:**
+  1. Las variables CSS `--tapa-arriba` y `--alto` estaban en niveles distintos; la primera
+     quedaba inválida y la cubierta móvil no se quedaba fija. Ahora viven las dos en
+     `.libro-escenario`.
+  2. En móvil, el recorrido de la cubierta como `padding` del libro la empujaba hacia abajo
+     junto con la primera hoja. Pasó a `margin-top` de `.doble-pagina`.
+  3. El canto libre de la tapa viene hacia el lector al girar y se salía de la pantalla:
+     perspectiva más suave (9000 px) y el libro se encoge un 7 % a mitad del giro.
+  4. Las cartas esperan giradas ±22° y ensanchaban la página (hasta 86 px de desborde):
+     `.reparto` recorta el eje horizontal. Mismo problema y mismo arreglo que las fichas de
+     Helikón en la fase 2. En 768 px faltaba 1 px: el margen del recorte se calcula con
+     `min(16px, 2vw)`.
+  5. Apagar y encender las animaciones cambiaba la altura de la página y el lector acababa
+     en otro sitio: `libro.js` recuerda un bloque ancla y lo restaura.
+- **Comprobado** (1366, 1024, 768×1024, 1920, 360 y 320 px): sin desborde en 8 posiciones del
+  scroll; cerrado la viñeta no recibe clics y abierto las tres sí, y las cinco cartas también;
+  el foco de teclado cambia el gesto y Enter abre la ficha; Abrir directo, Tab hasta una
+  viñeta tapada, espacio, AvPág y la rueda funcionan; con movimiento reducido (SO), con el
+  interruptor en "no", con GSAP bloqueado y sin JavaScript la portada sale abierta y quieta y
+  no se descarga GSAP; axe 0 en cerrado y abierto, escritorio y móvil; consola limpia.
+  Con red lenta simulada y CPU a 4× más lenta: LCP 2,1 s en escritorio y 1,5 s en móvil,
+  CLS 0,002. El peso nuevo en la ruta inicial es de unos 55 KB comprimidos (límite del plan:
+  120 KB).
+- **No se probó** en un teléfono real ni con lector de pantalla, y no se pasó Lighthouse
+  completo (se midieron LCP y CLS con el navegador de pruebas). El giro 3D conviene verlo en
+  un móvil de gama baja antes de darlo por bueno del todo.
+
 ---
 
 ## Pendientes

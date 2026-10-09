@@ -9,16 +9,18 @@
   gap: 70px;
 }
 
-.doble-pagina{
+.libro-escenario{
   --proporcion: 0.66;
   --alto: min(1040px, calc(100svh - 92px), calc(96vw / (2 * var(--proporcion) + 0.04)));
   --ancho-hoja: calc(var(--alto) * var(--proporcion));
+}
+@media (min-width: 761px) and (min-aspect-ratio: 3/2){
+  .libro-escenario{ --proporcion: 0.8; }
+}
+.doble-pagina{
   display: flex;
   justify-content: center;
   filter: drop-shadow(0 26px 34px rgba(53,37,15,0.34));
-}
-@media (min-width: 761px) and (min-aspect-ratio: 3/2){
-  .doble-pagina{ --proporcion: 0.8; }
 }
 
 .hoja{
@@ -481,7 +483,7 @@
 .personaje:nth-child(2n){ rotate: 0.8deg; }
 .personaje:nth-child(2n+1){ rotate: -0.6deg; }
 
-.personaje img{
+.personaje .personaje-figura{
   position: absolute;
   z-index: 0;
   inset: auto 0 -7% 0;
@@ -491,7 +493,7 @@
   filter: drop-shadow(5px 4px 0 rgba(23,19,14,0.7));
   transition: translate 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
-.personaje:hover img{
+.personaje:hover .personaje-figura{
   translate: 0 -4%;
 }
 .personaje-ficha{
@@ -724,8 +726,8 @@
 
 @media (max-width: 760px){
   .numero{ width: 92vw; gap: 54px; padding-top: 14px; }
+  .libro-escenario{ --alto: calc(92vw / 0.66); }
   .doble-pagina{
-    --alto: calc(92vw / 0.66);
     flex-direction: column;
     align-items: center;
     gap: 22px;
@@ -773,12 +775,12 @@
   .capa,
   .globo,
   .vineta-figura,
-  .personaje img,
+  .personaje .personaje-figura,
   .continuara-boton{
     transition: none;
   }
   .vineta:hover .vineta-figura,
-  .personaje:hover img{
+  .personaje:hover .personaje-figura{
     translate: none;
   }
 }
@@ -797,9 +799,9 @@
   text-align: left;
   cursor: pointer;
 }
-.personaje-boton img{ transition: scale 0.3s ease; }
-.personaje:hover .personaje-boton img,
-.personaje-boton:focus-visible img{ scale: 1.05; }
+.personaje-boton .personaje-figura{ transition: scale 0.3s ease; }
+.personaje:hover .personaje-boton .personaje-figura,
+.personaje-boton:focus-visible .personaje-figura{ scale: 1.05; }
 .personaje-boton:focus-visible{ outline: 4px solid #fffdf6; outline-offset: -8px; }
 .personaje-lupa{
   position: absolute;
@@ -1046,7 +1048,7 @@ body.con-expediente{ overflow: hidden; }
 
 @media (prefers-reduced-motion: reduce){
   .expediente-hoja{ animation: none; }
-  .personaje-boton img,
+  .personaje-boton .personaje-figura,
   .personaje-lupa{ transition: none; }
   .expediente-paso:hover{ translate: none; }
 }

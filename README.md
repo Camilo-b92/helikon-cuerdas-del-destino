@@ -63,11 +63,15 @@ Lo que eso implica al trabajar:
 │   │   ├── menu.css        Menú común de las cuatro páginas y bloque "Sigue explorando"
 │   │   ├── scroll.css      Efectos ligados al scroll y el escenario del vinilo 3D
 │   │   ├── movimiento.css  Reglas de "movimiento reducido" para el interruptor de animaciones
+│   │   ├── libro.css       El libro que se abre al bajar (escenario, cubierta y tapa en CSS 3D)
+│   │   ├── cartas.css      Cartas del reparto: inclinación, brillo de tramado y cambio de gesto
 │   │   └── home.css        Solo lo propio de la portada
 │   ├── js/
 │   │   ├── pulp.js         Revelado al scroll y paralaje del masthead
 │   │   ├── personajes.js   Las cinco fichas, compartidas por portada y cómic
 │   │   ├── movimiento.js   Interruptor de animaciones, señal única de movimiento y cargador de GSAP
+│   │   ├── libro.js        La línea de tiempo del libro que se abre (GSAP + ScrollTrigger)
+│   │   ├── cartas.js       Cartas del reparto: entrada en abanico, inclinación y gesto
 │   │   ├── scroll.js       Parallax (data-parallax) y progreso de sección (data-scroll)
 │   │   ├── vinilo.js       El vinilo 3D de Juanes (three.js, carga diferida)
 │   │   └── home.js         Solo lo propio de la portada
@@ -432,6 +436,46 @@ Reglas de esta página:
   si el usuario pidió movimiento reducido.
 - `initLinea()` — la línea de tiempo interactiva. Ver abajo.
 
+### El libro que se abre y las cartas (portada, `libro.js` y `cartas.js`)
+
+La portada empieza con un cómic **cerrado** que se abre al bajar y deja ver la doble
+página de siempre. El scroll es el del navegador (rueda, espacio y flechas funcionan);
+el script solo lee su posición.
+
+- **Escritorio y tablet (≥ 761 px).** El libro queda fijo en pantalla (`position: sticky`
+  dentro de un escenario de ~230 svh). Primer tercio: se acerca y se centra. Segundo:
+  la tapa gira 180° sobre el lomo (CSS 3D de dos caras, sin three.js) y el libro se
+  desliza al centro. Último: ya está abierto y el scroll lo deja leer antes de soltarlo.
+  El dorso de la tapa es una **copia** de la hoja izquierda (`aria-hidden`, `inert`, sin
+  ids) que `libro.js` crea al montar; la hoja real espera debajo con `opacity: 0` (no
+  `visibility`, para que el `h1` siga en el árbol de lectura) y toma el relevo al
+  terminar. La perspectiva está en `.libro`, `preserve-3d` solo en `.libro-tapa`, y las
+  dos caras usan `backface-visibility`; al abrirse la tapa se oculta y no queda ninguna
+  transformación 3D que estorbe a los clics.
+- **Móvil (≤ 760 px).** Las hojas van en columna, así que no hay giro: la cubierta queda
+  fija (`sticky`) sobre la primera hoja y se levanta y se desvanece. Ese recorrido es un
+  `margin-top` de `.doble-pagina` (no `padding` de `.libro`, que empujaría también a la
+  cubierta).
+- **Salvaguardas.** Botón **Abrir directo** visible desde el primer cuadro; la cubierta
+  y "Sigue bajando" también abren al pulsarlas; si alguien llega con Tab a una viñeta
+  tapada, el libro se abre solo. Sin JavaScript, con GSAP bloqueado, con movimiento
+  reducido o con el interruptor en "no" la portada se ve ya abierta, como antes.
+- **Sin saltos al cargar.** La cubierta es HTML estático y el estado cerrado lo da el CSS
+  desde el primer pintado (cuelga de `html.anim-espera` / `html.anim`, que
+  `movimiento.js` pone antes de pintar); GSAP solo toma el relevo con los mismos
+  valores de partida. Si GSAP falla, a los 3,5 s se libera y la página queda abierta.
+- **Al apagar o encender las animaciones** la altura de la página cambia; `libro.js`
+  anota en cada scroll qué bloque tiene cerca del borde superior y se lo devuelve.
+- **Cartas del reparto** (`cartas.js` + `cartas.css`, clase `con-cartas` en la tira):
+  entran en abanico al llegar a ellas; se inclinan con el puntero (solo ratón o lápiz) y
+  llevan un brillo de puntos de cómic que sigue al puntero; con el ratón encima **o con
+  el foco del teclado** la figura cambia por el rostro del personaje con un gesto
+  (`data-gesto` en cada botón; usa las expresiones que ya existían, sin arte nuevo). Los
+  rostros se crean por JavaScript y cargan en diferido. Con movimiento reducido, las
+  cartas quedan quietas y sin cambio de gesto. Las cartas esperan giradas antes de
+  entrar, por eso `.reparto` recorta el eje horizontal (con margen y relleno para no
+  cortar las sombras).
+
 ### Movimiento y animaciones (`movimiento.js`, GSAP)
 
 Una sola señal decide si el sitio se mueve: `<html data-movimiento="completo|reducido">`.
@@ -456,7 +500,8 @@ con `try/catch`; si el sistema ya pide menos movimiento, el botón no aparece).
 - **Cargar GSAP solo donde hace falta.** Una página lo declara en la etiqueta:
   `<script src="…/movimiento.js" data-gsap="ScrollTrigger"></script>` (la lista son
   nombres de archivo de `assets/vendor/gsap/` sin `.min.js`; `gsap` va siempre).
-  Hoy solo lo declara la página de Helikón. Con movimiento reducido **no se descarga nada**.
+  Hoy lo declaran la portada (`ScrollTrigger`) y la página de Helikón (`ScrollTrigger,DrawSVGPlugin`).
+  Con movimiento reducido **no se descarga nada**.
   `Movimiento.cargar()` devuelve una promesa con `{ gsap, ScrollTrigger }` o `null`, y
   `Movimiento.listo` es la del primer intento, y `Movimiento.liberar()` quita `anim-espera`.
 - **Estado seguro.** `<html class="anim">` solo se añade cuando todo cargó y el

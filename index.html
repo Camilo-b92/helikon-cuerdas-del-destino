@@ -26,8 +26,10 @@
   <link rel="stylesheet" href="assets/css/pulp.css">
   <link rel="stylesheet" href="assets/css/menu.css">
   <link rel="stylesheet" href="assets/css/home.css">
+  <link rel="stylesheet" href="assets/css/libro.css">
+  <link rel="stylesheet" href="assets/css/cartas.css">
   <link rel="stylesheet" href="assets/css/movimiento.css">
-  <script src="assets/js/movimiento.js"></script>
+  <script src="assets/js/movimiento.js" data-gsap="ScrollTrigger"></script>
 </head>
 <body>
   <div class="paper-grain"></div>
@@ -51,131 +53,173 @@
       <span class="baja-flecha" aria-hidden="true">&#9660;</span>
     </a>
 
-    <div class="doble-pagina">
 
-      <article class="hoja portada" id="portada" aria-labelledby="portadaTitulo">
-        <header class="portada-franja">
-          <div class="caja-editorial">
-            <img class="caja-cara" src="comic/assets/personajes/expresiones/nino-alegria.svg"
-                 width="590" height="496" alt="">
-            <span class="caja-sello">Helikón</span>
+    <button type="button" class="libro-abrir" id="libroAbrir">Abrir directo</button>
+
+    <div class="libro-escenario" id="libroEscenario">
+      <div class="libro-fijo">
+        <div class="libro" id="libro">
+          <div class="doble-pagina">
+
+            <article class="hoja portada" id="portada" aria-labelledby="portadaTitulo">
+              <header class="portada-franja">
+                <div class="caja-editorial">
+                  <img class="caja-cara" src="comic/assets/personajes/expresiones/nino-alegria.svg"
+                       width="590" height="496" alt="">
+                  <span class="caja-sello">Helikón</span>
+                </div>
+                <p class="franja-serie">Cómic digital interactivo</p>
+                <p class="franja-datos"><span>Sept. 2026</span><span>Gratis</span></p>
+              </header>
+
+              <div class="portada-escena">
+                <div class="portada-rayos" aria-hidden="true"></div>
+                <img class="portada-anillos capa" data-profundidad="10"
+                     src="comic/assets/presentacion-titulo/json/images/img_2.png" width="508" height="508" alt="">
+                <h1 class="portada-titulo capa" id="portadaTitulo" data-profundidad="-14">
+                  <img src="comic/assets/presentacion-titulo/json/images/img_0.png" width="870" height="436"
+                       alt="Cuerdas del Destino">
+                </h1>
+                <img class="portada-heroe capa" data-profundidad="22"
+                     src="comic/assets/personajes/juanes.svg" width="760" height="1000"
+                     alt="Juanes, el protagonista, con los brazos abiertos">
+                <span class="estallido" aria-hidden="true">¡2 capítulos!</span>
+                <p class="portada-reclamo">Un niño, una guitarra y un destino que suena.</p>
+              </div>
+
+              <footer class="portada-pie">
+                <p class="portada-inspiracion">Inspirado en la historia de <strong>Juanes</strong></p>
+                <div class="codigo-barras" aria-hidden="true">
+                  <span class="codigo-lineas"></span>
+                  <span class="codigo-texto">7 70126 00001 9</span>
+                </div>
+              </footer>
+            </article>
+
+            <section class="hoja pagina" aria-labelledby="paginaTitulo">
+              <p class="cartucho cartucho--abre">
+                Carolina del Príncipe, Antioquia. En una casa con aldabón de hierro,
+                alguien está a punto de encender un televisor.
+              </p>
+              <h2 class="visualmente-oculto" id="paginaTitulo">Elige por dónde entrar</h2>
+
+              <div class="vinetas">
+                <a class="panel panel-comic vineta vineta--comic" href="comic/">
+                  <img class="vineta-figura" src="comic/assets/personajes/nino.svg"
+                       width="760" height="1000" alt="">
+                  <p class="globo globo--derecha">¿Y si enciendo el televisor?</p>
+                  <span class="vineta-texto">
+                    <span class="panel-kicker">Capítulos 1 y 2</span>
+                    <span class="panel-title">El cómic</span>
+                    <span class="panel-action">Encender →</span>
+                  </span>
+                  <span class="burst-text" aria-hidden="true">¡CLIC!</span>
+                </a>
+
+                <a class="panel panel-juanes vineta vineta--juanes" href="juanes/">
+                  <span class="tono vineta-foto">
+                    <img src="juanes/img/juanes-retrato.webp" width="660" height="766" alt="">
+                  </span>
+                  <span class="cartucho cartucho--vineta">El músico real detrás de la historia</span>
+                  <span class="vineta-texto">
+                    <span class="panel-title">Juanes</span>
+                    <span class="panel-action">Conocerlo →</span>
+                  </span>
+                  <span class="burst-text" aria-hidden="true">¡ZAS!</span>
+                </a>
+
+                <a class="panel panel-helikon vineta vineta--helikon" href="helikon/">
+                  <img class="vineta-figura" src="comic/assets/personajes/ente.svg"
+                       width="760" height="1000" alt="">
+                  <p class="globo globo--izquierda">Aquí se dibuja el destino.</p>
+                  <span class="vineta-texto">
+                    <span class="panel-kicker">El estudio</span>
+                    <span class="panel-title">Helikón</span>
+                    <span class="panel-action">Entrar →</span>
+                  </span>
+                  <span class="burst-text" aria-hidden="true">¡PUM!</span>
+                </a>
+              </div>
+
+            </section>
+
           </div>
-          <p class="franja-serie">Cómic digital interactivo</p>
-          <p class="franja-datos"><span>Sept. 2026</span><span>Gratis</span></p>
-        </header>
 
-        <div class="portada-escena">
-          <div class="portada-rayos" aria-hidden="true"></div>
-          <img class="portada-anillos capa" data-profundidad="10"
-               src="comic/assets/presentacion-titulo/json/images/img_2.png" width="508" height="508" alt="">
-          <h1 class="portada-titulo capa" id="portadaTitulo" data-profundidad="-14">
-            <img src="comic/assets/presentacion-titulo/json/images/img_0.png" width="870" height="436"
-                 alt="Cuerdas del Destino">
-          </h1>
-          <img class="portada-heroe capa" data-profundidad="22"
-               src="comic/assets/personajes/juanes.svg" width="760" height="1000"
-               alt="Juanes, el protagonista, con los brazos abiertos">
-          <span class="estallido" aria-hidden="true">¡2 capítulos!</span>
-          <p class="portada-reclamo">Un niño, una guitarra y un destino que suena.</p>
-        </div>
-
-        <footer class="portada-pie">
-          <p class="portada-inspiracion">Inspirado en la historia de <strong>Juanes</strong></p>
-          <div class="codigo-barras" aria-hidden="true">
-            <span class="codigo-lineas"></span>
-            <span class="codigo-texto">7 70126 00001 9</span>
+          <div class="libro-tapa" id="libroTapa" aria-hidden="true">
+            <div class="tapa-cara tapa-frente">
+              <span class="tapa-lomo"></span>
+              <svg class="tapa-cuerdas" viewBox="0 0 100 150" preserveAspectRatio="none" focusable="false">
+                <line x1="24" y1="0" x2="24" y2="150" stroke-width="1.5"/>
+                <line x1="34.5" y1="0" x2="34.5" y2="150" stroke-width="1.2"/>
+                <line x1="45" y1="0" x2="45" y2="150" stroke-width="0.95"/>
+                <line x1="55.5" y1="0" x2="55.5" y2="150" stroke-width="0.75"/>
+                <line x1="66" y1="0" x2="66" y2="150" stroke-width="0.6"/>
+                <line x1="76.5" y1="0" x2="76.5" y2="150" stroke-width="0.5"/>
+              </svg>
+              <p class="tapa-sello">
+                <img src="comic/assets/personajes/expresiones/nino-alegria.svg" width="590" height="496" alt="">
+                <span>Helikón presenta</span>
+              </p>
+              <div class="tapa-emblema">
+                <img class="tapa-anillos" src="comic/assets/presentacion-titulo/json/images/img_2.png"
+                     width="508" height="508" alt="">
+                <img class="tapa-titulo" src="comic/assets/presentacion-titulo/json/images/img_0.png"
+                     width="870" height="436" alt="" fetchpriority="high">
+              </div>
+              <p class="tapa-leyenda">
+                <span>Cómic digital interactivo</span>
+                <span>Capítulos 1 y 2</span>
+              </p>
+              <span class="tapa-sombra"></span>
+            </div>
+            <div class="tapa-cara tapa-dorso" id="tapaDorso">
+              <span class="tapa-sombra"></span>
+            </div>
           </div>
-        </footer>
-      </article>
 
-      <section class="hoja pagina" aria-labelledby="paginaTitulo">
-        <p class="cartucho cartucho--abre">
-          Carolina del Príncipe, Antioquia. En una casa con aldabón de hierro,
-          alguien está a punto de encender un televisor.
-        </p>
-        <h2 class="visualmente-oculto" id="paginaTitulo">Elige por dónde entrar</h2>
-
-        <div class="vinetas">
-          <a class="panel panel-comic vineta vineta--comic" href="comic/">
-            <img class="vineta-figura" src="comic/assets/personajes/nino.svg"
-                 width="760" height="1000" alt="">
-            <p class="globo globo--derecha">¿Y si enciendo el televisor?</p>
-            <span class="vineta-texto">
-              <span class="panel-kicker">Capítulos 1 y 2</span>
-              <span class="panel-title">El cómic</span>
-              <span class="panel-action">Encender →</span>
-            </span>
-            <span class="burst-text" aria-hidden="true">¡CLIC!</span>
-          </a>
-
-          <a class="panel panel-juanes vineta vineta--juanes" href="juanes/">
-            <span class="tono vineta-foto">
-              <img src="juanes/img/juanes-retrato.webp" width="660" height="766" alt="">
-            </span>
-            <span class="cartucho cartucho--vineta">El músico real detrás de la historia</span>
-            <span class="vineta-texto">
-              <span class="panel-title">Juanes</span>
-              <span class="panel-action">Conocerlo →</span>
-            </span>
-            <span class="burst-text" aria-hidden="true">¡ZAS!</span>
-          </a>
-
-          <a class="panel panel-helikon vineta vineta--helikon" href="helikon/">
-            <img class="vineta-figura" src="comic/assets/personajes/ente.svg"
-                 width="760" height="1000" alt="">
-            <p class="globo globo--izquierda">Aquí se dibuja el destino.</p>
-            <span class="vineta-texto">
-              <span class="panel-kicker">El estudio</span>
-              <span class="panel-title">Helikón</span>
-              <span class="panel-action">Entrar →</span>
-            </span>
-            <span class="burst-text" aria-hidden="true">¡PUM!</span>
-          </a>
         </div>
-
-      </section>
-
+      </div>
     </div>
 
     <section class="reparto" id="reparto" aria-labelledby="repartoTitulo" data-reveal>
       <h2 class="rotulo" id="repartoTitulo">El reparto</h2>
       <ul class="reparto-tira">
         <li class="personaje personaje--azul">
-          <button type="button" class="personaje-boton" data-personaje="nino"
+          <button type="button" class="personaje-boton" data-personaje="nino" data-gesto="asombro"
                   aria-haspopup="dialog">
-            <img src="comic/assets/personajes/nino.svg" width="760" height="1000" loading="lazy" alt="">
+            <img class="personaje-figura" src="comic/assets/personajes/nino.svg" width="760" height="1000" loading="lazy" alt="">
             <span class="personaje-ficha"><strong>Juanes niño</strong> Descubre la guitarra</span>
             <span class="personaje-lupa" aria-hidden="true">Ver ficha</span>
           </button>
         </li>
         <li class="personaje personaje--amarillo">
-          <button type="button" class="personaje-boton" data-personaje="padre"
+          <button type="button" class="personaje-boton" data-personaje="padre" data-gesto="alegria"
                   aria-haspopup="dialog">
-            <img src="comic/assets/personajes/padre.svg" width="760" height="1000" loading="lazy" alt="">
+            <img class="personaje-figura" src="comic/assets/personajes/padre.svg" width="760" height="1000" loading="lazy" alt="">
             <span class="personaje-ficha"><strong>El Padre</strong> Toca con el corazón</span>
             <span class="personaje-lupa" aria-hidden="true">Ver ficha</span>
           </button>
         </li>
         <li class="personaje personaje--rojo">
-          <button type="button" class="personaje-boton" data-personaje="juanes"
+          <button type="button" class="personaje-boton" data-personaje="juanes" data-gesto="asombro"
                   aria-haspopup="dialog">
-            <img src="comic/assets/personajes/juanes.svg" width="760" height="1000" loading="lazy" alt="">
+            <img class="personaje-figura" src="comic/assets/personajes/juanes.svg" width="760" height="1000" loading="lazy" alt="">
             <span class="personaje-ficha"><strong>Juanes</strong> Músico callejero</span>
             <span class="personaje-lupa" aria-hidden="true">Ver ficha</span>
           </button>
         </li>
         <li class="personaje personaje--azul">
-          <button type="button" class="personaje-boton" data-personaje="madre"
+          <button type="button" class="personaje-boton" data-personaje="madre" data-gesto="alegria"
                   aria-haspopup="dialog">
-            <img src="comic/assets/personajes/madre.svg" width="760" height="1000" loading="lazy" alt="">
+            <img class="personaje-figura" src="comic/assets/personajes/madre.svg" width="760" height="1000" loading="lazy" alt="">
             <span class="personaje-ficha"><strong>La Madre</strong> Observa antes de intervenir</span>
             <span class="personaje-lupa" aria-hidden="true">Ver ficha</span>
           </button>
         </li>
         <li class="personaje personaje--tinta">
-          <button type="button" class="personaje-boton" data-personaje="ente"
+          <button type="button" class="personaje-boton" data-personaje="ente" data-gesto="desagrado"
                   aria-haspopup="dialog">
-            <img src="comic/assets/personajes/ente.svg" width="760" height="1000" loading="lazy" alt="">
+            <img class="personaje-figura" src="comic/assets/personajes/ente.svg" width="760" height="1000" loading="lazy" alt="">
             <span class="personaje-ficha"><strong>El Ente</strong> Aparece de repente</span>
             <span class="personaje-lupa" aria-hidden="true">Ver ficha</span>
           </button>
@@ -250,5 +294,7 @@
 <script src="assets/js/personajes.js"></script>
 <script src="assets/js/pulp.js"></script>
   <script src="assets/js/home.js"></script>
+  <script src="assets/js/libro.js"></script>
+  <script src="assets/js/cartas.js"></script>
 </body>
 </html>
