@@ -1520,6 +1520,12 @@ recorrió cada escena con el nuevo botón.
      fichas se quedaban en 0 de opacidad. Se lanzan a mano en ese caso.
   3. Las fichas heredaban `transition: transform` y peleaban con GSAP: se anula
      mientras entran.
+- **Desborde horizontal que la primera pasada no vio:** a 360 px, antes de entrar,
+  las fichas esperan giradas ±7° y 96 px más abajo, y esa pose ensanchaba la página 9 px
+  (369 de scroll contra 360). Solo ocurría con animaciones activas. Se resolvió con
+  `overflow-x: clip` en `.quien` (con margen y relleno de 16 px para no cortar las
+  sombras de las fichas ya colocadas). La suite de la fase 1 lo detectó porque mide
+  `scrollWidth`; sus expectativas se ajustaron: Helikón ahora sí declara GSAP.
 - **Nada se esconde con `visibility` ni `display`**, para que un lector de pantalla
   recorra el texto aunque la animación no haya corrido.
 - **Comprobado** (a 1366, 768, 360 y 320 px): 0 px de desborde, consola limpia, axe
