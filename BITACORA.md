@@ -22,7 +22,7 @@ README y luego esto.
 | Presentaciones | Canal 0: nombre del cómic y luego capítulo uno · Canal 4: capítulo dos · Canal 9: capítulo tres |
 | Fichas de personaje | `assets/js/personajes.js`, compartidas por portada y cómic |
 | Comentarios en el código | Ninguno: la documentación vive aquí y en el README |
-| Vista previa al compartir | `assets/img/og-portada.jpg`, en las cuatro páginas |
+| Vista previa al compartir | `assets/img/og-portada.jpg`, `og-comic.jpg`, `og-juanes.jpg` y `og-helikon.jpg`, una por página |
 
 Las cuatro páginas cargan sin errores de consola, sin desborde horizontal en
 móvil a 375 px, y respetan `prefers-reduced-motion`.
@@ -1331,6 +1331,41 @@ recorrió cada escena con el nuevo botón.
 - El desborde horizontal a 768 px de Juanes (16 px) y Helikón (2 px) sigue
   igual que antes de estas rondas.
 
+### Ronda 25 — Accesibilidad y cierre (fase 5 del plan de UX)
+
+- **"Saltar al contenido"** en las cuatro páginas (`.saltar` en `menu.css`),
+  con `id="contenido"` en el `<main>`. Probado con Tab y Enter en las cuatro.
+- **Error real encontrado y corregido:** en el cómic, `Enter` y espacio
+  encendían o apagaban el televisor con `preventDefault` aunque el foco
+  estuviera en un enlace, así que **Enter no abría los enlaces del menú** con
+  teclado. Ahora se ignoran si el foco está en un enlace, botón, campo o
+  `summary`. Probado: Tab hasta "Juanes" + Enter navega; con el foco en el
+  cuerpo, Enter sigue encendiendo.
+- **El cómic no tenía `h1`.** Se añadió uno oculto: "El cómic: Cuerdas del
+  Destino".
+- **La pista de scroll** de la portada pasó dentro del `<main>` (axe avisaba
+  de contenido fuera de un punto de referencia).
+- **Contraste:** auditoría con axe-core y cálculo propio de todos los textos.
+  Se corrigieron las tarjetas inactivas de la línea de tiempo (0,62 → 0,85 de
+  opacidad, de 3,5 a más de 4,5) y la cifra de premios sobre amarillo (de 2,7).
+  El título "Helikón" y las letras del nombre, en amarillo con contorno de tinta,
+  salen por debajo de 3 en el cálculo, pero son letras de dibujo; no se tocaron.
+- **Objetivos táctiles de 44 px:** filtros y controles de la línea de tiempo,
+  desplegable de fuentes y "Volver al inicio" (Juanes y Helikón), y el pie sube
+  a 0,72 rem. Quedan menores: las flechas del televisor (43 px, van en la
+  imagen), el botón de saltar la introducción y los créditos de fotos.
+- **Una imagen de vista previa por página** (portada, cómic, Juanes y
+  Helikón). **La de la portada se rehízo porque decía "Helikón Nº 1"**, justo
+  lo que la fase 1 había retirado. Pesan entre 110 y 175 KB.
+- **Desbordes a 768 px resueltos:** el sello "Basado en hechos reales" (Juanes,
+  16 px) y el sello del estudio (Helikón, 2 px) ya no sacan la página de ancho.
+  Las cuatro páginas dan 0 px de desborde a 1366, 768 y 360.
+- Probado en navegador: las cuatro páginas a 1366x768, 768x1024 y 360x740, sin
+  errores de consola, y el cómic recorrido con la flecha derecha desde el
+  encendido hasta la escena IV del capítulo dos. **No se probó en un teléfono
+  real ni con un lector de pantalla.**
+- Con esta ronda queda **completo el plan de UX** (fases 1 a 5, rondas 21 a 25).
+
 ---
 
 ## Pendientes
@@ -1349,36 +1384,29 @@ En orden de lo que más aporta:
    condiciones de peso y carga están en *El 3D entra vivo*.
 
 3. **Pasar `og:image` a URL absoluta al publicar.** Ya existe la imagen y las
-   cuatro páginas la declaran, pero con **ruta relativa**, porque el sitio
+   cuatro páginas la declaran (cada una con la suya), pero con **ruta relativa**, porque el sitio
    todavía no tiene dominio. Funciona en la mayoría de los lectores de enlaces,
    aunque la especificación de Open Graph pide una URL absoluta. En cuanto el
    sitio tenga dirección definitiva, hay que cambiar las cuatro por la ruta
-   completa (`https://…/assets/img/og-portada.jpg`).
+   completa (`https://…/assets/img/og-portada.jpg`, y lo mismo con las otras tres).
 
 4. **Historial y Stop motion**, si se quieren recuperar. Se retiraron por
    estar vacíos; el canal de Personajes sirve de molde para cuando haya
    material que poner.
 
-5. **Fase 5 del plan de UX** (las rondas 21 a 24 hicieron las fases 1 a 4):
-   accesibilidad y cierre.
-
-6. **Comprimir `comic/assets/intro.mp4`** (7.6 MB). Ya hay `ffmpeg` instalado
+5. **Comprimir `comic/assets/intro.mp4`** (7.6 MB). Ya hay `ffmpeg` instalado
    para hacerlo. También `caja.json` (2.6 MB) es pesado, aunque ya está
    mitigado con el renderizador `canvas` y `setSubframe(false)`, y `txt.json`
    de la escena I del capítulo tres (casi 900 KB).
 
-7. **La escena IV del capítulo dos no se puede jugar sin teclado.** Hace correr
-   a Juan con la flecha derecha, así que en un móvil o una tableta no hay
-   forma de moverlo. Habría que añadir un gesto equivalente, por ejemplo
-   mantener pulsada la pantalla. Es decisión del equipo de animación, porque
-   cambia cómo se siente la escena.
+6. **La escena IV del capítulo dos ya tiene un botón "Correr"** para móvil (ronda 22). Queda por decidir con el equipo de animación si prefieren además un gesto de mantener pulsada la pantalla.
 
-8. **Unificar las escenas en `.scene-stage` y `.scene-container`.** Las escenas
+7. **Unificar las escenas en `.scene-stage` y `.scene-container`.** Las escenas
    1 a 5 tienen un par de reglas propias, casi idénticas entre sí; las
    escenas 6, 7 y 8 ya usan las compartidas. Solo se ahorra CSS, no cambia nada
    a la vista.
 
-9. **Dos archivos sin usar.** Ninguno lo referencia ningún HTML, CSS ni JS.
+8. **Dos archivos sin usar.** Ninguno lo referencia ningún HTML, CSS ni JS.
    Decidir si se usan o se retiran:
    - `comic/assets/capitulo-n1/scene3/json/fonemas.json` (47 KB)
    - `comic/assets/capitulo-n1/scene3/img/fondoGuitarra.png` (156 KB) — el

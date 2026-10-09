@@ -21,6 +21,9 @@
   rotate: -8deg;
   filter: drop-shadow(8px 8px 0 var(--ink));
 }
+@media (max-width: 960px){
+  .sello{ width: min(86%, 340px); }
+}
 .sello-texto{
   font-family: Bangers, cursive;
   font-size: 25px;
@@ -523,12 +526,15 @@
   gap: 14px 18px;
   margin-top: 46px;
   font-family: 'Special Elite', serif;
-  font-size: 0.62rem;
+  font-size: 0.72rem;
   font-weight: 900;
   letter-spacing: 2px;
   text-transform: uppercase;
 }
 .fin-pie a{
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   color: var(--ink);
   text-decoration: none;
   border-bottom: 2px solid var(--ink);

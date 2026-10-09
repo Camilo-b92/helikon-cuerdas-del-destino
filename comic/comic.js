@@ -1284,6 +1284,7 @@ document.addEventListener('keydown', (e) => {
 
   if (e.key === ' ' || e.key === 'Enter'){
     if (tv.contains(document.activeElement)) return;
+    if (document.activeElement && document.activeElement.closest('a, button, input, select, textarea, summary')) return;
     e.preventDefault();
     tvOn ? powerOff() : powerOn();
   }

@@ -1,3 +1,35 @@
+.visualmente-oculto{
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.saltar{
+  position: absolute;
+  top: -80px;
+  left: 12px;
+  z-index: 100;
+  padding: 12px 18px;
+  background: #17130e;
+  border: 3px solid #fffdf6;
+  color: #fffdf6;
+  font-family: 'Special Elite', serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+.saltar:focus{
+  top: 8px;
+  outline: 3px solid #254f68;
+  outline-offset: 2px;
+}
+[id="contenido"]:focus{
+  outline: none;
+}
+
 .menu{
   position: sticky;
   top: 0;

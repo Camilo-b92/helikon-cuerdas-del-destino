@@ -8,16 +8,6 @@ html{
   height: 0;
   overflow: hidden;
 }
-.visualmente-oculto{
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  margin: -1px;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
-}
-
 .ink-rail{
   position: fixed;
   z-index: 18;
@@ -355,7 +345,8 @@ html{
 }
 .filtro,
 .control{
-  padding: 6px 12px 4px;
+  min-height: 44px;
+  padding: 6px 14px 4px;
   background: #fffdf6;
   color: var(--ink);
   border: 3px solid var(--ink);
@@ -442,7 +433,7 @@ html{
   border: 5px solid var(--ink);
   box-shadow: 6px 6px 0 var(--ink);
   scale: 0.88;
-  opacity: 0.62;
+  opacity: 0.85;
   filter: saturate(0.55);
   cursor: pointer;
   transition: scale 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.25s ease, filter 0.25s ease, box-shadow 0.25s ease;
@@ -698,9 +689,12 @@ html{
   letter-spacing: 1px;
   text-shadow: 3px 3px 0 var(--ink);
 }
-.cifra-grande--amarillo .stat-number,
 .cifra-grande--papel .stat-number{
   color: var(--red);
+}
+.cifra-grande--amarillo .stat-number{
+  color: var(--ink);
+  text-shadow: 3px 3px 0 var(--red);
 }
 .cifra-etiqueta{
   font-family: 'Special Elite', serif;
@@ -796,6 +790,9 @@ html{
   line-height: 1.55;
 }
 .fuentes summary{
+  display: flex;
+  align-items: center;
+  min-height: 44px;
   font-family: Bangers, cursive;
   font-size: 1.4rem;
   letter-spacing: 1px;
@@ -819,12 +816,15 @@ html{
   gap: 14px 18px;
   margin-top: 40px;
   font-family: 'Special Elite', serif;
-  font-size: 0.66rem;
+  font-size: 0.72rem;
   font-weight: 900;
   letter-spacing: 2px;
   text-transform: uppercase;
 }
 .fin-pie a{
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   color: var(--ink);
   text-decoration: none;
   border-bottom: 2px solid var(--ink);
@@ -844,6 +844,10 @@ html{
 .fuentes summary:focus-visible{
   outline: 3px solid var(--blue);
   outline-offset: 3px;
+}
+
+@media (max-width: 1240px){
+  .sello-real{ right: 0; }
 }
 
 @media (max-width: 960px){

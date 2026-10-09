@@ -66,7 +66,7 @@ Lo que eso implica al trabajar:
 │   │   ├── pulp.js         Revelado al scroll y paralaje del masthead
 │   │   ├── personajes.js   Las cinco fichas, compartidas por portada y cómic
 │   │   └── home.js         Solo lo propio de la portada
-│   └── img/                favicon.svg y og-portada.jpg (vista previa al compartir)
+│   └── img/                favicon.svg y las cuatro og-*.jpg (vista previa al compartir)
 │
 ├── helikon/                El estudio: origen, equipo, bitácora
 │   ├── index.html
@@ -765,18 +765,31 @@ Hay más detalle sobre esto —incluido qué hacer con elementos 3D— en la
 
 ## La imagen de vista previa
 
-`assets/img/og-portada.jpg` (1200x630, 109 KB) es lo que se ve al pegar un
-enlace del sitio en WhatsApp, Slack o una red. Las cuatro páginas la declaran
-con `og:image`, más `twitter:card` en `summary_large_image` para que salga
-grande y no como miniatura.
+Cada página tiene la suya (1200x630, entre 110 y 175 KB), que es lo que se ve
+al pegar un enlace en WhatsApp, Slack o una red:
 
-**No es una captura de la portada**, es una composición aparte hecha con el
-mismo material: el rojo `--red`, el estallido de rayos, el logotipo
-`presentacion-titulo/json/images/img_0.png` y la figura `personajes/juanes.svg`.
-Se dibujó en un `<canvas>` a 1200x630 y se exportó a JPEG con calidad 0,88
-—en PNG pesaba 651 KB, seis veces el techo de 300 KB que fija este README—.
+| Página | Imagen |
+|---|---|
+| Portada | `assets/img/og-portada.jpg` |
+| El cómic | `assets/img/og-comic.jpg` (el televisor con el título en la pantalla) |
+| Juanes | `assets/img/og-juanes.jpg` (el retrato tramado; lleva el crédito de la foto escrito) |
+| Helikón | `assets/img/og-helikon.jpg` (el sello del estudio) |
 
-Si la portada cambia de arte, esta imagen **no se actualiza sola**: hay que
+Cada página la declara con `og:image` y su propio `og:image:alt`, más
+`twitter:card` en `summary_large_image` para que salga grande y no como
+miniatura.
+
+**No son capturas de pantalla**, son composiciones aparte hechas con el mismo
+material: la cabecera de papel con "Helikón", el fondo de rayos y puntos de la
+trama de cada página, y sus propios recursos (`presentacion-titulo`, `tv.png`,
+`juanes-retrato.webp`, el sello SVG de Helikón). Se compusieron en HTML a
+1200x630 con Bangers y Special Elite y se exportaron a JPEG con calidad 0,86;
+en PNG pesarían varias veces más del techo de 300 KB que fija este README.
+
+**Ninguna lleva "Nº 1" ni "Edición"**: la de la portada se rehízo en la ronda
+25 porque todavía decía "Helikón Nº 1".
+
+Si una página cambia de arte, su imagen **no se actualiza sola**: hay que
 rehacerla.
 
 ## Créditos de imágenes
@@ -812,6 +825,31 @@ Todas las animaciones respetan `prefers-reduced-motion`. El revelado al hacer
 scroll solo oculta el contenido si el JavaScript llegó a ejecutarse (marca
 `.js-reveal` en `<html>`), para que un fallo de script no deje la página en
 blanco.
+
+**Saltar al contenido.** Cada página abre con un enlace `.saltar` ("Saltar al
+contenido"), invisible hasta que recibe el foco con Tab. Lleva al `<main id="contenido"
+tabindex="-1">`. Su estilo está en `menu.css`, junto con `.visualmente-oculto`,
+que ya no se repite en `home.css` ni en `juanes.css`.
+
+**Un `h1` por página.** El cómic tiene el suyo oculto (`.visualmente-oculto`) porque
+la pantalla del televisor no lleva títulos de página.
+
+**El teclado en el cómic.** Enter y espacio encienden o apagan el televisor
+**solo si el foco no está en un enlace, botón o campo**. Antes lo hacían siempre
+y quitaban a Enter su función en el menú.
+
+**Contraste.** Se revisó con axe-core (WCAG 2.2 AA) en las cuatro páginas a 1366 y
+360 px, sin avisos, y a mano con un cálculo de contraste de todos los textos. Los
+dos casos reales se corrigieron: las tarjetas inactivas de la línea de tiempo de
+Juanes (opacidad 0,62 → 0,85) y la cifra de los premios sobre amarillo (ahora tinta
+con sombra roja). Quedan fuera de la norma, a propósito, los **rótulos de
+letras grandes con contorno de tinta** (el título "Helikón" y las letras del
+nombre), que son dibujo y no texto corrido.
+
+**Tamaño táctil.** Los botones de filtro y de control de la línea de tiempo, el
+desplegable de fuentes y el enlace "Volver al inicio" miden al menos 44 px. No se
+tocaron las flechas del televisor (43 px, van dibujadas en la imagen), el botón
+*Saltar introducción* del vídeo ni los enlaces de crédito dentro de una frase.
 
 ## Estado del contenido
 
