@@ -1423,6 +1423,10 @@ recorrió cada escena con el nuevo botón.
   etiqueta anterior. En fotogramas con mucho color se nota algo de compresión,
   que queda dentro del efecto de televisor viejo; si el equipo de animación
   prefiere más calidad, el siguiente punto razonable es 1280×720 a 3,3 MB.
+- **Ramas antiguas borradas** (`fase-1-navegacion` a `fase-6-scroll-3d`): todas estaban
+  dentro de `main`. El proxy del entorno de Claude bloquea el borrado de ramas
+  remotas, así que se hizo desde la página de ramas de GitHub. Los números de
+  fase del plan nuevo empiezan de cero sin confundirse con las viejas.
 - **`.nojekyll`** en la raíz, para que GitHub Pages sirva los archivos tal cual.
 - Probado a 1366, 768 y 360: 0 px de desborde, 0 errores en consola, axe con 0
   violaciones en las cuatro páginas, y el cómic arranca la introducción.
