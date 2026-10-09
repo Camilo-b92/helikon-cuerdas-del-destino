@@ -1474,4 +1474,4 @@ importar en qué carpeta quede.
 
 Lo que **no** viaja es el historial de las conversaciones con Claude Code, que
 se guarda localmente en cada equipo. Por eso existe este documento: al abrir
-una sesión nueva, basta con pedir que se lean el README y esta bitácora.
+una sesión nueva, basta con pedir que se lean el README, esta bitácora y `METODO.md`.
