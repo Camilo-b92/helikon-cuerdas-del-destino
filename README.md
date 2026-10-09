@@ -764,7 +764,11 @@ publicación es la raíz.
 
 - **GitHub Pages** — la opción recomendada ahora que el repositorio es
   público: no hace falta cuenta de pago ni ningún servicio más. Se activa en
-  *Settings → Pages*, publicando desde la rama `main`, carpeta raíz.
+  *Settings → Pages*, publicando desde la rama `main`, carpeta raíz. La
+  dirección esperada es `https://camilo-b92.github.io/helikon-cuerdas-del-destino/`
+  y es la que declaran `og:url`, `og:image` y `canonical` de las cuatro páginas;
+  si cambia, hay que actualizar esas líneas. El archivo `.nojekyll` evita que
+  GitHub procese el sitio como Jekyll.
 - **Netlify** o **Vercel** — alternativas igual de válidas, con vistas previas
   por rama y despliegue automático en cada `push`. Hacen falta si el
   repositorio vuelve a ser privado, porque las dos publican gratis desde
