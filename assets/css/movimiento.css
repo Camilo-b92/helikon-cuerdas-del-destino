@@ -1,0 +1,56 @@
+html[data-movimiento="reducido"] *,
+html[data-movimiento="reducido"] *::before,
+html[data-movimiento="reducido"] *::after{
+  animation-duration: 0.001ms !important;
+  animation-delay: 0s !important;
+  animation-iteration-count: 1 !important;
+  animation-timeline: auto !important;
+  transition-duration: 0.001ms !important;
+  transition-delay: 0s !important;
+  scroll-behavior: auto !important;
+}
+
+html[data-movimiento="reducido"] .panel:not(.panel-locked):hover{
+  transform: none;
+  filter: none;
+}
+html[data-movimiento="reducido"] .panel:not(.panel-locked):hover .panel-art{ transform: none; }
+html[data-movimiento="reducido"] .panel:not(.panel-locked):hover .burst-text{ animation: none; }
+html[data-movimiento="reducido"] .emblem{ transform: none !important; }
+html[data-movimiento="reducido"] .js-reveal [data-reveal]{ opacity: 1; transform: none; }
+html[data-movimiento="reducido"] .caption-box{ animation: none; transform: rotate(-2deg); }
+
+html[data-movimiento="reducido"] .vineta:hover .vineta-figura,
+html[data-movimiento="reducido"] .personaje:hover img,
+html[data-movimiento="reducido"] .expediente-paso:hover{ translate: none; }
+html[data-movimiento="reducido"] .expediente-hoja{ animation: none; }
+
+html[data-movimiento="reducido"] .team-card:hover,
+html[data-movimiento="reducido"] .team-card:hover .team-icon,
+html[data-movimiento="reducido"] .team-card:hover .team-portrait::after{ transform: none; }
+html[data-movimiento="reducido"] .team-card:hover .team-grito,
+html[data-movimiento="reducido"] .clipping:hover{ scale: 1; }
+
+html[data-movimiento="reducido"] .equalizer span{ animation: none; height: 60%; }
+html[data-movimiento="reducido"] .cuerda.vibra .cuerda-hilo,
+html[data-movimiento="reducido"] .marcador-anio.late .marcador-anio-valor{ animation: none; }
+
+html[data-movimiento="reducido"] [data-parallax]{ translate: none; will-change: auto; }
+html[data-movimiento="reducido"] .splash[data-scroll] .splash-burst,
+html[data-movimiento="reducido"] .cifras-seccion[data-scroll] .cifra-grande{ rotate: none; scale: none; translate: none; }
+
+html[data-movimiento="reducido"] .pres-hint,
+html[data-movimiento="reducido"] .scene-hint,
+html[data-movimiento="reducido"] .tv-cartel-titulo,
+html[data-movimiento="reducido"] .crt-flicker,
+html[data-movimiento="reducido"] .tv.is-off .tv-btn--power,
+html[data-movimiento="reducido"] #s1-nubes,
+html[data-movimiento="reducido"] #s3-text,
+html[data-movimiento="reducido"] #s4-nubes,
+html[data-movimiento="reducido"] #s4-nubes2,
+html[data-movimiento="reducido"] #s4-juanCaminando.s4-pulso,
+html[data-movimiento="reducido"] #s5-fondoSky,
+html[data-movimiento="reducido"] #s6-fantasmaEsc,
+html[data-movimiento="reducido"] #s7-sky{
+  animation: none !important;
+}

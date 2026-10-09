@@ -1,5 +1,5 @@
 const escenario = document.getElementById('vinilo');
-const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+const reduceMotion = (window.Movimiento ? window.Movimiento.consulta : window.matchMedia('(prefers-reduced-motion: reduce)'));
 
 function limitar(valor, min, max){
   return Math.min(max, Math.max(min, valor));

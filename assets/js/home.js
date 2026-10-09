@@ -1,4 +1,4 @@
-const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+const reduceMotion = (window.Movimiento ? window.Movimiento.consulta : window.matchMedia('(prefers-reduced-motion: reduce)'));
 
 let audioCtx = null;
 

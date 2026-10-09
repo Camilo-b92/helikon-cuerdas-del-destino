@@ -1,8 +1,7 @@
 (function(){
   'use strict';
 
-  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-  if (reduceMotion.matches) return;
+  const reduceMotion = (window.Movimiento ? window.Movimiento.consulta : window.matchMedia('(prefers-reduced-motion: reduce)'));
 
   const progresivos = Array.from(document.querySelectorAll('[data-scroll]'));
   const paralajes = Array.from(document.querySelectorAll('[data-parallax]'));
@@ -41,21 +40,49 @@
     window.requestAnimationFrame(actualizar);
   }
 
-  if ('IntersectionObserver' in window){
-    const observador = new IntersectionObserver((entradas) => {
-      entradas.forEach((entrada) => {
-        if (entrada.isIntersecting) visibles.add(entrada.target);
-        else visibles.delete(entrada.target);
-      });
-      pedir();
-    }, { rootMargin: '120px 0px 120px 0px' });
+  let observador = null;
+  let activo = false;
 
-    progresivos.concat(paralajes).forEach((el) => observador.observe(el));
-  } else {
-    progresivos.concat(paralajes).forEach((el) => visibles.add(el));
+  function iniciar(){
+    if (activo) return;
+    activo = true;
+
+    if ('IntersectionObserver' in window){
+      observador = new IntersectionObserver((entradas) => {
+        entradas.forEach((entrada) => {
+          if (entrada.isIntersecting) visibles.add(entrada.target);
+          else visibles.delete(entrada.target);
+        });
+        pedir();
+      }, { rootMargin: '120px 0px 120px 0px' });
+
+      progresivos.concat(paralajes).forEach((el) => observador.observe(el));
+    } else {
+      progresivos.concat(paralajes).forEach((el) => visibles.add(el));
+    }
+
+    window.addEventListener('scroll', pedir, { passive: true });
+    window.addEventListener('resize', pedir);
+    pedir();
   }
 
-  window.addEventListener('scroll', pedir, { passive: true });
-  window.addEventListener('resize', pedir);
-  pedir();
+  function detener(){
+    if (!activo) return;
+    activo = false;
+    if (observador) observador.disconnect();
+    observador = null;
+    visibles.clear();
+    window.removeEventListener('scroll', pedir);
+    window.removeEventListener('resize', pedir);
+    progresivos.forEach((el) => el.style.removeProperty('--p'));
+    paralajes.forEach((el) => el.style.removeProperty('--py'));
+  }
+
+  function sincronizar(){
+    if (reduceMotion.matches) detener();
+    else iniciar();
+  }
+
+  reduceMotion.addEventListener('change', sincronizar);
+  sincronizar();
 })();

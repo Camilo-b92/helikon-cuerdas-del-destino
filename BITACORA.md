@@ -1431,6 +1431,57 @@ recorrió cada escena con el nuevo botón.
   Sitio en `https://camilo-b92.github.io/helikon-cuerdas-del-destino/`: las
   cuatro páginas, la imagen de vista previa y `intro.mp4` responden 200.
 
+### Ronda 28 — Base común de animación (fase 1 del plan)
+
+- **GSAP 3.15 y ScrollTrigger, locales** en `assets/vendor/gsap/` (73 KB y 45 KB;
+  28 KB y 18 KB comprimidos), copiados sin cambios del paquete de npm. El paquete
+  no trae archivo de licencia; se dejó `LICENSE.md` con la versión, el origen y el
+  enlace a la licencia estándar "sin cargo" de GreenSock. **Ninguna página lo carga
+  todavía**: eso empieza en la fase 2.
+- **`assets/js/movimiento.js` y `assets/css/movimiento.css`**, en el `<head>` de las
+  cuatro páginas. Publican una sola señal, `html[data-movimiento]`, que vale
+  `reducido` si el sistema pide menos movimiento **o** si el lector apagó las
+  animaciones con el botón nuevo del menú, **Anim. sí/no** (se guarda en
+  `localStorage` con `try/catch`; si el sistema ya lo pide, el botón no aparece).
+  Se eligió el interruptor manual porque el plan trae mucho más movimiento.
+- **Los seis scripts que miraban `prefers-reduced-motion`** (`pulp.js`, `home.js`,
+  `scroll.js`, `vinilo.js`, `juanes.js`, `helikon.js`) ahora preguntan a
+  `Movimiento.consulta`, y `scroll.js` se detiene y se reanuda al vuelo cuando se
+  cambia el interruptor. Si `movimiento.js` no cargara, vuelven a `matchMedia`.
+- **Una trampa que se resolvió así:** CSS no puede unir una media query con un
+  atributo, así que `movimiento.css` repite lo que hacen los bloques de movimiento
+  reducido de cada hoja, colgado de `html[data-movimiento="reducido"]`. Quien cambie
+  uno de esos bloques tiene que cambiar su copia (está avisado en el README).
+- **Cargador de GSAP con estado seguro.** Una página declara
+  `data-gsap="ScrollTrigger"` en la etiqueta de `movimiento.js`; con movimiento
+  reducido no se descarga nada, y `html.anim` solo se añade cuando todo cargó. Si
+  GSAP falla o no hay JavaScript, la página se ve completa. Las fases siguientes
+  deben esconder cosas solo bajo `.anim`.
+- **Reparto fijado:** `scroll.js` para efectos simples con variables CSS, GSAP para
+  secuencias coreografiadas, y nunca los dos sobre el mismo elemento. Presupuesto:
+  120 KB comprimidos de JavaScript nuevo en la ruta inicial, 200 KB por imagen
+  nueva, 3D en diferido. Todo está en el README.
+- **README:** nueva tabla "Créditos de recursos externos" con autor, licencia,
+  enlace y dónde se usa (GSAP, three.js, lottie-web, tipografías y las tres fotos).
+  La licencia de lottie-web figura como MIT por su repositorio oficial: el archivo
+  copiado no lleva cabecera, así que conviene confirmarlo.
+- **El menú ganó un botón** y hubo que apretarlo en pantallas pequeñas: la marca se
+  oculta desde 860 px (antes 640) y a 360 px el botón es un cuadrado de 46 px con
+  "Anim." sobre el estado. Sin desborde a 1366, 768, 360 ni 320 px.
+- **Comprobado:** axe con 0 violaciones en las cuatro páginas con el interruptor en
+  sí y en no; sin errores de consola; con el interruptor en no o con el sistema
+  pidiendo menos movimiento, cero animaciones largas o infinitas (se midió con
+  `document.getAnimations()`); GSAP no se pide en ninguna página, ni se descarga
+  con movimiento reducido; sin GSAP no se pone `.anim`; sin JavaScript la portada
+  se ve. Comparando con `main` con movimiento reducido, **todo lo que queda bajo el
+  menú es idéntico** a 1366 y 360 px, salvo 218 píxeles del vinilo 3D en Juanes
+  (WebGL por software, no es determinista).
+- **Límites conocidos.** El cómic sigue como estaba: la introducción en vídeo y las
+  escenas de lottie no leen el interruptor, igual que no leían la preferencia del
+  sistema; solo se apagan sus efectos CSS. Las decisiones que se toman una vez al
+  cargar (por ejemplo, los contadores de Juanes) valen desde la siguiente recarga.
+  No se probó en teléfono real ni con lector de pantalla.
+
 ---
 
 ## Pendientes

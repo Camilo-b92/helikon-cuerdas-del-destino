@@ -1,7 +1,7 @@
 (function(){
   'use strict';
 
-  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const reduceMotion = (window.Movimiento ? window.Movimiento.consulta : window.matchMedia('(prefers-reduced-motion: reduce)'));
 
   function initReveal(){
     const targets = document.querySelectorAll('[data-reveal]');

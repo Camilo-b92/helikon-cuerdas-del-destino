@@ -62,14 +62,17 @@ Lo que eso implica al trabajar:
 │   │   ├── pulp.css        Base visual común: paleta, papel, viñetas
 │   │   ├── menu.css        Menú común de las cuatro páginas y bloque "Sigue explorando"
 │   │   ├── scroll.css      Efectos ligados al scroll y el escenario del vinilo 3D
+│   │   ├── movimiento.css  Reglas de "movimiento reducido" para el interruptor de animaciones
 │   │   └── home.css        Solo lo propio de la portada
 │   ├── js/
 │   │   ├── pulp.js         Revelado al scroll y paralaje del masthead
 │   │   ├── personajes.js   Las cinco fichas, compartidas por portada y cómic
+│   │   ├── movimiento.js   Interruptor de animaciones, señal única de movimiento y cargador de GSAP
 │   │   ├── scroll.js       Parallax (data-parallax) y progreso de sección (data-scroll)
 │   │   ├── vinilo.js       El vinilo 3D de Juanes (three.js, carga diferida)
 │   │   └── home.js         Solo lo propio de la portada
 │   ├── vendor/three/       three.js r170 local (módulo ES) y su licencia
+│   ├── vendor/gsap/        GSAP 3.15 y ScrollTrigger locales, con la nota de licencia
 │   └── img/                favicon.svg y las cuatro og-*.jpg (vista previa al compartir)
 │
 ├── helikon/                El estudio: origen, equipo, bitácora
@@ -389,6 +392,46 @@ Reglas de esta página:
   si el usuario pidió movimiento reducido.
 - `initLinea()` — la línea de tiempo interactiva. Ver abajo.
 
+### Movimiento y animaciones (`movimiento.js`, GSAP)
+
+Una sola señal decide si el sitio se mueve: `<html data-movimiento="completo|reducido">`.
+Es `reducido` si el sistema pide menos movimiento **o** si el lector apagó las
+animaciones con el botón **Anim. sí/no** del menú (se guarda en `localStorage`,
+con `try/catch`; si el sistema ya pide menos movimiento, el botón no aparece).
+
+- **Se carga en el `<head>` de las cuatro páginas**, antes que cualquier otro
+  script, junto con `movimiento.css`, que va el último de las hojas de estilo.
+- **Los scripts no llaman a `matchMedia` por su cuenta**: usan
+  `window.Movimiento.consulta` (con `.matches` y `addEventListener('change')`, igual
+  que un `MediaQueryList`), y si `movimiento.js` no cargó, vuelven a `matchMedia`.
+- **`movimiento.css` duplica a propósito** lo que hacen los bloques
+  `@media (prefers-reduced-motion: reduce)` de cada hoja, pero colgado de
+  `html[data-movimiento="reducido"]`, porque CSS no puede mezclar una media query
+  con un atributo. **Si se cambia un bloque de movimiento reducido, hay que
+  cambiar también su copia ahí.** La regla general (duraciones de 0,001 ms,
+  `animation-timeline: auto`) cubre lo demás.
+- **Reparto de trabajo.** `scroll.js` (variables CSS `--p` y `--py`) es para efectos
+  simples, como el desplazamiento de un retrato. **GSAP es para secuencias
+  coreografiadas.** Nunca los dos sobre el mismo elemento.
+- **Cargar GSAP solo donde hace falta.** Una página lo declara en la etiqueta:
+  `<script src="…/movimiento.js" data-gsap="ScrollTrigger"></script>` (la lista son
+  nombres de archivo de `assets/vendor/gsap/` sin `.min.js`; `gsap` va siempre).
+  Ninguna página lo declara todavía. Con movimiento reducido **no se descarga nada**.
+  `Movimiento.cargar()` devuelve una promesa con `{ gsap, ScrollTrigger }` o `null`, y
+  `Movimiento.listo` es la del primer intento.
+- **Estado seguro.** `<html class="anim">` solo se añade cuando todo cargó y el
+  movimiento está permitido. El CSS de las animaciones que esconden algo al empezar
+  debe colgar de `.anim`: sin JavaScript, sin GSAP o con movimiento reducido, la página
+  se ve completa y abierta.
+- **Al cambiar el interruptor** se quita o se pone `.anim`, se avisa a quien escuche
+  `Movimiento.consulta` y se emite `document` → `movimiento` (`detail.reducido`). Cada
+  animación de GSAP debe escuchar y matar su propia línea de tiempo; las decisiones que
+  se toman una sola vez al cargar (un contador, por ejemplo) valen desde la siguiente
+  recarga.
+- **Presupuesto de peso:** JavaScript nuevo en la ruta inicial de una página, 120 KB
+  comprimidos como máximo; imágenes nuevas, 200 KB cada una; el 3D, siempre en
+  diferido. GSAP + ScrollTrigger son unos 46 KB comprimidos.
+
 ### Scroll y 3D (`scroll.js`, `vinilo.js`)
 
 - `data-parallax="0.07"` en un elemento lo desplaza según su distancia al
@@ -396,7 +439,8 @@ Reglas de esta página:
   `scroll.css` aplica con `translate`.
 - `data-scroll` en una sección publica `--p` (0 a 1) mientras cruza la
   pantalla; el CSS lo usa con `calc()` para girar, inclinar o escalar.
-- Ambos se apagan con `prefers-reduced-motion`.
+- Ambos se apagan con `prefers-reduced-motion` y con el interruptor de animaciones
+  (ver *Movimiento y animaciones*); al volver a activarlo, se encienden sin recargar.
 - `vinilo.js` es un módulo ES: importa three.js solo cuando `#vinilo` está cerca
   de la pantalla, pausa el render fuera de vista y deja el disco SVG si no hay
   WebGL. Hay que servir el sitio por HTTP.
@@ -818,6 +862,26 @@ en PNG pesarían varias veces más del techo de 300 KB que fija este README.
 
 Si una página cambia de arte, su imagen **no se actualiza sola**: hay que
 rehacerla.
+
+## Créditos de recursos externos
+
+Ningún recurso de terceros entra al repositorio sin su fila en esta tabla: quién
+lo hizo, con qué licencia, de dónde sale y dónde se usa. Las fotografías de
+Juanes tienen además condiciones de atribución, explicadas más abajo.
+
+| Recurso | Autor | Licencia | Enlace | Dónde se usa |
+|---|---|---|---|---|
+| GSAP 3.15 y ScrollTrigger | GreenSock | Licencia estándar "sin cargo" | [gsap.com/standard-license](https://gsap.com/standard-license) | `assets/vendor/gsap/`; aún no lo usa ninguna página |
+| three.js r170 | Autores de three.js | MIT | [threejs.org](https://threejs.org) | `assets/vendor/three/`; el vinilo de Juanes |
+| lottie-web 5.13.0 | Airbnb y colaboradores | MIT (según su repositorio; el archivo no lleva cabecera) | [github.com/airbnb/lottie-web](https://github.com/airbnb/lottie-web) | `comic/assets/`; las escenas del cómic |
+| Bangers, Patrick Hand SC, Inter, Boogaloo, Fredoka, Montserrat, Work Sans | Varios; ver cada familia | SIL Open Font License 1.1 | [fonts.google.com](https://fonts.google.com) | Google Fonts. Patrick Hand SC e Inter: portada, Juanes y Helikón; Boogaloo, Fredoka, Montserrat y Work Sans: solo el cómic; Bangers: las cuatro |
+| Special Elite | Astigmatic | Apache 2.0 | [fonts.google.com/specimen/Special+Elite](https://fonts.google.com/specimen/Special+Elite) | Cartuchos y menú de las cuatro páginas |
+| Retrato de Juanes (`juanes-retrato.webp`) | RGB Productions | CC BY 3.0 | [Commons](https://commons.wikimedia.org/wiki/File:Juanes_2022.png) | Portada y página de Juanes |
+| Aldabón de la casa familiar | laloking97 | CC BY-SA 2.0 | [Commons](https://commons.wikimedia.org/wiki/File:Aldab%C3%B3n-casa_de_los_pap%C3%A1s_de_Juanes.jpg) | Página de Juanes |
+| Estatua en Carolina del Príncipe | XalD | CC BY-SA 4.0 | [Commons](https://commons.wikimedia.org/wiki/File:Estatua_de_Juanes_en_Carolina_del_Pr%C3%ADncipe,_2023.jpg) | Página de Juanes |
+
+Los dibujos, las animaciones y el texto del cómic son del equipo (Gabriel
+Torres, Brayhan Mosquera y Camilo Betancourt) y no llevan fila.
 
 ## Créditos de imágenes
 
