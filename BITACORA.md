@@ -1401,16 +1401,44 @@ recorrió cada escena con el nuevo botón.
   reproductor propio con el audio y su visualizador; el vinilo ya está
   montado para reaccionar a él.
 
+### Ronda 27 — Publicación (fase 0 del plan definitivo)
+
+- **El plan definitivo quedó aprobado** (documento *Plan definitivo — Helikón*):
+  seis fases, una rama cada una, empezando por dejar el sitio publicable. Las
+  decisiones que el equipo cerró: la "Página Helikón" del PDF que habla de la
+  televisión es el cómic; la persona que camina hacia el televisor es una
+  silueta anónima, sin relación con la historia (SVG provisional, la definitiva
+  la dibuja Gabriel Torres); en Helikón solo quedan tres secciones; GSAP con
+  ScrollTrigger como librería de animación; publicación en GitHub Pages.
+- **`main` ya contiene todo.** Se unieron `fase-6-scroll-3d` y
+  `docs-metodo-de-trabajo`, y antes se dejó la etiqueta **`v1.0-antes-del-plan`**
+  sobre el último commit de la UX anterior: para volver a ese punto,
+  `git checkout v1.0-antes-del-plan`.
+- **`og:image` y `og:url` absolutos** en las cuatro páginas, con
+  `link rel="canonical"` y `twitter:image`, apuntando a
+  `https://camilo-b92.github.io/helikon-cuerdas-del-destino/`. Si el sitio
+  cambia de dirección, hay que cambiar esas cuatro líneas por página.
+- **`intro.mp4` bajó de 7,9 MB a 2,8 MB** (960×540, H.264 a ~340 kbps, audio
+  mono a 48 kbps, `faststart`). El original sigue en el historial y en la
+  etiqueta anterior. En fotogramas con mucho color se nota algo de compresión,
+  que queda dentro del efecto de televisor viejo; si el equipo de animación
+  prefiere más calidad, el siguiente punto razonable es 1280×720 a 3,3 MB.
+- **`.nojekyll`** en la raíz, para que GitHub Pages sirva los archivos tal cual.
+- Probado a 1366, 768 y 360: 0 px de desborde, 0 errores en consola, axe con 0
+  violaciones en las cuatro páginas, y el cómic arranca la introducción.
+- **Activar Pages no se pudo hacer desde la sesión de Claude** (el proxy del
+  entorno bloquea la API de Pages): se hace en *Settings → Pages*.
+
 ---
 
 ## Pendientes
 
 En orden de lo que más aporta:
 
-1. **Publicar el sitio.** Ahora que el repositorio es público, **GitHub Pages**
-   sirve sin plan de pago: se activa en *Settings → Pages*, desde `main` y
-   carpeta raíz. **Netlify** y **Vercel** siguen siendo alternativas válidas, y
-   son las únicas si el repositorio vuelve a ser privado.
+1. **Activar GitHub Pages** (*Settings → Pages*, desde `main` y carpeta raíz) y
+   comprobar la dirección pública. Todo lo demás de la publicación ya está
+   hecho (ronda 27). **Netlify** y **Vercel** siguen siendo alternativas
+   válidas, y son las únicas si el repositorio vuelve a ser privado.
 
 2. **Más 3D.** El primero ya existe: el vinilo de Juanes (ronda 26, three.js
    local). El televisor en CSS 3D se probó y se aparcó (ver *El televisor sigue
@@ -1418,19 +1446,14 @@ En orden de lo que más aporta:
    cómic. Para un modelo de verdad hace falta un modelador y un `.glb`; las
    condiciones de peso y carga están en *El 3D entra vivo*.
 
-3. **Pasar `og:image` a URL absoluta al publicar.** Ya existe la imagen y las
-   cuatro páginas la declaran (cada una con la suya), pero con **ruta relativa**, porque el sitio
-   todavía no tiene dominio. Funciona en la mayoría de los lectores de enlaces,
-   aunque la especificación de Open Graph pide una URL absoluta. En cuanto el
-   sitio tenga dirección definitiva, hay que cambiar las cuatro por la ruta
-   completa (`https://…/assets/img/og-portada.jpg`, y lo mismo con las otras tres).
+3. ~~Pasar `og:image` a URL absoluta~~ — hecho en la ronda 27.
 
 4. **Historial y Stop motion**, si se quieren recuperar. Se retiraron por
    estar vacíos; el canal de Personajes sirve de molde para cuando haya
    material que poner.
 
-5. **Comprimir `comic/assets/intro.mp4`** (7.6 MB). Ya hay `ffmpeg` instalado
-   para hacerlo. También `caja.json` (2.6 MB) es pesado, aunque ya está
+5. ~~Comprimir `intro.mp4`~~ — hecho en la ronda 27 (2,8 MB). Siguen pesados
+   `caja.json` (2.6 MB) es pesado, aunque ya está
    mitigado con el renderizador `canvas` y `setSubframe(false)`, y `txt.json`
    de la escena I del capítulo tres (casi 900 KB).
 
