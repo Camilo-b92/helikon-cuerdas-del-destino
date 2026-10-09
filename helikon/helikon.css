@@ -105,19 +105,8 @@
 
 .origen,
 .manifiesto,
-.quien,
-.detras,
-.universo{
+.quien{
   margin-top: 78px;
-}
-.detras .marca,
-.detras .tablero-seccion{
-  margin-top: 44px;
-}
-.detras .rotulo:not(#detrasTitulo){
-  background: #fffdf6;
-  font-size: clamp(1.3rem, 3vw, 1.9rem);
-  box-shadow: 4px 4px 0 var(--ink);
 }
 .origen{
   margin-top: 10px;
@@ -424,85 +413,6 @@
   line-height: 1.45;
 }
 
-
-
-
-
-
-.corkboard{
-  margin-top: 28px;
-  background: #a9835a;
-  border: 6px solid var(--ink);
-  box-shadow: 8px 8px 0 var(--ink);
-  padding: 32px 26px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 18px 14px;
-  justify-content: center;
-}
-.clipping{
-  position: relative;
-  background: var(--paper);
-  border: 2px solid var(--ink);
-  padding: 9px 14px 8px;
-  font-family: 'Special Elite', serif;
-  font-size: 0.76rem;
-  box-shadow: 3px 3px 0 rgba(0,0,0,0.35);
-  transition: rotate 0.2s ease, scale 0.2s ease, box-shadow 0.2s ease;
-}
-.clipping::before{
-  content: '';
-  position: absolute;
-  top: -7px;
-  left: 50%;
-  width: 11px;
-  height: 11px;
-  margin-left: -5.5px;
-  border-radius: 50%;
-  background: var(--red);
-  border: 2px solid var(--ink);
-}
-.clipping:nth-child(odd){ rotate: -2.5deg; }
-.clipping:nth-child(even){ rotate: 2deg; }
-.clipping:nth-child(3n){ background: #f1ead8; rotate: -1deg; }
-.clipping:nth-child(4n)::before{ background: var(--yellow); }
-.clipping:nth-child(5n)::before{ background: var(--blue); }
-.clipping:hover{
-  rotate: 0deg;
-  scale: 1.07;
-  box-shadow: 5px 5px 0 rgba(0,0,0,0.45);
-}
-
-.panels{
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 18px;
-  max-width: 820px;
-  margin: 28px auto 0;
-}
-.universo .rotulo{
-  display: block;
-  width: fit-content;
-  margin-inline: auto;
-}
-.panel{ min-height: 300px; }
-.panel-kicker{ font-size: 0.6rem; }
-.panel-title{
-  font-size: clamp(2.6rem, 5vw, 3.8rem);
-  line-height: 0.85;
-  letter-spacing: 2px;
-  text-shadow: 4px 4px 0 var(--ink);
-}
-.panel-action{ font-size: 1.1rem; }
-.burst-text{
-  top: 22px;
-  right: 22px;
-  font-size: 2.2rem;
-}
-.panel:hover{
-  filter: saturate(1.08);
-}
-
 .fin-numero{
   margin-top: 90px;
   text-align: center;
@@ -563,7 +473,6 @@
 
 @media (max-width: 900px){
   .team-grid{ grid-template-columns: 1fr; max-width: 520px; }
-  .panels{ grid-template-columns: 1fr; }
 }
 
 @media (max-width: 700px){
@@ -594,105 +503,43 @@
   .team-card:hover,
   .team-card:hover .team-icon,
   .team-card:hover .team-portrait::after{ transform: none; }
-  .team-card:hover .team-grito,
-  .clipping:hover{ scale: 1; }
+  .team-card:hover .team-grito{ scale: 1; }
 }
 
-.marca-rejilla{
-  margin-top: 34px;
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 22px;
-}
-.marca-bloque{
-  padding: 26px 24px 28px;
-  background: #fffdf6;
-  border: 5px solid var(--ink);
-  box-shadow: 8px 8px 0 var(--ink);
-}
-.marca-bloque--ancho{ grid-column: 1 / -1; }
-.marca-titulo{
-  margin: 0 0 18px;
-  font-family: Bangers, cursive;
-  font-weight: 400;
-  font-size: 1.6rem;
-  letter-spacing: 1px;
-}
-.marca-texto{
-  margin: 0 0 20px;
-  font-family: 'Special Elite', serif;
-  font-size: 0.86rem;
-  line-height: 1.6;
-}
-
-.paleta{ margin: 0; padding: 0; list-style: none; display: grid; gap: 12px; }
-.tinte{
-  display: grid;
-  grid-template-columns: 54px auto 1fr;
-  align-items: center;
-  gap: 14px;
-}
-.tinte-muestra{
-  width: 54px;
-  height: 46px;
-  background: var(--tono);
-  border: 4px solid var(--ink);
-  box-shadow: 3px 3px 0 var(--ink);
-}
-.tinte strong{ font-family: Bangers, cursive; font-weight: 400; font-size: 1.25rem; letter-spacing: 1px; }
-.tinte code{
-  grid-column: 3;
-  grid-row: 1;
-  justify-self: start;
-  font-family: 'Special Elite', serif;
-  font-size: 0.74rem;
-  opacity: 0.75;
-}
-.tinte-uso{
-  grid-column: 2 / -1;
-  font-family: 'Special Elite', serif;
-  font-size: 0.72rem;
-  line-height: 1.4;
-  opacity: 0.8;
-}
-
-.voces{ margin: 0; padding: 0; list-style: none; display: grid; gap: 20px; }
-.voz{ display: grid; gap: 5px; }
-.voz-muestra{
+.hilo{
   display: block;
-  padding: 10px 14px;
-  background: var(--paper);
-  border: 3px solid var(--ink);
-  line-height: 1.15;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  width: min(110px, 26vw);
+  height: auto;
+  margin: 30px auto 0;
+  overflow: visible;
 }
-.voz-muestra--titular{ font-family: Bangers, cursive; font-size: 2rem; letter-spacing: 2px; }
-.voz-muestra--narrador{ font-family: 'Special Elite', serif; font-size: 1rem; }
-.voz-muestra--mano{ font-family: 'Patrick Hand SC', 'Comic Sans MS', cursive; font-size: 1.7rem; color: var(--red); }
-.voz strong{ font-family: Bangers, cursive; font-weight: 400; font-size: 1.15rem; letter-spacing: 1px; }
-.voz-uso{ font-family: 'Special Elite', serif; font-size: 0.72rem; line-height: 1.45; opacity: 0.8; }
-
-.mundos{ display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
-.mundo{ padding: 20px 18px; border: 4px solid var(--ink); }
-.mundo-etiqueta{
-  display: block;
-  margin-bottom: 8px;
-  font-family: 'Special Elite', serif;
-  font-size: 0.64rem;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  opacity: 0.75;
+.hilo path{
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
-.mundo strong{ display: block; margin-bottom: 8px; font-family: Bangers, cursive; font-weight: 400; font-size: 1.5rem; letter-spacing: 1px; }
-.mundo p{ margin: 0; font-family: 'Special Elite', serif; font-size: 0.76rem; line-height: 1.55; }
-.mundo--papel{ background: var(--paper); color: var(--ink); }
-.mundo--tele{ background: #123037; color: #cfe8eb; border-color: #09cbbb; }
-.mundo--tele .mundo-etiqueta{ color: #09cbbb; opacity: 1; }
-.mundo--tele strong{ color: #fafac8; }
+.hilo-tinta{
+  stroke: var(--ink);
+  stroke-width: 11;
+}
+.hilo-linea{
+  stroke: var(--yellow);
+  stroke-width: 5;
+}
+.hilo .hilo-estrella{
+  fill: #fffdf6;
+  stroke: var(--ink);
+  stroke-width: 3;
+}
+.hilo + .manifiesto,
+.hilo + .quien{
+  margin-top: 26px;
+}
 
-@media (max-width: 820px){
-  .marca-rejilla{ grid-template-columns: 1fr; }
-  .mundos{ grid-template-columns: 1fr; }
+.anim-espera .sendero path,
+.anim-espera .cumbre,
+.anim-espera .hilo path,
+.anim-espera .vineta-origen,
+.anim-espera .team-card{
+  opacity: 0;
 }

@@ -26,5 +26,4 @@ function bindTilt(selector, strength, lift){
   });
 }
 
-bindTilt('.panel:not(.panel-locked)', 2.5, 4);
 bindTilt('.team-card', 6, 4);

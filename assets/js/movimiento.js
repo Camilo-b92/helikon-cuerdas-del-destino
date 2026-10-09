@@ -112,7 +112,10 @@
 
   function aplicar(){
     raiz.setAttribute('data-movimiento', reducido() ? 'reducido' : 'completo');
-    if (reducido()) raiz.classList.remove('anim');
+    if (reducido()){
+      raiz.classList.remove('anim');
+      raiz.classList.remove('anim-espera');
+    }
     if (interruptor) pintarInterruptor();
   }
 
@@ -166,6 +169,16 @@
   aplicar();
 
   var declarado = script && script.hasAttribute('data-gsap') ? script.getAttribute('data-gsap') : null;
+
+  function terminarEspera(){
+    raiz.classList.remove('anim-espera');
+  }
+
+  if (declarado !== null && !reducido()){
+    raiz.classList.add('anim-espera');
+    window.setTimeout(terminarEspera, 3500);
+  }
+
   var listo = declarado === null ? Promise.resolve(null) : cargar(declarado);
 
   if (document.readyState === 'loading'){
@@ -178,6 +191,7 @@
     reducido: reducido,
     consulta: consulta,
     cargar: cargar,
-    listo: listo
+    listo: listo,
+    liberar: terminarEspera
   };
 })();

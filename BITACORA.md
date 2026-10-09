@@ -1486,6 +1486,58 @@ recorrió cada escena con el nuevo botón.
   cargar (por ejemplo, los contadores de Juanes) valen desde la siguiente recarga.
   No se probó en teléfono real ni con lector de pantalla.
 
+### Ronda 29 — Helikón recortado y "el monte que se escala" (fase 2 del plan)
+
+- **La página queda en lo que el plan decidió:** titular y sello, *El monte de las
+  musas*, el manifiesto, *Quién es quién* y el cierre con "Volver al inicio". Salen
+  el índice, *Detrás de cámaras* (con *Señas de identidad* y el *Tablero de ideas*)
+  y *Sigue explorando*. Antes de borrar se buscaron enlaces a `#detras`, `#universo`,
+  `#marca` y al tablero en todo el repositorio: no había ninguno fuera de la propia
+  página. También se quitó el CSS huérfano (paleta, voces, mundos, corcho, tarjetas
+  de `Sigue explorando`) y la llamada a `bindTilt` de las tarjetas que ya no existen.
+  La página pasó de 5.360 a 3.504 px de alto a 1366 px.
+- **Dos textos se ajustaron** porque prometían lo que ya no está: la entradilla (ya
+  no dice "cómo se construye cada página") y la meta descripción. La imagen de vista
+  previa no mencionaba nada que saliera y se queda.
+- **La animación** (`helikon/ascenso.js`, GSAP + ScrollTrigger + DrawSVG; el plugin
+  pesa 4 KB y se copió a `assets/vendor/gsap/`): un sendero rojo se dibuja sobre el
+  monte con el scroll y al llegar arriba aparece el templo; las viñetas entran en
+  orden y HELIKÓN se estampa letra a letra; dos hilos de tinta con estrella unen el
+  origen, el manifiesto y las fichas; las tres fichas entran con rebote y luego sus
+  gritos. Peso añadido en la ruta inicial: unos 52 KB comprimidos (límite del plan:
+  120 KB).
+- **`movimiento.js` ganó `anim-espera` y `Movimiento.liberar()`.** Sin ellos, el
+  contenido se veía y luego desaparecía cuando GSAP terminaba de cargar. Ahora una
+  página que declara GSAP esconde (con `opacity`) lo que va a animar desde el primer
+  pintado y lo libera al montar; si nadie lo hace, a los 3,5 s se libera sola.
+- **Tres trampas encontradas y resueltas:**
+  1. GSAP convierte `rotate`, `translate` y `scale` de CSS en un `transform`, así que
+     las fichas y las letras del nombre (que usan esas propiedades) se animan con
+     `clearProps` al final para devolverlas al CSS. Las onomatopeyas, que tienen una
+     animación de CSS sobre `scale`, solo cambian de opacidad.
+  2. ScrollTrigger **no** dispara `onEnter` si la página ya pasó de ese punto cuando
+     se monta (recargar a mitad de página, o encender el interruptor abajo): las
+     fichas se quedaban en 0 de opacidad. Se lanzan a mano en ese caso.
+  3. Las fichas heredaban `transition: transform` y peleaban con GSAP: se anula
+     mientras entran.
+- **Nada se esconde con `visibility` ni `display`**, para que un lector de pantalla
+  recorra el texto aunque la animación no haya corrido.
+- **Comprobado** (a 1366, 768, 360 y 320 px): 0 px de desborde, consola limpia, axe
+  con 0 violaciones, todo visible al terminar de recorrer la página; con movimiento
+  reducido, con el interruptor guardado en "no", con GSAP o DrawSVG bloqueados y sin
+  JavaScript la página sale completa (el camino ya dibujado, el templo a la vista, las
+  fichas en su sitio) y no se descarga GSAP; apagar y encender el interruptor en vivo
+  revierte y vuelve a montar sin errores; recargar a mitad de la página deja todo
+  visible. No hay CSS ni clases huérfanas en `helikon.css`.
+- **Criterio del plan que se interpretó:** "con Tab se llega a las tres fichas".
+  Las fichas no tienen ningún control dentro, así que no son una parada de Tab y no
+  se les puso `tabindex` (un elemento enfocable sin acción confunde más de lo que
+  ayuda). Con teclado se recorren con las flechas o `Fin`, y se muestran al llegar.
+- **Pendiente de respuesta del equipo:** el plan preguntaba si se quieren retratos
+  reales de los integrantes; hoy las fichas no los llevan. No se tocó.
+- **No se probó** en teléfono real ni con lector de pantalla, y el rendimiento se
+  midió con render por software.
+
 ---
 
 ## Pendientes

@@ -78,7 +78,8 @@ Lo que eso implica al trabajar:
 ├── helikon/                El estudio: origen, equipo, bitácora
 │   ├── index.html
 │   ├── helikon.css
-│   └── helikon.js
+│   ├── helikon.js
+│   └── ascenso.js          La animación "el monte que se escala" (GSAP)
 │
 ├── juanes/                 El artista que inspira el cómic
 │   ├── index.html
@@ -311,8 +312,8 @@ dejaría las viñetas rectas.
 ### `helikon/helikon.js`
 
 - `bindTilt(selector, strength, lift)` — la misma inclinación, parametrizada
-  en grados de giro y en cuánto se levanta la tarjeta. Se aplica dos veces:
-  a las viñetas (`2.5`, `4`) y a las fichas del equipo (`6`, `4`).
+  en grados de giro y en cuánto se levanta la tarjeta. Hoy se aplica solo a las
+  fichas del equipo (`6`, `4`).
 
 ### El expediente de personaje, en la portada
 
@@ -340,36 +341,75 @@ Lo que hay que respetar si se toca:
 
 ### La página de Helikón: el estudio
 
-Cuenta el origen del estudio que hace el cómic. Se lee de arriba abajo:
+Cuenta el origen del estudio que hace el cómic y presenta a su equipo; no hay
+nada más. Se lee de arriba abajo:
 
 1. **Menú común**, con "Helikón" resaltado.
 2. **Titular y sello**: la entradilla dice qué es Helikón (el estudio que
    dibuja, anima y programa el cómic) antes de contar su origen. El lema gira
    alrededor de un círculo con `textPath`, estirado con `textLength` para que
-   dé la vuelta completa. Debajo, el **índice de la página**.
-3. **El origen en cuatro viñetas** (`.vineta-origen`): el Monte Helicón,
-   Pegaso golpeando la roca, la fuente Hipocrene con las nueve musas y el
-   nombre HELIKÓN. Los dibujos son SVG en línea con trazo de tinta.
+   dé la vuelta completa.
+3. **El monte de las musas**, el origen en cuatro viñetas
+   (`.vineta-origen`): el Monte Helicón, Pegaso golpeando la roca, la fuente
+   Hipocrene con las nueve musas y el nombre HELIKÓN. Los dibujos son SVG en
+   línea con trazo de tinta.
 4. **Manifiesto** como página de impacto, con la lira.
 5. **Quién es quién**: fichas del equipo al estilo del *Who's Who* de los
    cómics.
-6. **Detrás de cámaras** (`#detras`), que agrupa dos secciones para curiosos,
-   con su propio rótulo y los dos subtítulos más pequeños. **Señas de
-   identidad**: la paleta con sus cinco tintes y su uso, las tres
-   tipografías con muestra en su propia letra, y la regla de los dos mundos
-   —papel fuera de la pantalla, turquesa dentro—.
-7. **Tablero de ideas** (también en *Detrás de cámaras*), **sigue explorando**
-   (dos tarjetas centradas, hacia Juanes y el cómic) y un cierre con enlace
-   para volver al inicio.
+6. Un cierre con enlace para volver al inicio.
+
+Sobre esta página se quitaron, en la fase 2 del plan, el índice "En esta
+página", *Detrás de cámaras* (con *Señas de identidad*, la paleta y las
+tipografías, y el *Tablero de ideas*) y *Sigue explorando*: el menú de arriba ya
+navega y el resto no contaba la historia. La paleta y las tipografías siguen
+documentadas en este README.
+
+#### La animación "el monte que se escala" (`ascenso.js`)
+
+GSAP + ScrollTrigger + DrawSVG, declarados en la etiqueta de `movimiento.js`
+(`data-gsap="ScrollTrigger,DrawSVGPlugin"`). Es lo único que se mueve por GSAP en
+esta página, y tiene cuatro piezas:
+
+- **El camino de la cima.** Dentro del dibujo del monte, un sendero rojo
+  (`.sendero`, dos trazos: tinta y rojo) se dibuja con `scrub` a medida que la
+  viñeta cruza la pantalla, y solo al llegar arriba aparece el templo
+  (`.cumbre`). El sendero está pensado para quedar en el centro del lienzo, que
+  es lo que sobrevive al recorte en móvil.
+- **Las viñetas entran en orden**, una vez, con su cartucho, y las letras de
+  HELIKÓN se estampan una a una. Las onomatopeyas solo cambian de opacidad:
+  llevan una animación de CSS que escribe `scale` y GSAP la pisaría.
+- **Dos hilos de tinta** (`.hilo`) unen el origen con el manifiesto y el
+  manifiesto con las fichas. Se dibujan con el scroll y terminan en una estrella.
+- **Las tres fichas entran como musas**, con rebote, y sus gritos (`¡SWOOSH!`…) se
+  estampan después.
+
+Cosas que conviene saber antes de tocarla:
+
+- **Todo está dentro de un `gsap.context()`**, así que al apagar las animaciones
+  `revert()` devuelve cada elemento al CSS: el camino queda dibujado, el templo a
+  la vista y las fichas en su sitio. Al encenderlas otra vez se monta de nuevo.
+- **GSAP fusiona `rotate`, `translate` y `scale` de CSS en `transform`.** Por eso
+  los tweens terminan con `clearProps`, que devuelve las propiedades individuales
+  que ya tenían las fichas y las letras del nombre.
+- **`transition: none` mientras entran las fichas**: heredan `transition: transform`
+  del CSS y dejarla puesta hace que GSAP y la transición se peleen cada fotograma.
+- **Nada se oculta con `visibility` ni `display`**, solo con `opacity`, para que un
+  lector de pantalla pueda recorrer el texto aunque la animación no haya corrido.
+- **`html.anim-espera`** esconde esos elementos desde el primer pintado, mientras
+  GSAP descarga, para que no haya un destello de contenido que luego desaparece.
+  `ascenso.js` la quita con `Movimiento.liberar()` cuando termina de montar, y
+  `movimiento.js` la quita sola a los 3,5 s si nadie lo hizo (GSAP lento o roto).
+- **Las disparadas "una sola vez"** se lanzan a mano si la página ya pasó de ese
+  punto al montarse (recarga a mitad de página o interruptor encendido más abajo):
+  ScrollTrigger no dispara `onEnter` en ese caso.
+- **Las fichas no son enfocables con Tab**: no tienen ningún control dentro. Con
+  teclado se recorren con las flechas o `Fin`, y al llegar se muestran.
 
 Reglas de esta página:
 
 - **Nada inventado sobre personas reales.** Sin retratos, sin frases que no
   dijeron y sin estadísticas de "poderes". Las fichas dicen el oficio y lo que
   cada uno aporta al cómic.
-- **La paleta y las tipografías de *Señas de identidad* son las de verdad.**
-  Los hexadecimales salen de `pulp.css` y cada muestra se escribe con la fuente
-  que anuncia. Si la paleta cambia, esa sección cambia con ella.
 - **El dibujo del monte usa `preserveAspectRatio="xMidYMax slice"`** con la
   cima centrada en un lienzo de 1000×260, de la misma proporción que la viñeta.
   Así, en móvil se recortan los lados pero la cima y el templo siempre se ven.
@@ -416,13 +456,17 @@ con `try/catch`; si el sistema ya pide menos movimiento, el botón no aparece).
 - **Cargar GSAP solo donde hace falta.** Una página lo declara en la etiqueta:
   `<script src="…/movimiento.js" data-gsap="ScrollTrigger"></script>` (la lista son
   nombres de archivo de `assets/vendor/gsap/` sin `.min.js`; `gsap` va siempre).
-  Ninguna página lo declara todavía. Con movimiento reducido **no se descarga nada**.
+  Hoy solo lo declara la página de Helikón. Con movimiento reducido **no se descarga nada**.
   `Movimiento.cargar()` devuelve una promesa con `{ gsap, ScrollTrigger }` o `null`, y
-  `Movimiento.listo` es la del primer intento.
+  `Movimiento.listo` es la del primer intento, y `Movimiento.liberar()` quita `anim-espera`.
 - **Estado seguro.** `<html class="anim">` solo se añade cuando todo cargó y el
   movimiento está permitido. El CSS de las animaciones que esconden algo al empezar
   debe colgar de `.anim`: sin JavaScript, sin GSAP o con movimiento reducido, la página
   se ve completa y abierta.
+- **`html.anim-espera`** se pone, antes del primer pintado, en las páginas que
+  declaran GSAP: el CSS de la página la usa para esconder (con `opacity`, nunca con
+  `visibility`) lo que va a animarse. Se quita con `Movimiento.liberar()`, que debe
+  llamar el script de la página al terminar de montar, o a los 3,5 s por seguridad.
 - **Al cambiar el interruptor** se quita o se pone `.anim`, se avisa a quien escuche
   `Movimiento.consulta` y se emite `document` → `movimiento` (`detail.reducido`). Cada
   animación de GSAP debe escuchar y matar su propia línea de tiempo; las decisiones que
@@ -871,7 +915,7 @@ Juanes tienen además condiciones de atribución, explicadas más abajo.
 
 | Recurso | Autor | Licencia | Enlace | Dónde se usa |
 |---|---|---|---|---|
-| GSAP 3.15 y ScrollTrigger | GreenSock | Licencia estándar "sin cargo" | [gsap.com/standard-license](https://gsap.com/standard-license) | `assets/vendor/gsap/`; aún no lo usa ninguna página |
+| GSAP 3.15, ScrollTrigger y DrawSVG | GreenSock | Licencia estándar "sin cargo" | [gsap.com/standard-license](https://gsap.com/standard-license) | `assets/vendor/gsap/`; la animación de la página de Helikón |
 | three.js r170 | Autores de three.js | MIT | [threejs.org](https://threejs.org) | `assets/vendor/three/`; el vinilo de Juanes |
 | lottie-web 5.13.0 | Airbnb y colaboradores | MIT (según su repositorio; el archivo no lleva cabecera) | [github.com/airbnb/lottie-web](https://github.com/airbnb/lottie-web) | `comic/assets/`; las escenas del cómic |
 | Bangers, Patrick Hand SC, Inter, Boogaloo, Fredoka, Montserrat, Work Sans | Varios; ver cada familia | SIL Open Font License 1.1 | [fonts.google.com](https://fonts.google.com) | Google Fonts. Patrick Hand SC e Inter: portada, Juanes y Helikón; Boogaloo, Fredoka, Montserrat y Work Sans: solo el cómic; Bangers: las cuatro |
