@@ -1426,8 +1426,10 @@ recorrió cada escena con el nuevo botón.
 - **`.nojekyll`** en la raíz, para que GitHub Pages sirva los archivos tal cual.
 - Probado a 1366, 768 y 360: 0 px de desborde, 0 errores en consola, axe con 0
   violaciones en las cuatro páginas, y el cómic arranca la introducción.
-- **Activar Pages no se pudo hacer desde la sesión de Claude** (el proxy del
-  entorno bloquea la API de Pages): se hace en *Settings → Pages*.
+- **GitHub Pages activado** (*Settings → Pages*, `main`, raíz; la API de Pages
+  está bloqueada en el entorno de Claude, así que se hizo desde el navegador).
+  Sitio en `https://camilo-b92.github.io/helikon-cuerdas-del-destino/`: las
+  cuatro páginas, la imagen de vista previa y `intro.mp4` responden 200.
 
 ---
 
@@ -1435,10 +1437,9 @@ recorrió cada escena con el nuevo botón.
 
 En orden de lo que más aporta:
 
-1. **Activar GitHub Pages** (*Settings → Pages*, desde `main` y carpeta raíz) y
-   comprobar la dirección pública. Todo lo demás de la publicación ya está
-   hecho (ronda 27). **Netlify** y **Vercel** siguen siendo alternativas
-   válidas, y son las únicas si el repositorio vuelve a ser privado.
+1. ~~Publicar el sitio~~ — hecho en la ronda 27, con GitHub Pages. **Netlify** y
+   **Vercel** siguen siendo alternativas válidas, y son las únicas si el
+   repositorio vuelve a ser privado.
 
 2. **Más 3D.** El primero ya existe: el vinilo de Juanes (ronda 26, three.js
    local). El televisor en CSS 3D se probó y se aparcó (ver *El televisor sigue
