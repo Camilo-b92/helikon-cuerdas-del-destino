@@ -1598,6 +1598,61 @@ recorrió cada escena con el nuevo botón.
 
 ---
 
+### Ronda 31 — La entrada al cómic: alguien camina hasta el televisor (fase 4 del plan)
+
+- **Directo sobre `main`**, sin rama, como pidió el equipo.
+- **Qué se hizo.** Cuarto a oscuras, televisor en penumbra y una silueta provisional (de
+  espaldas, sin rostro, ~2 KB de SVG) que entra por la izquierda, camina, pulsa el botón
+  rojo y se sienta abajo mirando la pantalla. Todo el detalle de cómo funciona y cómo
+  cambiar el dibujo está en el README (*La entrada al cómic*). **`comic.js` no se tocó**:
+  el clic final es `btnPower.click()` sobre el botón de verdad.
+- **Punto de inserción.** `powerOn()` solo se protege con `tvOn` e `isAnimating`, y el
+  botón y el cartel son los únicos que lo llaman; bastó un script cargado **después** de
+  `comic.js` (`entrada.js`) y una hoja (`entrada.css`). El televisor se marca `inert`
+  mientras dura la escena y un clic en su zona se intercepta en la fase de captura.
+- **Decisiones:**
+  1. GSAP y MotionPath no se declaran en la etiqueta de `movimiento.js`: la escena los pide
+     con `Movimiento.cargar()` solo cuando va a ocurrir, así que quien ya la vio (o quien
+     tiene movimiento reducido) no descarga nada.
+  2. La capa es absoluta y no fija: el televisor se mueve con la página y la silueta tiene
+     que seguirlo. Se mide al empezar; si cambia el ancho a mitad de camino se salta.
+  3. Silueta intercambiable: el código lee piezas y articulaciones del propio SVG
+     (`data-parte`, `data-pivote`, `data-suelo`, `data-punta`), así que el dibujo de Gabriel
+     solo tiene que respetar esos nombres.
+  4. El resplandor respira despacio en vez de parpadear (WCAG 2.3.1).
+  5. Sin sonido. No se prometió y no hay un efecto con licencia clara a mano.
+- **Trampas encontradas y resueltas:**
+  1. El botón *Saltar* colgaba de `<main>`, que tiene su propio contexto de apilamiento, y
+     quedaba por debajo de la capa oscura. Ahora cuelga de `<body>`, antes del menú.
+  2. El cartel "Toca la pantalla para encender" se veía a través de la oscuridad. Se oculta
+     mientras la escena está activa (`entrada-activa`) y vuelve si se salta.
+  3. El borde de luz de la silueta a plena intensidad la hacía parecer un muñeco; bajó a
+     0,42 y se apaga al encender la sala.
+  4. Las pruebas viejas pulsaban el cartel nada más cargar: ahora el clic en el televisor
+     salta la escena y lo enciende, así que no se rompen, pero `fase1.js` tuvo que aceptar
+     que el cómic pida GSAP en la primera visita.
+- **Comprobado** (1366×768, 1920×1080, 1024×600, 768×1024 y 360×740 táctil): la escena
+  completa lleva al televisor encendido en unos 6,5 s (4 s en móvil vertical); luego las
+  flechas recorren los canales y vuelven al 0; recargar en la misma sesión no repite la
+  escena ni pide GSAP; *Saltar*, Esc, Enter y el toque en el televisor terminan en el estado
+  de siempre (el toque y Enter, con el televisor encendido una sola vez); movimiento
+  reducido del sistema, o apagar *Anim.* a mitad, dejan el televisor apagado con su cartel;
+  girar el móvil a mitad la salta; sin desborde horizontal; axe 0 durante la escena (sin
+  contraste, que no se puede medir a través de la capa) y con la silueta sentada; consola
+  limpia. Peso nuevo: 46 KB comprimidos, de ellos 38 KB de GSAP solo en la primera visita.
+- **Comentarios fuera.** La regla de la ronda 10 (el código no lleva comentarios) se había
+  colado en las fases 1 a 3: `libro.js`, `cartas.js`, `movimiento.js`, `libro.css`,
+  `cartas.css` y `helikon.css` los llevaban. Se quitaron todos (ya estaban explicados en el
+  README) y los archivos nuevos de esta fase nacen sin ellos. Todas las pruebas se repitieron
+  después. El contrato de la silueta, que iba como comentario dentro del SVG, vive en el README.
+- **No se probó** en un teléfono real, con lector de pantalla ni en Brave: la reproducción
+  de la introducción con sonido tras un clic hecho por script depende de la política de
+  autoplay de cada navegador (ver *Límite conocido* en el README). La silueta es
+  provisional: la cabeza y los hombros son rígidos y el paso es esquemático hasta que
+  llegue el dibujo definitivo.
+
+---
+
 ## Pendientes
 
 En orden de lo que más aporta:

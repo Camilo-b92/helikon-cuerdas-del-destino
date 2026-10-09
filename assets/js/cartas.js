@@ -1,13 +1,6 @@
 (function(){
   'use strict';
 
-  /* Cartas del reparto (fase 3):
-     - entran en abanico al llegar a ellas en el scroll (GSAP, si está disponible);
-     - se inclinan con el puntero y llevan un brillo de tramado;
-     - al pasar el ratón o enfocar con el teclado, el personaje cambia de figura
-       entera a su rostro con un gesto (el CSS lo hace con :hover y :focus-within).
-     Con movimiento reducido todo esto se apaga y las cartas quedan quietas. */
-
   const M = window.Movimiento;
   const tira = document.querySelector('.reparto-tira');
   if (!tira) return;
@@ -76,8 +69,6 @@
     carta.addEventListener('pointermove', inclinar);
     carta.addEventListener('pointerleave', soltar);
   });
-
-  /* ---------- Entrada en abanico ---------- */
 
   function alEntrar(ST, trigger, inicio, accion){
     let hecho = false;

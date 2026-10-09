@@ -1,14 +1,3 @@
-/* ==========================================================================
-   El libro que se abre (fase 3)
-   --------------------------------------------------------------------------
-   Sin JavaScript, con movimiento reducido o con el interruptor de animaciones
-   en "no" la portada se ve ya abierta, igual que antes: los envoltorios no
-   dibujan nada y la tapa y el botón no existen.
-
-   Con animaciones, movimiento.js pone `anim-espera` (antes del primer pintado)
-   y luego `anim` en <html>. Esas dos clases son las que encienden el escenario:
-   así la cubierta cerrada sale en el primer cuadro y GSAP solo toma el relevo.
-   ========================================================================== */
 
 :root{
   --menu-alto: 56px;
@@ -24,9 +13,6 @@
   display: none;
 }
 
-/* -------------------------------------------------------------------------
-   Botón "Abrir directo"
-   ------------------------------------------------------------------------- */
 html:is(.anim, .anim-espera) .numero:not(.libro-abierto) .libro-abrir{
   position: fixed;
   left: 16px;
@@ -56,9 +42,6 @@ html:is(.anim, .anim-espera) .libro-abrir:focus-visible{
   outline-offset: 4px;
 }
 
-/* -------------------------------------------------------------------------
-   Escritorio y tablet: el libro queda fijo en pantalla mientras se abre
-   ------------------------------------------------------------------------- */
 @media (min-width: 761px){
   html:is(.anim, .anim-espera) .numero{
     padding-top: 0;
@@ -66,7 +49,6 @@ html:is(.anim, .anim-espera) .libro-abrir:focus-visible{
   html:is(.anim, .anim-espera) .libro-escenario{
     display: block;
     position: relative;
-    /* una pantalla de libro + 130 % de recorrido para abrirlo */
     height: calc(230svh - var(--menu-alto));
   }
   html:is(.anim, .anim-espera) .libro-fijo{
@@ -82,7 +64,6 @@ html:is(.anim, .anim-espera) .libro-abrir:focus-visible{
     perspective: 9000px;
     perspective-origin: 50% 50%;
     transform-origin: 75% 50%;
-    /* mismo punto de partida que la línea de tiempo: cubierta centrada y lejos */
     transform: translateX(-25%) scale(0.74);
     will-change: transform;
   }
@@ -100,8 +81,6 @@ html:is(.anim, .anim-espera) .libro-abrir:focus-visible{
     cursor: pointer;
   }
 
-  /* La hoja izquierda real espera, invisible, debajo de la tapa. Se oculta con
-     opacidad y no con visibility para que el h1 siga en el árbol de lectura. */
   html:is(.anim, .anim-espera) .numero:not(.libro-abierto) .doble-pagina .portada{
     opacity: 0;
   }
@@ -110,10 +89,6 @@ html:is(.anim, .anim-espera) .libro-abrir:focus-visible{
   }
 }
 
-/* -------------------------------------------------------------------------
-   Móvil: las dos hojas van una debajo de la otra, así que no hay giro. La
-   cubierta queda fija sobre la primera hoja y se levanta y se desvanece.
-   ------------------------------------------------------------------------- */
 @media (max-width: 760px){
   .libro-escenario{
     --tapa-arriba: max(12px, calc((100svh - var(--menu-alto) - var(--alto)) / 2));
@@ -130,7 +105,6 @@ html:is(.anim, .anim-espera) .libro-abrir:focus-visible{
     flex-direction: column;
     align-items: center;
   }
-  /* recorrido en el que la cubierta se despide, antes de la primera hoja */
   html:is(.anim, .anim-espera) .doble-pagina{
     margin-top: calc(var(--tapa-arriba) + var(--alto) * 0.85);
   }
@@ -163,9 +137,6 @@ html:is(.anim, .anim-espera) .libro-abrir:focus-visible{
   }
 }
 
-/* -------------------------------------------------------------------------
-   Estado abierto: la tapa deja de existir para el puntero y la vista
-   ------------------------------------------------------------------------- */
 .numero.libro-abierto .libro-tapa{
   opacity: 0;
   visibility: hidden;
@@ -173,9 +144,6 @@ html:is(.anim, .anim-espera) .libro-abrir:focus-visible{
   transition: opacity 0.18s ease, visibility 0s linear 0.18s;
 }
 
-/* -------------------------------------------------------------------------
-   La cubierta
-   ------------------------------------------------------------------------- */
 .tapa-cara{
   position: absolute;
   inset: 0;
@@ -207,7 +175,6 @@ html:is(.anim, .anim-espera) .libro-abrir:focus-visible{
     radial-gradient(rgba(232, 223, 201, 0.08) 28%, transparent 32%) 0 0 / 7px 7px,
     #1b1612;
   border: 6px solid var(--ink);
-  /* el canto de las hojas, escalonado como en un cómic grapado */
   box-shadow:
     calc(0.5 * var(--u)) calc(0.5 * var(--u)) 0 #efe6cf,
     calc(1 * var(--u)) calc(1 * var(--u)) 0 var(--ink),
@@ -312,7 +279,6 @@ html:is(.anim, .anim-espera) .libro-abrir:focus-visible{
   white-space: nowrap;
 }
 
-/* sombra con la que la línea de tiempo oscurece la cara que se aleja de la luz */
 .tapa-sombra{
   position: absolute;
   inset: 0;

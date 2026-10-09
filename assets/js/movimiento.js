@@ -35,7 +35,6 @@
 
   var guardado = leerGuardado();
   var apagado = guardado === 'no';
-  // El sistema pide menos movimiento, pero el lector eligió activarlo aquí a propósito.
   var forzado = guardado === 'forzado';
 
   function reducido(){

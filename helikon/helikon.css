@@ -108,9 +108,6 @@
 .quien{
   margin-top: 78px;
 }
-/* Las fichas esperan su entrada giradas y desplazadas; sin este recorte ensanchan
-   la página unos píxeles en móvil antes de aparecer. El margen negativo deja
-   dentro del recorte la sombra y la inclinación de las fichas ya colocadas. */
 .quien{
   margin-inline: -16px;
   padding-inline: 16px;

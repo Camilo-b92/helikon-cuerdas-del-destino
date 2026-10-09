@@ -1,0 +1,127 @@
+
+:root{
+  --glow: 143, 212, 230;
+  --entrada-oscuro: radial-gradient(ellipse at 50% 55%, rgba(10, 14, 22, 0.82) 0%, rgba(5, 7, 12, 0.94) 100%);
+}
+
+html.entrada-espera::after{
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  pointer-events: none;
+  background: var(--entrada-oscuro);
+}
+html.entrada-espera .tv-cartel,
+html.entrada-activa .tv-cartel{
+  opacity: 0 !important;
+  transition: none;
+}
+
+.entrada{
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  z-index: 20;
+  overflow: hidden;
+  pointer-events: none;
+  contain: layout paint;
+}
+
+.entrada-oscuro{
+  position: absolute;
+  inset: 0;
+  background: var(--entrada-oscuro);
+}
+
+.entrada-halo{
+  position: absolute;
+  border-radius: 3% / 5%;
+  background:
+    repeating-linear-gradient(0deg, rgba(var(--glow), 0.06) 0 2px, transparent 2px 5px),
+    rgba(var(--glow), 0.09);
+  box-shadow:
+    0 0 70px 26px rgba(var(--glow), 0.2),
+    inset 0 0 46px rgba(var(--glow), 0.16);
+  mix-blend-mode: screen;
+  opacity: 0.8;
+}
+
+.entrada-piloto{
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 96, 64, 0.95) 0 24%, rgba(255, 96, 64, 0.35) 46%, rgba(255, 96, 64, 0) 72%);
+  mix-blend-mode: screen;
+}
+
+.entrada-figura{
+  position: absolute;
+  left: 0;
+  top: 0;
+  --luz: 0.42;
+  will-change: transform;
+}
+.entrada-figura svg{
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.entrada-figura svg :is(path, ellipse, circle, rect){
+  fill: #0a0908;
+  stroke: rgba(var(--glow), var(--luz));
+  stroke-width: 1.2px;
+  vector-effect: non-scaling-stroke;
+}
+.entrada-figura svg .trazo{
+  fill: none;
+  stroke: rgba(var(--glow), calc(var(--luz) * 0.22));
+  stroke-width: 1.2px;
+}
+
+.entrada-saltar{
+  position: fixed;
+  top: 68px;
+  right: 16px;
+  z-index: 30;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 1.15em;
+  border: 2px solid var(--turquoise, #09cbbb);
+  border-radius: 999px;
+  background: rgba(10, 14, 22, 0.86);
+  color: #e7f3f3;
+  font-family: var(--font-sub, sans-serif);
+  font-weight: 600;
+  font-size: 0.95rem;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+.entrada-saltar:hover{
+  background: var(--turquoise, #09cbbb);
+  color: #04201d;
+}
+.entrada-saltar:focus-visible{
+  outline: 3px solid #fff;
+  outline-offset: 3px;
+}
+.entrada-saltar-icono{
+  font-size: 0.8em;
+  letter-spacing: -0.1em;
+}
+
+html[data-movimiento="reducido"].entrada-activa .tv-cartel{
+  opacity: 1 !important;
+}
+html[data-movimiento="reducido"] .entrada,
+html[data-movimiento="reducido"] .entrada-saltar{
+  display: none;
+}
+html[data-movimiento="reducido"].entrada-espera::after{
+  display: none;
+}

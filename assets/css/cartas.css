@@ -1,14 +1,4 @@
-/* ==========================================================================
-   Las cartas del reparto (fase 3)
-   --------------------------------------------------------------------------
-   Todo lo de aquí se enciende con la clase `con-cartas`, que cartas.js pone
-   en la tira solo cuando hay movimiento permitido. Sin ella (sin JavaScript,
-   movimiento reducido, interruptor en "no") las cartas quedan quietas, con su
-   figura, y siguen abriendo la ficha igual.
-   ========================================================================== */
 
-/* El gesto vive en un hueco propio: el cambio de figura a rostro es un
-   cambio de plano, como en una viñeta que se acerca a la cara. */
 .personaje-gesto{
   position: absolute;
   z-index: 1;
@@ -32,7 +22,6 @@
   transition: transform 0.22s ease-out, box-shadow 0.22s ease-out;
 }
 
-/* Brillo de tramado: puntos de cómic que solo se ven cerca del puntero */
 .reparto-tira.con-cartas .personaje::after{
   content: '';
   position: absolute;
@@ -86,14 +75,10 @@
   }
 }
 
-/* Mientras GSAP las hace entrar en abanico, el CSS de scroll de antes se aparta */
 .reparto-tira.cartas-gsap .personaje{
   animation: none;
 }
 
-/* Antes de entrar, las cartas esperan giradas y más abajo; sin este recorte
-   ensanchan la página. El margen y el relleno dejan dentro del recorte las
-   sombras de las cartas ya colocadas. */
 .reparto{
   margin-inline: calc(-1 * min(16px, 2vw));
   padding-inline: min(16px, 2vw);

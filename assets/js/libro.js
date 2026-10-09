@@ -1,12 +1,6 @@
 (function(){
   'use strict';
 
-  /* El libro que se abre al bajar (fase 3).
-     - Escritorio: el libro queda fijo en pantalla; se acerca, la tapa gira 180°
-       sobre el lomo y deja ver la doble página.
-     - Móvil: las hojas van en columna, así que la cubierta se levanta y se desvanece.
-     El scroll es el normal del navegador: aquí solo se lee su posición. */
-
   const M = window.Movimiento;
   if (!M) return;
 
@@ -20,8 +14,8 @@
   const pista = document.querySelector('.baja-pista');
   if (!principal || !escenario || !libro || !tapa || !hojaIzq) return;
 
-  const UMBRAL = 0.72;          // a partir de aquí el libro cuenta como abierto
-  let aterriza = 0.8;           // dónde queda el scroll con "Abrir directo"
+  const UMBRAL = 0.72;
+  let aterriza = 0.8;
 
   let mm = null;
   let ancla = null;
@@ -29,9 +23,6 @@
   let clon = null;
   let enganchado = false;
 
-  /* Al apagar o encender las animaciones cambia la altura de la página (el escenario
-     del libro aparece o desaparece). Para que el lector no pierda su sitio se anota
-     en cada scroll qué bloque tiene cerca del borde superior y se le devuelve a él. */
   const bloques = ['.doble-pagina', '#reparto', '.contraportada']
     .map((q) => document.querySelector(q))
     .filter(Boolean);
@@ -75,8 +66,6 @@
     if (primera) primera.focus({ preventScroll: true });
   }
 
-  /* Copia de la hoja izquierda que viaja en el dorso de la tapa. No es contenido:
-     va oculta a los lectores de pantalla y sin ids, para no duplicar nada. */
   function crearClon(){
     quitarClon();
     clon = hojaIzq.cloneNode(true);
@@ -112,7 +101,6 @@
     tapa.addEventListener('click', abrirDirecto);
     if (boton) boton.addEventListener('click', abrirDirecto);
 
-    /* Si alguien llega con Tab a una viñeta que todavía está tapada, se abre el libro. */
     escenario.addEventListener('focusin', (e) => {
       if (principal.classList.contains('libro-abierto')) return;
       if (e.target.closest('.pagina')) abrirDirecto(e, true);
@@ -138,7 +126,6 @@
 
     mm = gsap.matchMedia();
 
-    /* ---------- Escritorio y tablet: el libro se abre de verdad ---------- */
     mm.add('(min-width: 761px)', () => {
       crearClon();
 
@@ -163,18 +150,13 @@
       });
       disparador = linea.scrollTrigger;
 
-      // primer tercio: el libro se acerca y se centra
       linea.to(libro, { scale: 1, duration: 0.33, ease: 'power2.out' }, 0);
-      // segundo tercio: la tapa gira sobre el lomo y el libro se abre hacia el centro
       linea.to(libro, { xPercent: 0, duration: 0.39, ease: 'power2.inOut' }, 0.33);
       linea.to(tapa, { rotationY: -180, duration: 0.39, ease: 'power2.inOut' }, 0.33);
-      // el canto libre de la tapa viene hacia el lector: el libro se encoge un poco
-      // a mitad del giro para que no se salga de la pantalla
       linea.to(libro, { scale: 0.93, duration: 0.195, ease: 'sine.out' }, 0.33);
       linea.to(libro, { scale: 1, duration: 0.195, ease: 'sine.in' }, 0.525);
       linea.fromTo(sombraFrente, { opacity: 0 }, { opacity: 0.85, duration: 0.2, ease: 'power1.in' }, 0.33);
       linea.fromTo(sombraDorso, { opacity: 0.85 }, { opacity: 0, duration: 0.2, ease: 'power1.out' }, 0.52);
-      // último tercio: el libro ya está abierto; el scroll lo deja leer antes de soltarlo
       linea.to({}, { duration: 1 - UMBRAL }, UMBRAL);
 
       enganchar();
@@ -187,7 +169,6 @@
       };
     });
 
-    /* ---------- Móvil: la cubierta se levanta y se desvanece ---------- */
     mm.add('(max-width: 760px)', () => {
       aterriza = 1;
       tapa.style.transform = 'none';

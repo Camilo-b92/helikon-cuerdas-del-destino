@@ -25,8 +25,19 @@
 <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Special+Elite&family=Boogaloo&family=Fredoka:wght@500;600;700&family=Montserrat:wght@500;600&family=Work+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/css/menu.css">
 <link rel="stylesheet" href="comic.css">
+<link rel="stylesheet" href="entrada.css">
 <link rel="stylesheet" href="../assets/css/movimiento.css">
 <script src="../assets/js/movimiento.js"></script>
+<script>
+(function(){
+  var h = document.documentElement, M = window.Movimiento, visto = false;
+  try { visto = sessionStorage.getItem('helikon-entrada') === '1'; } catch (e) {}
+  if (M && !M.reducido() && !visto){
+    h.classList.add('entrada-espera');
+    setTimeout(function(){ if (!document.getElementById('entrada')) h.classList.remove('entrada-espera'); }, 6000);
+  }
+})();
+</script>
 </head>
 <body>
 
@@ -229,5 +240,6 @@
 
 <script src="assets/lottie-web-5.13.0.min.js"></script>
 <script src="comic.js"></script>
+<script src="entrada.js"></script>
 </body>
 </html>

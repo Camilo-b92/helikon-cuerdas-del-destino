@@ -76,7 +76,7 @@ Lo que eso implica al trabajar:
 │   │   ├── vinilo.js       El vinilo 3D de Juanes (three.js, carga diferida)
 │   │   └── home.js         Solo lo propio de la portada
 │   ├── vendor/three/       three.js r170 local (módulo ES) y su licencia
-│   ├── vendor/gsap/        GSAP 3.15 y ScrollTrigger locales, con la nota de licencia
+│   ├── vendor/gsap/        GSAP 3.15 y sus plugins (ScrollTrigger, DrawSVG, MotionPath) locales, con la nota de licencia
 │   └── img/                favicon.svg y las cuatro og-*.jpg (vista previa al compartir)
 │
 ├── helikon/                El estudio: origen, equipo, bitácora
@@ -94,7 +94,10 @@ Lo que eso implica al trabajar:
     ├── index.html
     ├── comic.css
     ├── comic.js
+    ├── entrada.js          La entrada: alguien camina hasta el televisor y lo enciende (GSAP)
+    ├── entrada.css
     └── assets/             Arte, video y animaciones Lottie
+        ├── entrada/silueta.svg  La silueta provisional de la entrada (sustituible)
         ├── intro.mp4
         ├── tv.png
         ├── personajes/      Los cinco personajes, en SVG
@@ -773,6 +776,57 @@ defecto. No se enlaza `pulp.css` entera porque redefine `--ink` y `*`, y
 para que la trama de papel quede *debajo* del televisor y no empañe la
 pantalla. El interior del televisor conserva su propia paleta turquesa.
 
+### La entrada al cómic (`comic/entrada.js`)
+
+Al abrir el cómic por primera vez en una sesión, el cuarto está a oscuras y el
+televisor en penumbra, con el resplandor tenue de una pantalla sin señal. Una
+silueta sin rostro, de espaldas, entra por la izquierda, camina hasta el televisor
+(unos cuatro segundos), estira la mano hacia el botón rojo y lo pulsa. **El clic es
+real**: el script llama a `btnPower.click()` y `comic.js` hace lo de siempre
+(encender, introducción, canal 0). `comic.js` no se tocó. Cuando el televisor
+enciende, la luz vuelve al cuarto y la silueta se sienta abajo a la izquierda, con
+solo la cabeza y los hombros sobre el marco, mirando la pantalla.
+
+- **Una sola función.** `entrada.js` expone `window.Entrada.caminarHastaTelevisor()`,
+  que devuelve una promesa y se cumple cuando la escena acaba (`'sentado'`,
+  `'saltada'`, `'sin-movimiento'`, `'reducido'` o `'error'`).
+- **Cambiar el dibujo no toca el código.** La silueta vive en
+  `assets/entrada/silueta.svg`. El script solo exige que conserve estas piezas
+  (`data-parte`): `pierna-i`, `pierna-d`, `brazo-i`, `brazo-d`, `torso` y `cabeza`,
+  cada una con su articulación en `data-pivote="x y"`, y en el `<svg>` los puntos
+  `data-suelo` (entre los pies) y `data-punta` (la punta de la mano derecha con el
+  brazo caído). Con eso calcula solo dónde debe quedar la figura para que la mano caiga
+  sobre el botón. Si una pieza falta, simplemente esa pieza no se mueve. El SVG se
+  lee como documento y se le quitan scripts, enlaces y eventos antes de insertarlo.
+- **Cómo se mueve.** GSAP + `MotionPathPlugin`: la ruta se calcula en cada visita a
+  partir del tamaño real del televisor y de la posición del botón, y la figura se
+  achica un poco al alejarse (profundidad). El paso es un ciclo de piernas, brazos,
+  torso y cabeza en oposición, con un pequeño rebote.
+- **La luz.** Una capa absoluta (`.entrada`, hija de `<body>`, que se mueve con la
+  página) oscurece todo; encima, el resplandor de la pantalla respira despacio
+  (sin parpadeos) y un piloto rojo marca el botón. La silueta lleva un borde de luz del
+  color de la pantalla (`--glow` en `entrada.css`). El cuarto oscuro sale ya en el primer
+  cuadro: un script mínimo del `<head>` pone `entrada-espera` en `<html>` antes de pintar.
+- **Salvaguardas.** Una vez por sesión (`sessionStorage`, clave `helikon-entrada`); el
+  botón **Saltar la entrada** está siempre a la vista y lleva al estado de siempre (con el
+  foco en el botón rojo); **Esc** salta; **Enter**, **Espacio** o **un toque sobre el
+  televisor** saltan y además lo encienden. Con movimiento reducido (sistema o botón
+  *Anim.*) no hay escena: el televisor sale apagado, con su cartel, y ni siquiera se
+  descarga GSAP. Apagar las animaciones a mitad de la escena la retira. Girar el móvil
+  o cambiar el ancho a mitad de la caminata también la salta. Mientras dura, el
+  televisor está `inert` (no recibe foco ni toques) para que nada lo encienda a medias.
+- **Móvil vertical.** Versión corta (2,4 s de caminata); sigue saliendo el aviso de girar
+  el teléfono.
+- **Peso.** GSAP y MotionPath (38 KB comprimidos) se descargan **solo cuando hay escena**,
+  con `Movimiento.cargar()`, no al abrir la página; el resto (`entrada.js`, `entrada.css` y
+  la silueta) son unos 8 KB. Las siguientes visitas de la misma sesión no pagan nada.
+- **Sin sonido**, a propósito: no se prometió y las pisadas sin licencia clara no entran.
+- **Límite conocido.** El clic final lo hace el script, no una persona. Los navegadores
+  solo dejan reproducir con sonido sin gesto previo si la persona ya interactuó con el
+  sitio (lo normal al llegar desde la portada); si no, `comic.js` ya salta la
+  introducción por su cuenta (es lo que hace cuando `video.play()` es rechazado) y va
+  directo al canal 0.
+
 ### Puntos no obvios del CSS
 
 - **La pantalla va por encima del marco.** En `comic/index.html`, `.tv-screen`
@@ -964,7 +1018,7 @@ Juanes tienen además condiciones de atribución, explicadas más abajo.
 
 | Recurso | Autor | Licencia | Enlace | Dónde se usa |
 |---|---|---|---|---|
-| GSAP 3.15, ScrollTrigger y DrawSVG | GreenSock | Licencia estándar "sin cargo" | [gsap.com/standard-license](https://gsap.com/standard-license) | `assets/vendor/gsap/`; la animación de la página de Helikón |
+| GSAP 3.15, ScrollTrigger, DrawSVG y MotionPath | GreenSock | Licencia estándar "sin cargo" | [gsap.com/standard-license](https://gsap.com/standard-license) | `assets/vendor/gsap/`; la animación de la página de Helikón y la entrada del cómic |
 | three.js r170 | Autores de three.js | MIT | [threejs.org](https://threejs.org) | `assets/vendor/three/`; el vinilo de Juanes |
 | lottie-web 5.13.0 | Airbnb y colaboradores | MIT (según su repositorio; el archivo no lleva cabecera) | [github.com/airbnb/lottie-web](https://github.com/airbnb/lottie-web) | `comic/assets/`; las escenas del cómic |
 | Bangers, Patrick Hand SC, Inter, Boogaloo, Fredoka, Montserrat, Work Sans | Varios; ver cada familia | SIL Open Font License 1.1 | [fonts.google.com](https://fonts.google.com) | Google Fonts. Patrick Hand SC e Inter: portada, Juanes y Helikón; Boogaloo, Fredoka, Montserrat y Work Sans: solo el cómic; Bangers: las cuatro |
