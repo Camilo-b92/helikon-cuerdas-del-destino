@@ -1,83 +1,172 @@
-
-:root{
-  --glow: 143, 212, 230;
-  --entrada-oscuro: radial-gradient(ellipse at 50% 55%, rgba(10, 14, 22, 0.82) 0%, rgba(5, 7, 12, 0.94) 100%);
-}
-
 html.entrada-espera::after{
   content: '';
   position: fixed;
   inset: 0;
   z-index: 20;
   pointer-events: none;
-  background: var(--entrada-oscuro);
+  background: #0b1210;
 }
+
 html.entrada-espera .tv-cartel,
 html.entrada-activa .tv-cartel{
   opacity: 0 !important;
   transition: none;
 }
 
-.entrada{
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  z-index: 20;
+.tv-caption,
+.tv-giro{
+  transition: opacity 0.6s ease;
+}
+html.entrada-activa .tv-caption,
+html.entrada-activa .tv-giro{
+  opacity: 0;
+}
+
+html.entrada-activa .tv.is-off .tv-btn--power{
+  animation: none;
+}
+
+.entrada-fondo,
+.entrada-frente,
+.entrada-velo{
+  position: fixed;
+  inset: 0;
   overflow: hidden;
   pointer-events: none;
-  contain: layout paint;
+}
+.entrada-fondo{
+  z-index: 1;
+  background: #8ccfc6;
+}
+.entrada-frente{
+  z-index: 3;
+}
+.entrada-velo{
+  z-index: 4;
+  background: #0b1210;
 }
 
-.entrada-oscuro{
-  position: absolute;
-  inset: 0;
-  background: var(--entrada-oscuro);
-}
-
-.entrada-halo{
-  position: absolute;
-  border-radius: 3% / 5%;
-  background:
-    repeating-linear-gradient(0deg, rgba(var(--glow), 0.06) 0 2px, transparent 2px 5px),
-    rgba(var(--glow), 0.09);
-  box-shadow:
-    0 0 70px 26px rgba(var(--glow), 0.2),
-    inset 0 0 46px rgba(var(--glow), 0.16);
-  mix-blend-mode: screen;
-  opacity: 0.8;
-}
-
-.entrada-piloto{
-  position: absolute;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 96, 64, 0.95) 0 24%, rgba(255, 96, 64, 0.35) 46%, rgba(255, 96, 64, 0) 72%);
-  mix-blend-mode: screen;
-}
-
-.entrada-figura{
+.entrada-capa{
   position: absolute;
   left: 0;
   top: 0;
-  --luz: 0.42;
-  will-change: transform;
+  width: 1600px;
+  height: 900px;
+  transform-origin: 0 0;
 }
-.entrada-figura svg{
+.entrada-capa img{
+  position: absolute;
+  display: block;
+  max-width: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+.entrada-capa .entrada-base{
+  left: 0;
+  top: 0;
+  width: 1600px;
+  height: 900px;
+}
+
+.entrada-sombra{
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 140px;
+  height: 24px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center, rgba(8, 18, 12, 0.85) 0, rgba(8, 18, 12, 0.5) 45%, rgba(8, 18, 12, 0) 72%);
+  transform-origin: 0 0;
+}
+
+.entrada-caminante{
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: block;
+  width: 260px;
+  height: 480px;
+  overflow: visible;
+  transform-origin: 0 0;
+}
+.entrada-caminante path,
+.entrada-caminante ellipse{
+  fill: #101a18;
+}
+.entrada-caminante .lejos path,
+.entrada-caminante .lejos ellipse{
+  fill: #2a3b36;
+}
+.entrada-caminante .trazo{
+  fill: none;
+  stroke: #4c5e57;
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+
+.entrada-estallido{
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 120px;
+  height: 100px;
+  opacity: 0;
+  transform-origin: 0 0;
+}
+.entrada-estallido svg{
   display: block;
   width: 100%;
   height: 100%;
   overflow: visible;
 }
-.entrada-figura svg :is(path, ellipse, circle, rect){
-  fill: #0a0908;
-  stroke: rgba(var(--glow), var(--luz));
-  stroke-width: 1.2px;
-  vector-effect: non-scaling-stroke;
+.entrada-estallido polygon{
+  fill: #ffd23f;
+  stroke: #17130e;
+  stroke-width: 4;
+  stroke-linejoin: round;
 }
-.entrada-figura svg .trazo{
-  fill: none;
-  stroke: rgba(var(--glow), calc(var(--luz) * 0.22));
-  stroke-width: 1.2px;
+.entrada-estallido text{
+  fill: #17130e;
+  font-family: 'Bangers', 'Impact', 'Arial Black', sans-serif;
+  font-size: 50px;
+  letter-spacing: 1px;
+}
+
+.entrada-pulso{
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  opacity: 0;
+  background: radial-gradient(circle, rgba(255, 120, 78, 0.95) 0, rgba(255, 120, 78, 0.9) 26%, rgba(255, 120, 78, 0.4) 50%, rgba(255, 120, 78, 0) 72%);
+  mix-blend-mode: screen;
+  transform-origin: 0 0;
+}
+
+.entrada-mugre{
+  position: absolute;
+  inset: 0;
+  z-index: 40;
+  pointer-events: none;
+  border-radius: inherit;
+  opacity: var(--mugre, 0);
+  background:
+    linear-gradient(112deg, rgba(255, 255, 255, 0) 24%, rgba(255, 255, 255, 0.16) 33%, rgba(255, 255, 255, 0) 41%, rgba(255, 255, 255, 0.07) 56%, rgba(255, 255, 255, 0) 62%),
+    radial-gradient(ellipse 120% 90% at 18% 12%, rgba(138, 116, 78, 0.34), rgba(138, 116, 78, 0) 60%),
+    radial-gradient(ellipse 90% 70% at 86% 104%, rgba(74, 58, 36, 0.55), rgba(74, 58, 36, 0) 66%),
+    radial-gradient(circle at 34% 72%, rgba(210, 198, 168, 0.18) 0 2.5%, rgba(210, 198, 168, 0) 3.5%),
+    radial-gradient(circle at 71% 28%, rgba(210, 198, 168, 0.14) 0 1.6%, rgba(210, 198, 168, 0) 2.4%),
+    radial-gradient(circle at 52% 55%, rgba(60, 46, 28, 0.2) 0 5%, rgba(60, 46, 28, 0) 7%);
+}
+
+html.entrada-activa .tv .tv-frame{
+  filter:
+    sepia(calc(var(--mugre, 0) * 0.55))
+    saturate(calc(1 - var(--mugre, 0) * 0.35))
+    brightness(calc(1 - var(--mugre, 0) * 0.28))
+    contrast(calc(1 + var(--mugre, 0) * 0.1));
 }
 
 .entrada-saltar{
@@ -119,7 +208,8 @@ html[data-movimiento="reducido"].entrada-activa .tv-cartel{
   opacity: 1 !important;
 }
 html[data-movimiento="reducido"] .entrada,
-html[data-movimiento="reducido"] .entrada-saltar{
+html[data-movimiento="reducido"] .entrada-saltar,
+html[data-movimiento="reducido"] .entrada-mugre{
   display: none;
 }
 html[data-movimiento="reducido"].entrada-espera::after{

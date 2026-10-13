@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-130 -250 260 480" width="260" height="480" data-suelo="0 210" data-mira="1" focusable="false" aria-hidden="true">
+  <g data-parte="cuerpo" data-pos="0 0">
+    <g class="lejos" data-parte="brazo-i" data-pos="2 -122" data-largo="70">
+      <path d="M-9 -4Q-12 30 -8 70L8 70Q12 30 9 -4Z"/>
+      <g data-parte="antebrazo-i" data-pos="0 70" data-largo="66">
+        <path d="M-8 0Q-10 30 -6 64L6 64Q9 30 8 0Z"/>
+        <ellipse cx="0" cy="72" rx="7" ry="10"/>
+      </g>
+    </g>
+    <g class="lejos" data-parte="muslo-i" data-pos="0 0" data-largo="100">
+      <path d="M-17 -6Q-19 50 -14 100L13 100Q18 50 16 -6Z"/>
+      <g data-parte="pierna-i" data-pos="0 100" data-largo="92">
+        <path d="M-14 0Q-19 35 -10 92L9 92Q14 40 13 0Z"/>
+        <g data-parte="pie-i" data-pos="0 92">
+          <path d="M-10 -3L10 -3L11 8Q34 8 40 16L40 20L-12 20Q-14 10 -10 -3Z"/>
+        </g>
+      </g>
+    </g>
+    <g data-parte="torso" data-pos="0 0">
+      <path d="M-24 6Q-30 -30 -22 -100Q-18 -126 -4 -134L10 -134Q26 -122 30 -90Q36 -40 24 8Z"/>
+      <path d="M-30 -112Q-42 -50 -38 28Q-10 36 24 30Q34 -30 34 -106Z"/>
+      <path class="trazo" d="M-38 22Q-10 30 24 24"/>
+      <g data-parte="cabeza" data-pos="0 -132">
+        <path d="M-8 8L-7 -12L9 -12L10 8Z"/>
+        <ellipse cx="4" cy="-38" rx="21" ry="26"/>
+        <path d="M22 -42Q33 -37 25 -29Z"/>
+        <ellipse cx="4" cy="-55" rx="54" ry="9"/>
+        <path d="M-20 -56Q-23 -90 4 -93Q31 -90 27 -56Z"/>
+        <path class="trazo" d="M-20 -62Q4 -55 27 -62"/>
+      </g>
+    </g>
+    <g data-parte="muslo-d" data-pos="0 0" data-largo="100">
+      <path d="M-17 -6Q-19 50 -14 100L13 100Q18 50 16 -6Z"/>
+      <g data-parte="pierna-d" data-pos="0 100" data-largo="92">
+        <path d="M-14 0Q-19 35 -10 92L9 92Q14 40 13 0Z"/>
+        <g data-parte="pie-d" data-pos="0 92">
+          <path d="M-10 -3L10 -3L11 8Q34 8 40 16L40 20L-12 20Q-14 10 -10 -3Z"/>
+        </g>
+      </g>
+    </g>
+    <g data-parte="brazo-d" data-pos="2 -122" data-largo="70">
+      <path d="M-9 -4Q-12 30 -8 70L8 70Q12 30 9 -4Z"/>
+      <g data-parte="antebrazo-d" data-pos="0 70" data-largo="66">
+        <path d="M-8 0Q-10 30 -6 64L6 64Q9 30 8 0Z"/>
+        <ellipse cx="0" cy="72" rx="7" ry="10"/>
+      </g>
+    </g>
+  </g>
+</svg>

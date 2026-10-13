@@ -32,6 +32,7 @@
 (function(){
   var h = document.documentElement, M = window.Movimiento, visto = false;
   try { visto = sessionStorage.getItem('helikon-entrada') === '1'; } catch (e) {}
+  if (/[?&]entrada(=|&|$)/.test(location.search)) visto = false;
   if (M && !M.reducido() && !visto){
     h.classList.add('entrada-espera');
     setTimeout(function(){ if (!document.getElementById('entrada')) h.classList.remove('entrada-espera'); }, 6000);

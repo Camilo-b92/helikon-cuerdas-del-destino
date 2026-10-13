@@ -1598,7 +1598,10 @@ recorrió cada escena con el nuevo botón.
 
 ---
 
-### Ronda 31 — La entrada al cómic: alguien camina hasta el televisor (fase 4 del plan)
+### Ronda 31 — La entrada al cómic: alguien camina hasta el televisor (fase 4 del plan) — REHECHA en la ronda 32
+
+> Esta primera versión (cuarto oscuro y silueta de espaldas) no gustó al equipo y se
+> sustituyó entera; se conserva el registro porque varias decisiones siguen valiendo.
 
 - **Directo sobre `main`**, sin rama, como pidió el equipo.
 - **Qué se hizo.** Cuarto a oscuras, televisor en penumbra y una silueta provisional (de
@@ -1650,6 +1653,56 @@ recorrió cada escena con el nuevo botón.
   autoplay de cada navegador (ver *Límite conocido* en el README). La silueta es
   provisional: la cabeza y los hombros son rígidos y el paso es esquemático hasta que
   llegue el dibujo definitivo.
+
+### Ronda 32 — La entrada se rehace: el campo, el televisor abandonado y el zoom (fase 4, segunda versión)
+
+- **Directo sobre `main`**, sin rama.
+- **Por qué se rehízo.** La primera versión se entendió mal: se pidió «una persona que camina
+  por una montaña del campo colombiano, encuentra un televisor antiguo y desechado, le da
+  curiosidad, le pulsa el botón de encendido —con un zoom al televisor a la vez— y se
+  enciende dando inicio al cómic», y el televisor interactivo **no** debía estar a pantalla
+  completa desde el principio. Se había hecho un cuarto oscuro. Camilo asumió parte de la
+  culpa por no explicarlo; la lección para el método: antes de animar, describir la escena
+  en una frase y pedir confirmación del *lugar* y del *encuadre*, no solo de la acción.
+- **Qué se hizo.** Paisaje andino en seis capas con paralaje, tocón con el televisor, un
+  caminante articulado con ciclo de paso real y brazo con cinemática inversa, globo «¿?»,
+  luz del botón, televisor sucio y zoom. El televisor de verdad se coloca pequeño en el
+  paisaje con `transform` y vuelve a identidad al final (relevo exacto, medido en la
+  prueba). Todo el detalle y el contrato del arte están en el README.
+- **Decisiones:**
+  1. **Todo en función del tiempo** (un solo contador de GSAP): permite avanzar y retroceder
+     para probar y hace que saltar o interrumpir nunca deje nada a medias.
+  2. **Sin MotionPathPlugin**: el recorrido se lee de un `<path id="senda">` del propio arte y
+     el paso se calcula a mano; se retiró el plugin del repositorio.
+  3. **No se bloquea el scroll con `overflow:hidden`**: quitar la barra de desplazamiento
+     movía el televisor unos píxeles y rompía el relevo. Se interceptan rueda, toque y teclas.
+  4. **Un clic de script no cuenta como clic de persona** para el desvío «tocar el televisor
+     salta»: se ignoran los eventos con `isTrusted` falso, así el clic final no se cancela solo.
+  5. **El clic de encendido ocurre a mitad del zoom**, para que la introducción empiece cuando
+     el televisor ya casi llena la pantalla.
+  6. Se probó `will-change: transform` en las capas: en render por software fue peor y borroso
+     al acercar; se descartó. Queda el corte por lentitud (`'lenta'`) como red de seguridad.
+- **Arte provisional.** El paisaje y el caminante se generaron con un script (no está en el
+  repositorio: el contrato de formato sí, en el README) para poder ver y probar la escena ya.
+  Son sustituibles por el dibujo de Gabriel y Brayhan sin tocar el código.
+- **Trampas encontradas:**
+  1. Un `getBBox`/`svgOrigin` de GSAP en grupos SVG anidados da orígenes ambiguos: se dejaron
+     transformaciones propias (`translate` + `rotate`) por pieza.
+  2. Un recorte (`clip-path`) heredaba la rotación de las parcelas de la montaña y dejaba
+     rectángulos flotando en el cielo: recorte en el grupo exterior y giro en el interior.
+  3. La finca quedaba detrás de la loma cercana: se movió a la primera cresta.
+  4. Pruebas: devolver el objeto de GSAP desde `page.evaluate` congela la página (intenta
+     serializarlo); y la hoja de fuentes de Google bloqueada retrasa el evento `load`.
+- **Comprobado** (1366×768, 1920×1080, 1024×600, 768×1024 y 360×740 táctil): recorrido completo
+  hasta televisor encendido; el televisor empieza a ~135 px de ancho e inclinado; el relevo
+  final coincide con la colocación normal (diferencia 0 px); solo se pide `gsap.min.js`;
+  *Saltar*, Esc (también en pleno zoom, sin apagar el televisor), Enter y toque; movimiento
+  reducido; apagar *Anim.* a mitad; girar el móvil; `?entrada`; axe 0 en la escena y al
+  terminar; sin desborde; consola limpia; fases 1, 2 y 3, `optin` y `axall` repetidas.
+  Fotogramas en render por software: ~15 por segundo (sin GPU); con GPU debería ir mucho
+  mejor, pero **no se midió en un equipo real**.
+- **No se probó** en Brave ni en un teléfono real, ni la reproducción de la introducción con
+  sonido tras el clic del script (ver *Límite conocido* en el README).
 
 ---
 
