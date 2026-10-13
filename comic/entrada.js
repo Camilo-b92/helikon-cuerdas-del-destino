@@ -11,7 +11,17 @@
     matasIzq: { x: 918, y: 538, w: 70, archivo: 'matas' },
     matasDer: { x: 1030, y: 540, w: 64, archivo: 'matas' }
   };
-  const EXTENSION = { nubes: 'webp' };
+  const RUTAS = { nubes: 'assets/capitulo-n1/scene1/img/nubes.png' };
+  const NUBES = [
+    { s: [830, 0, 617, 252], x: 110, y: 78, w: 440 },
+    { s: [1705, 76, 382, 161], x: 640, y: 150, w: 300 },
+    { s: [2280, 105, 366, 140], x: 1130, y: 86, w: 330 },
+    { s: [2069, 334, 378, 144], x: 1360, y: 232, w: 250 },
+    { s: [389, 350, 378, 140], x: 330, y: 276, w: 250 },
+    { s: [1212, 371, 293, 113], x: 860, y: 300, w: 190 },
+    { s: [0, 404, 173, 70], x: 40, y: 330, w: 120 },
+    { s: [1677, 389, 176, 69], x: 1010, y: 224, w: 130 }
+  ];
   const SUELO_TV = { x: 1000, y: 551, rx: 78, ry: 9 };
   const FONDOS = [
     { id: 'cielo', d: 0.1 },
@@ -21,7 +31,7 @@
   ];
   const ALTURA = 0.7586;
   const ZANCADA = 348;
-  const BRAZO = { a: 70, b: 72 };
+  const BRAZO = { a: 70, b: 76 };
   const VELOCIDAD = 250;
   const FRENADA = 150;
 
@@ -154,7 +164,7 @@
       img.draggable = false;
       img.addEventListener('load', () => ok(img), { once: true });
       img.addEventListener('error', () => mal(new Error(nombre)), { once: true });
-      img.src = CARPETA + nombre + '.' + (EXTENSION[nombre] || 'svg');
+      img.src = RUTAS[nombre] || (CARPETA + nombre + '.svg');
     });
   }
 
@@ -210,9 +220,19 @@
     });
     const necesarias = ['cuerpo', 'torso', 'cabeza', 'brazo-i', 'antebrazo-i', 'brazo-d', 'antebrazo-d', 'muslo-i', 'pierna-i', 'pie-i', 'muslo-d', 'pierna-d', 'pie-d'];
     if (!necesarias.every((k) => partes[k]) || !vb || !vb.width) return null;
+    const sel = (q) => svg.querySelector(q);
     return {
       svg: svg,
       partes: partes,
+      cara: {
+        ojos: sel('.ojos'),
+        pupilas: sel('.pupilas'),
+        cejas: sel('.cejas'),
+        boca: sel('.boca'),
+        bocaO: sel('.boca-o'),
+        puno: sel('[data-parte="antebrazo-d"] .puno'),
+        senala: sel('[data-parte="antebrazo-d"] .senala')
+      },
       ancla: [-vb.x, -vb.y],
       ancho: vb.width,
       alto: vb.height,
@@ -371,8 +391,8 @@
     const p1 = giro(0, 100, t1);
     const p2 = giro(0, 92, t2);
     const ay = p1[1] + p2[1];
-    const h = giro(-12, 20, punta);
-    const d = giro(40, 20, punta);
+    const h = giro(-20, 22, punta);
+    const d = giro(64, 22, punta);
     return { muslo: t1, rodilla: rodilla, pie: punta - t2, bajo: ay + Math.max(h[1], d[1]) };
   }
 
@@ -395,6 +415,45 @@
 
   function tr(x, y, a){
     return 'translate(' + n3(x) + ' ' + n3(y) + ') rotate(' + n3(a) + ')';
+  }
+
+  function ver(n, si){
+    if (n) n.setAttribute('opacity', si ? '1' : '0');
+  }
+
+  function escalaEn2(n, cx, cy, sx, sy, dy){
+    if (!n) return;
+    n.setAttribute('transform', 'translate(0 ' + n3(dy) + ') translate(' + cx + ' ' + cy + ') scale(' + n3(sx) + ' ' + n3(sy) + ') translate(' + (-cx) + ' ' + (-cy) + ')');
+  }
+
+  const PARPADEOS = [1.25, 3.3, 5.1, 7.9, 9.7, 11.4];
+
+  function expresion(t, alcanza){
+    const g = G;
+    const c = figura.cara;
+    const dentro = suave((t - g.tB) / 0.12) * (1 - suave((t - (g.tC0 + 0.1)) / 0.5));
+    const sor = t > g.tB ? dentro : 0;
+    let parpado = 1;
+    for (let i = 0; i < PARPADEOS.length; i++){
+      const d = Math.abs(t - PARPADEOS[i]);
+      if (d < 0.09) parpado = Math.min(parpado, 0.12 + 0.88 * (d / 0.09));
+    }
+    const k = 1 + 0.2 * sor;
+    escalaEn2(c.ojos, 32, -77, k, k * parpado, 0);
+    const mira = suave((t - (g.tB + 0.5)) / 0.4);
+    const baja = suave((t - g.tR0) / 0.5);
+    const ps = 1 - 0.28 * sor;
+    if (c.pupilas) c.pupilas.setAttribute('transform', 'translate(' + n3(2.2 * mira) + ' ' + n3(3.2 * baja - 1.2 * sor) + ') translate(37 -76) scale(' + n3(ps) + ') translate(-37 76)');
+    escalaEn2(c.cejas, 32, -104, 1, 1, -9 * sor - 3 * alcanza);
+    ver(c.boca, sor < 0.5);
+    ver(c.bocaO, sor >= 0.5);
+    const senala = alcanza > 0.25;
+    ver(c.puno, !senala);
+    ver(c.senala, senala);
+  }
+
+  function enTorso(inclina, pos, ang){
+    return 'rotate(' + n3(inclina) + ') translate(' + n3(pos[0]) + ' ' + n3(pos[1]) + ') rotate(' + n3(ang) + ')';
   }
 
   function figuraEn(t){
@@ -445,18 +504,19 @@
 
     P.cuerpo.el.setAttribute('transform', tr(0, bajada, 0));
     P.torso.el.setAttribute('transform', tr(0, 0, inclina));
-    P.cabeza.el.setAttribute('transform', tr(P.cabeza.pos[0], P.cabeza.pos[1], cabeza));
+    P.cabeza.el.setAttribute('transform', enTorso(inclina, P.cabeza.pos, cabeza));
+    expresion(t, alcanza);
     P['brazo-i'].el.setAttribute('transform', tr(hombro[0], hombro[1], lejosAng));
     P['antebrazo-i'].el.setAttribute('transform', tr(P['antebrazo-i'].pos[0], P['antebrazo-i'].pos[1], lejosCodo));
     P['brazo-d'].el.setAttribute('transform', tr(hombro[0], hombro[1], cercaAng));
     P['antebrazo-d'].el.setAttribute('transform', tr(P['antebrazo-d'].pos[0], P['antebrazo-d'].pos[1], cercaCodo));
     if (P.ruana){
       const vaiven = -3 * w + 4 * w * Math.sin(ph * 2 - 1.1) + 1.2 * Math.sin(t * 1.4) * (1 - w);
-      P.ruana.el.setAttribute('transform', tr(P.ruana.pos[0], P.ruana.pos[1], vaiven));
+      P.ruana.el.setAttribute('transform', enTorso(inclina, P.ruana.pos, vaiven));
     }
     if (P.carriel){
       const cuelga = -4 * w * Math.sin(ph * 2 - 0.5) + 2 * w - 1 * Math.sin(t * 1.6) * (1 - w);
-      P.carriel.el.setAttribute('transform', tr(P.carriel.pos[0], P.carriel.pos[1], cuelga));
+      P.carriel.el.setAttribute('transform', enTorso(inclina, P.carriel.pos, cuelga));
     }
     P['muslo-i'].el.setAttribute('transform', tr(0, 0, piernaI.muslo));
     P['pierna-i'].el.setAttribute('transform', tr(P['pierna-i'].pos[0], P['pierna-i'].pos[1], piernaI.rodilla));
@@ -465,21 +525,20 @@
     P['pierna-d'].el.setAttribute('transform', tr(P['pierna-d'].pos[0], P['pierna-d'].pos[1], piernaD.rodilla));
     P['pie-d'].el.setAttribute('transform', tr(P['pie-d'].pos[0], P['pie-d'].pos[1], piernaD.pie));
 
-    f.svg.style.setProperty('--rim', signo > 0 ? '1' : '-1');
     const an = f.ancla;
     const sx = cara * U;
     f.svg.style.transform =
       'translate(' + n3(x) + 'px,' + n3(y) + 'px) scale(' + n3(sx) + ',' + n3(U) + ') translate(' + (-(an[0] + f.suelo[0])) + 'px,' + (-(an[1] + f.suelo[1])) + 'px)';
     sombra.style.transform =
-      'translate(' + n3(x) + 'px,' + n3(y) + 'px) scale(' + n3(U) + ') translate(-70px,-12px)';
+      'translate(' + n3(x) + 'px,' + n3(y) + 'px) scale(' + n3(U) + ') translate(-80px,-13px)';
 
     const apareceE = t - g.tB;
     const sale = g.tC0 + 0.25;
     let e = 0;
     if (apareceE > 0 && t < sale) e = rebote(apareceE / 0.36) * (1 - suave((t - (sale - 0.2)) / 0.2));
     if (e > 0.01){
-      const bx = x + 46 * U;
-      const by = y - 455 * U;
+      const bx = x + 70 * U;
+      const by = y - 545 * U;
       const k = e * U / 0.8;
       const ladeo = 4 * Math.sin((t - g.tB) * 9) * (1 - suave((t - g.tB) / 1.2));
       estallido.style.opacity = '1';
@@ -584,7 +643,25 @@
       c.el.appendChild(img);
     }
 
-    FONDOS.forEach((f) => base(capa(fondo, f.d, f.deriva), f.id));
+    function nubes(c, img){
+      NUBES.forEach((n) => {
+        const k = n.w / n.s[2];
+        const d = crear('div', 'entrada-nube');
+        d.style.left = n.x + 'px';
+        d.style.top = n.y + 'px';
+        d.style.width = n.w + 'px';
+        d.style.height = (n.s[3] * k) + 'px';
+        d.style.backgroundImage = 'url("' + img.src + '")';
+        d.style.backgroundSize = (img.naturalWidth * k) + 'px ' + (img.naturalHeight * k) + 'px';
+        d.style.backgroundPosition = (-n.s[0] * k) + 'px ' + (-n.s[1] * k) + 'px';
+        c.el.appendChild(d);
+      });
+    }
+    FONDOS.forEach((f) => {
+      const c = capa(fondo, f.d, f.deriva);
+      if (f.id === 'nubes') nubes(c, imagenes.nubes);
+      else base(c, f.id);
+    });
     const cerca = capa(fondo, 1);
     base(cerca, 'cerca');
     pieza(cerca, 'tocon');

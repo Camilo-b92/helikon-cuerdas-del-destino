@@ -1735,6 +1735,43 @@ recorrió cada escena con el nuevo botón.
 - **No se probó** en Brave ni en un teléfono real, ni el rendimiento con GPU (en el entorno de
   prueba, por software, ~15 fotogramas por segundo).
 
+### Ronda 34 — La entrada con la identidad visual del cómic (revisión del maestro)
+
+- **Directo sobre `main`**, sin rama.
+- **Pedido.** El maestro valoró la entrada pero dejó dos revisiones: (1) no se parece a los
+  fondos del cómic, no tiene su identidad visual; (2) el personaje aún se puede mejorar. Camilo
+  pidió tomarse el tiempo necesario y **no pasar a la fase 5 hasta cerrar esto**.
+- **Estudio de la identidad.** Se miraron los fondos y personajes reales de las escenas del
+  cómic: vectorial plano con contorno negro fino, paleta apagada de oliva/ocre/sepia, cielo
+  verde azulado en degradado, nubes ocres con contorno, colinas moteadas como camuflaje,
+  trocha punteada, personajes de dibujo animado clásico (guantes blancos, zapatos grandes).
+  La versión anterior era un paisaje «pintado» con brumas y luz suave: otro lenguaje.
+- **Paisaje rehecho** (`cielo`, `lejos`, `media`, `cerca`, `frente`, `tocon`, `matas`) con esa
+  gramática: patrones `<pattern>` de manchas para el camuflaje, follaje en lóbulos con contorno
+  (truco: trazar todos los círculos gruesos y rellenar después), palmas de cera, finca con
+  humo, cerca, carretilla. **Las nubes son las del propio cómic** (`nubes.png` de la escena I),
+  recortadas desde `entrada.js` (`RUTAS`, `NUBES`); se borró `nubes.webp`.
+- **Campesino rehecho** en el lenguaje de los personajes: cabeza grande, ojos de dibujo
+  animado, bigote, guante blanco, zapatos grandes, ruana y carriel. Ahora **actúa**: parpadea,
+  se sorprende (ojos más grandes, cejas arriba, boca en «o»), mira al televisor y señala con
+  el guante al pulsar. Colores dentro del SVG (el lector descarta `<style>`); se quitaron la
+  paleta de `entrada.css` y la luz de borde (`--rim`).
+- **Trampas encontradas:**
+  1. Los primeros camuflajes parecían militares (manchas grandes y contrastadas) → se bajó
+     contraste y saturación comparando recortes con `fondo.png` real.
+  2. La boca y la «o» quedaban fuera de la silueta de la cabeza → se unió una elipse de hocico.
+  3. Rendimiento: el arte vectorial nuevo costaba ~78 ms por fotograma en el render por
+     software; con `will-change: transform` en `.entrada-capa` bajó a ~55 ms (en la ronda
+     anterior se había descartado por empeorar; con estas capas hace lo contrario).
+  4. La prueba esperaba `rotate(-4/-5deg)` para el televisor; se relajó a −2…−5.
+- **Comprobado:** `fase4` (escritorio, 360×740, 768×1024, 1920×1080, 1024×600), `fase1`, `fase2`,
+  `fase3`, `optin` y `axall` (0 violaciones de accesibilidad), fotogramas revisados a mano.
+- **No se probó** en Brave ni en un teléfono real, ni los fotogramas por segundo con GPU. El
+  maestro es quien dirá si ahora sí se siente del cómic: si pide más, lo siguiente sería que
+  Gabriel y Brayhan redibujen el campesino o los fondos con el contrato del README.
+- **Pendiente:** fase 5 (Juanes, recorrido interactivo) bloqueada hasta que Camilo confirme
+  esta revisión.
+
 ---
 
 ## Pendientes
