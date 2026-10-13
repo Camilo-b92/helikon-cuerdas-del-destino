@@ -4,11 +4,15 @@
   const CLAVE = 'helikon-entrada';
   const CARPETA = 'assets/entrada/';
   const LIENZO = { w: 1600, h: 900 };
-  const TV = { cx: 1000, cy: 475, ancho: 150, giro: -5, boton: [0.895, 0.886], proporcion: 925 / 1566 };
+  const TV = { cx: 1000, cy: 506, ancho: 150, giro: -2, boton: [0.895, 0.886], proporcion: 925 / 1566 };
   const PIEZAS = {
     tocon: { x: 908, y: 530, w: 184 },
-    matas: { x: 875, y: 640, w: 250 }
+    matasBase: { x: 875, y: 640, w: 250, archivo: 'matas' },
+    matasIzq: { x: 918, y: 538, w: 70, archivo: 'matas' },
+    matasDer: { x: 1030, y: 540, w: 64, archivo: 'matas' }
   };
+  const EXTENSION = { nubes: 'webp' };
+  const SUELO_TV = { x: 1000, y: 551, rx: 78, ry: 9 };
   const FONDOS = [
     { id: 'cielo', d: 0.1 },
     { id: 'nubes', d: 0.18, deriva: 5 },
@@ -52,6 +56,8 @@
   let sombra = null;
   let estallido = null;
   let pulso = null;
+  let contacto = null;
+  let hierbas = [];
   let G = null;
 
   function activa(si){
@@ -148,7 +154,7 @@
       img.draggable = false;
       img.addEventListener('load', () => ok(img), { once: true });
       img.addEventListener('error', () => mal(new Error(nombre)), { once: true });
-      img.src = CARPETA + nombre + '.svg';
+      img.src = CARPETA + nombre + '.' + (EXTENSION[nombre] || 'svg');
     });
   }
 
@@ -444,6 +450,14 @@
     P['antebrazo-i'].el.setAttribute('transform', tr(P['antebrazo-i'].pos[0], P['antebrazo-i'].pos[1], lejosCodo));
     P['brazo-d'].el.setAttribute('transform', tr(hombro[0], hombro[1], cercaAng));
     P['antebrazo-d'].el.setAttribute('transform', tr(P['antebrazo-d'].pos[0], P['antebrazo-d'].pos[1], cercaCodo));
+    if (P.ruana){
+      const vaiven = -3 * w + 4 * w * Math.sin(ph * 2 - 1.1) + 1.2 * Math.sin(t * 1.4) * (1 - w);
+      P.ruana.el.setAttribute('transform', tr(P.ruana.pos[0], P.ruana.pos[1], vaiven));
+    }
+    if (P.carriel){
+      const cuelga = -4 * w * Math.sin(ph * 2 - 0.5) + 2 * w - 1 * Math.sin(t * 1.6) * (1 - w);
+      P.carriel.el.setAttribute('transform', tr(P.carriel.pos[0], P.carriel.pos[1], cuelga));
+    }
     P['muslo-i'].el.setAttribute('transform', tr(0, 0, piernaI.muslo));
     P['pierna-i'].el.setAttribute('transform', tr(P['pierna-i'].pos[0], P['pierna-i'].pos[1], piernaI.rodilla));
     P['pie-i'].el.setAttribute('transform', tr(P['pie-i'].pos[0], P['pie-i'].pos[1], piernaI.pie));
@@ -451,6 +465,7 @@
     P['pierna-d'].el.setAttribute('transform', tr(P['pierna-d'].pos[0], P['pierna-d'].pos[1], piernaD.rodilla));
     P['pie-d'].el.setAttribute('transform', tr(P['pie-d'].pos[0], P['pie-d'].pos[1], piernaD.pie));
 
+    f.svg.style.setProperty('--rim', signo > 0 ? '1' : '-1');
     const an = f.ancla;
     const sx = cara * U;
     f.svg.style.transform =
@@ -517,6 +532,8 @@
     const salida = suave((t - g.tZ1 + 0.1) / 0.55);
     const retira = 1 - suave((t - g.tP0 - 0.9) / 0.7);
     figura.svg.style.opacity = n3(retira);
+    const hierba = 1 - suave((t - g.tZ0 - 0.2) / 1.1);
+    hierbas.forEach((h) => { h.style.opacity = n3(hierba); });
     sombra.style.opacity = n3(0.34 * retira);
     tv.style.transform = 'translate(' + n3(ax - g.t0[0]) + 'px,' + n3(ay - g.t0[1]) + 'px) rotate(' + n3(rot) + 'deg) scale(' + n3(k) + ')';
     tv.style.setProperty('--mugre', n3(1 - suave((t - g.tZ0 - 0.6) / 2.2)));
@@ -557,7 +574,8 @@
     }
     function pieza(c, nombre){
       const p = PIEZAS[nombre];
-      const img = imagenes[nombre];
+      const fuente = imagenes[p.archivo || nombre];
+      const img = nombre === (p.archivo || nombre) ? fuente : fuente.cloneNode();
       img.className = 'entrada-pieza';
       img.style.left = p.x + 'px';
       img.style.top = p.y + 'px';
@@ -570,7 +588,13 @@
     const cerca = capa(fondo, 1);
     base(cerca, 'cerca');
     pieza(cerca, 'tocon');
-    pieza(cerca, 'matas');
+    pieza(cerca, 'matasBase');
+    contacto = crear('div', 'entrada-contacto');
+    contacto.style.left = (SUELO_TV.x - SUELO_TV.rx) + 'px';
+    contacto.style.top = (SUELO_TV.y - SUELO_TV.ry) + 'px';
+    contacto.style.width = (SUELO_TV.rx * 2) + 'px';
+    contacto.style.height = (SUELO_TV.ry * 2) + 'px';
+    cerca.el.appendChild(contacto);
 
     const mundo = capa(frente, 1);
     sombra = crear('div', 'entrada-sombra');
@@ -578,6 +602,9 @@
     estallido = crearEstallido();
     pulso = crear('div', 'entrada-pulso');
     mundo.el.append(sombra, figura.svg, pulso, estallido);
+    pieza(mundo, 'matasIzq');
+    pieza(mundo, 'matasDer');
+    hierbas = Array.prototype.slice.call(mundo.el.querySelectorAll('.entrada-pieza'));
     base(capa(frente, 1.4), 'frente');
 
     raiz.append(fondo, frente, velo);
@@ -680,7 +707,8 @@
     if (aviso){ aviso.remove(); aviso = null; }
     if (mugre){ mugre.remove(); mugre = null; }
     if (raiz){ raiz.remove(); raiz = null; }
-    fondo = frente = velo = sombra = estallido = pulso = figura = null;
+    fondo = frente = velo = sombra = estallido = pulso = contacto = figura = null;
+    hierbas = [];
     capas = [];
     tv.style.transform = '';
     tv.style.removeProperty('--mugre');

@@ -780,9 +780,10 @@ pantalla. El interior del televisor conserva su propia paleta turquesa.
 
 Al abrir el cómic por primera vez en una sesión no aparece el televisor a pantalla
 completa: aparece **un paisaje de montaña del campo colombiano** (cordilleras en capas,
-neblina, palmas de cera, una finca con humo, cercas, una trocha) y, sobre un tocón, **un
-televisor viejo y abandonado**, pequeño, ladeado y empañado. Una silueta con sombrero
-camina por la trocha, se detiene al verlo (le sale un globo de cómic con «¿?»), pasa
+neblina, palmas de cera, una finca con humo, cercas, una trocha, nubes con volumen) y,
+**apoyado sobre un tocón** (con su sombra de contacto y matas de pasto alrededor), **un
+televisor viejo y abandonado**, pequeño, ladeado y empañado. Un campesino con sombrero,
+ruana y carriel camina por la trocha, se detiene al verlo (le sale un globo de cómic con «¿?»), pasa
 frente al tocón, se vuelve hacia él, estira el brazo y **pulsa el botón de encendido**.
 Mientras estira el brazo la cámara empieza un **zoom** hacia el televisor; este se
 enciende a mitad del acercamiento y el zoom termina con el televisor real exactamente
@@ -814,20 +815,35 @@ lleva a «sin transformación» al final del zoom, de modo que el relevo es exac
   distancia recorrida, así que los pies no patinan al acelerar o frenar. El brazo que
   pulsa usa cinemática inversa de dos huesos hacia el botón real. Para girarse se
   voltea con `scaleX`. Su tamaño depende de la altura en la trocha (perspectiva).
+  La ruana y el carriel se balancean con el paso (son piezas opcionales: si faltan,
+  la figura funciona igual). Los colores no van en el SVG sino en `entrada.css`
+  (clases `piel`, `camisa`, `ruana`…), y una luz de borde cálida —un `drop-shadow`
+  del lado del sol, controlado por `--rim`— separa la figura del fondo y cambia de
+  lado cuando se voltea.
 - **Contrato del arte (sustituible sin tocar el código).** Todo vive en
-  `comic/assets/entrada/` y es provisional, generado a mano por código; Gabriel y
-  Brayhan pueden reemplazarlo respetando:
-  - Las capas `cielo`, `nubes`, `lejos`, `media`, `cerca` y `frente`, todas `.svg` de
-    **1600×900**, de atrás hacia delante; `tocon.svg` y `matas.svg` son piezas sueltas
-    que se colocan en las constantes `PIEZAS` de `entrada.js`.
+  `comic/assets/entrada/` y es provisional, generado por código; Gabriel y Brayhan
+  pueden reemplazarlo respetando:
+  - Las capas `cielo`, `nubes`, `lejos`, `media`, `cerca` y `frente`, de **1600×900**
+    (las nubes son `nubes.webp`, 2400×1350 con transparencia; el resto, `.svg`; la
+    extensión de cada capa está en `EXTENSION` de `entrada.js`), de atrás hacia
+    delante; `tocon.svg` y `matas.svg` son piezas sueltas que se colocan en las
+    constantes `PIEZAS` de `entrada.js` (`matas.svg` se usa tres veces: base del tocón
+    y dos matas pequeñas sobre la cara superior del tocón, a los lados del televisor).
+  - Las nubes se hornearon: se dibujaron como SVG con degradados y filtros, se
+    renderizaron en un navegador sin cabeza a PNG transparente y se pasaron a WebP
+    (~70 KB). Pesan poco, se ven con volumen y no cuestan nada de filtro en el
+    navegador de la persona. El script que las genera no está en el repositorio.
   - `cerca.svg` debe llevar un `<path id="senda" d="M x y L x y …">` (solo rectas) con
     el eje de la trocha, de izquierda a derecha y sin relleno ni trazo: por ahí camina.
-  - El televisor va sobre el tocón en `TV` (`cx`, `cy`, `ancho`, `giro`) y la fracción
-    del botón de encendido; deben coincidir con el dibujo del tocón.
+  - El televisor va sobre el tocón en `TV` (`cx`, `cy`, `ancho`, `giro`, hoy 1000, 506,
+    150 y −2°) y la fracción del botón de encendido; deben coincidir con el dibujo del
+    tocón: `cy` es la altura de la base del televisor sobre la cara superior. `SUELO_TV`
+    es la elipse de contacto del televisor con la madera (de ahí sale la sombra).
   - `caminante.svg`: `viewBox` con la figura mirando a la derecha, `data-suelo="x y"`
     (entre los pies) y estas piezas con `data-parte` (y `data-pos="x y"` si cuelgan de
     otra): `cuerpo`, `torso`, `cabeza`, `brazo-i`/`antebrazo-i`, `brazo-d`/`antebrazo-d`,
-    `muslo-i`/`pierna-i`/`pie-i` y `muslo-d`/`pierna-d`/`pie-d`. Cada miembro cuelga
+    `muslo-i`/`pierna-i`/`pie-i` y `muslo-d`/`pierna-d`/`pie-d`; opcionales `ruana` y
+    `carriel` (cuelgan del torso). Cada miembro cuelga
     hacia abajo desde su articulación (`brazo` 70 unidades, `antebrazo` 72; `muslo` 100,
     `pierna` 92). Los de la clase `lejos` se pintan más claros. El SVG se lee como
     documento y se le quitan scripts, enlaces y eventos antes de insertarlo.
@@ -850,7 +866,7 @@ lleva a «sin transformación» al final del zoom, de modo que el relevo es exac
   en 12 s, queda la página de siempre.
 - **Móvil vertical.** Versión corta: el caminante entra por el borde y el televisor se
   acerca en 2,6 s; sigue saliendo el aviso de girar el teléfono, oculto durante la escena.
-- **Peso.** El arte son unos 32 KB comprimidos (`cerca.svg` pesa 13 KB); GSAP (27 KB)
+- **Peso.** El arte son unos 100 KB comprimidos (`nubes.webp` 66 KB; `cerca.svg` 13 KB); GSAP (27 KB)
   se descarga **solo cuando hay escena**, con `Movimiento.cargar()`, no al abrir la
   página. Las siguientes visitas de la misma sesión no pagan nada.
 - **Sin sonido**, a propósito: no se prometió y las pisadas sin licencia clara no entran.
@@ -1059,6 +1075,11 @@ Juanes tienen además condiciones de atribución, explicadas más abajo.
 | Retrato de Juanes (`juanes-retrato.webp`) | RGB Productions | CC BY 3.0 | [Commons](https://commons.wikimedia.org/wiki/File:Juanes_2022.png) | Portada y página de Juanes |
 | Aldabón de la casa familiar | laloking97 | CC BY-SA 2.0 | [Commons](https://commons.wikimedia.org/wiki/File:Aldab%C3%B3n-casa_de_los_pap%C3%A1s_de_Juanes.jpg) | Página de Juanes |
 | Estatua en Carolina del Príncipe | XalD | CC BY-SA 4.0 | [Commons](https://commons.wikimedia.org/wiki/File:Estatua_de_Juanes_en_Carolina_del_Pr%C3%ADncipe,_2023.jpg) | Página de Juanes |
+
+El arte de la entrada al cómic (paisaje, nubes, tocón y campesino) está hecho a mano
+con código y no lleva fila: se buscaron recursos gratuitos (OpenGameArt, itch.io y
+similares) y no se usó ninguno, porque ninguno encajaba con el estilo ni traía las
+piezas articuladas que necesita el paso; si se incorpora alguno, va aquí con su licencia.
 
 Los dibujos, las animaciones y el texto del cómic son del equipo (Gabriel
 Torres, Brayhan Mosquera y Camilo Betancourt) y no llevan fila.

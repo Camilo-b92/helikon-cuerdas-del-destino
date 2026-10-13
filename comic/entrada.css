@@ -68,6 +68,12 @@ html.entrada-activa .tv.is-off .tv-btn--power{
   height: 900px;
 }
 
+.entrada-contacto{
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center, rgba(34, 18, 6, 0.62) 0, rgba(34, 18, 6, 0.4) 52%, rgba(34, 18, 6, 0) 74%);
+}
+
 .entrada-sombra{
   position: absolute;
   left: 0;
@@ -89,20 +95,54 @@ html.entrada-activa .tv.is-off .tv-btn--power{
   overflow: visible;
   transform-origin: 0 0;
 }
-.entrada-caminante path,
-.entrada-caminante ellipse{
-  fill: #101a18;
+.entrada-caminante{
+  --rim: 1;
+  filter:
+    drop-shadow(calc(var(--rim) * 2.2px) 0 0 rgba(255, 210, 140, 0.9))
+    drop-shadow(0 -1.4px 0 rgba(255, 232, 186, 0.55));
 }
-.entrada-caminante .lejos path,
-.entrada-caminante .lejos ellipse{
-  fill: #2a3b36;
-}
-.entrada-caminante .trazo{
+.entrada-caminante .piel{ fill: #7a553f; }
+.entrada-caminante .camisa{ fill: #5d6762; }
+.entrada-caminante .pantalon{ fill: #1f2b38; }
+.entrada-caminante .bota{ fill: #101311; }
+.entrada-caminante .puno{ fill: #323a28; }
+.entrada-caminante .suela{ fill: #2d2c26; }
+.entrada-caminante .cinto{ fill: #25170e; }
+.entrada-caminante .hebilla{ fill: #9a7a44; }
+.entrada-caminante .ruana{ fill: #3d2a20; }
+.entrada-caminante .franja{ fill: #8a3228; }
+.entrada-caminante .cuero{ fill: #553620; }
+.entrada-caminante .solapa{ fill: #6c472a; }
+.entrada-caminante .pelo{ fill: #17100c; }
+.entrada-caminante .oreja{ fill: #6a4733; }
+.entrada-caminante .ojo{ fill: #120c09; }
+.entrada-caminante .sombra-ala{ fill: #0b0807; opacity: 0.55; }
+.entrada-caminante .copa{ fill: #51493d; }
+.entrada-caminante .ala{ fill: #5e5649; }
+.entrada-caminante .banda{ fill: #16110e; }
+.entrada-caminante .lejos .piel{ fill: #5f4231; }
+.entrada-caminante .lejos .camisa{ fill: #46514d; }
+.entrada-caminante .lejos .pantalon{ fill: #28364a; }
+.entrada-caminante .lejos .bota{ fill: #0d0f0e; }
+.entrada-caminante .lejos .puno{ fill: #28301f; }
+.entrada-caminante .lejos .suela{ fill: #23221e; }
+.entrada-caminante .pliegue-p,
+.entrada-caminante .rasgo,
+.entrada-caminante .pliegue,
+.entrada-caminante .puntada,
+.entrada-caminante .trazo-ala,
+.entrada-caminante .trazo-copa,
+.entrada-caminante .correa{
   fill: none;
-  stroke: #4c5e57;
-  stroke-width: 3;
   stroke-linecap: round;
 }
+.entrada-caminante .pliegue{ stroke: #5a4034; stroke-width: 2; }
+.entrada-caminante .pliegue-p{ stroke: #2e3d50; stroke-width: 1.8; }
+.entrada-caminante .rasgo{ stroke: #2a1a12; stroke-width: 1.5; }
+.entrada-caminante .puntada{ stroke: #a58058; stroke-width: 1.3; stroke-dasharray: 3 2.4; }
+.entrada-caminante .trazo-ala{ stroke: #2f2a23; stroke-width: 1.6; }
+.entrada-caminante .trazo-copa{ stroke: #3c352b; stroke-width: 1.4; }
+.entrada-caminante .correa{ stroke: #3a2416; stroke-width: 5; }
 
 .entrada-estallido{
   position: absolute;

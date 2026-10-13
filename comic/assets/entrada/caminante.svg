@@ -1,49 +1,91 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="-130 -250 260 480" width="260" height="480" data-suelo="0 210" data-mira="1" focusable="false" aria-hidden="true">
   <g data-parte="cuerpo" data-pos="0 0">
+
     <g class="lejos" data-parte="brazo-i" data-pos="2 -122" data-largo="70">
-      <path d="M-9 -4Q-12 30 -8 70L8 70Q12 30 9 -4Z"/>
-      <g data-parte="antebrazo-i" data-pos="0 70" data-largo="66">
-        <path d="M-8 0Q-10 30 -6 64L6 64Q9 30 8 0Z"/>
-        <ellipse cx="0" cy="72" rx="7" ry="10"/>
+      <path class="camisa" d="M-10 -6Q-14 6 -12 28Q-10 52 -8 70L9 70Q11 50 12 28Q13 6 10 -6Q0 -10 -10 -6Z"/>
+      <g data-parte="antebrazo-i" data-pos="0 70" data-largo="72">
+        <path class="piel" d="M-8 0Q-9 20 -5 58L-4 64L5 64Q8 22 8 0Z"/>
+        <path class="camisa" d="M-11 -4L11 -4L10 8L-10 8Z"/>
+        <path class="piel" d="M-5 62Q-8 74 -6 84Q-3 91 2 91Q7 90 8 82Q8 72 5 62Z"/>
+        <path class="piel" d="M5 68Q12 74 10 83Q8 79 4 77Z"/>
       </g>
     </g>
+
     <g class="lejos" data-parte="muslo-i" data-pos="0 0" data-largo="100">
-      <path d="M-17 -6Q-19 50 -14 100L13 100Q18 50 16 -6Z"/>
+      <path class="pantalon" d="M-19 -10Q-23 30 -17 100L15 100Q21 40 20 -10Z"/><path class="pliegue-p" d="M-6 6Q-2 22 -8 40M6 14Q10 30 4 44" fill="none"/>
       <g data-parte="pierna-i" data-pos="0 100" data-largo="92">
-        <path d="M-14 0Q-19 35 -10 92L9 92Q14 40 13 0Z"/>
+        <path class="pantalon" d="M-15 -3Q-18 14 -15 40Q-12 70 -9 92L10 92Q11 70 14 44Q17 14 15 -3Z"/><path class="pliegue-p" d="M-7 6Q-4 14 -9 26M4 40Q8 56 2 70" fill="none"/>
         <g data-parte="pie-i" data-pos="0 92">
-          <path d="M-10 -3L10 -3L11 8Q34 8 40 16L40 20L-12 20Q-14 10 -10 -3Z"/>
+          <path class="bota" d="M-11 -24L12 -24L13 4Q36 4 42 13Q45 20 38 21L-13 21Q-16 6 -11 -24Z"/>
+          <path class="puno" d="M-11.4 -24L12.4 -24L12.7 -16L-11.2 -16Z"/>
+          <path class="suela" d="M-13.5 16L40 16Q44 16 44 19.5Q42 21 38 21L-13 21Z"/>
         </g>
       </g>
     </g>
+
     <g data-parte="torso" data-pos="0 0">
-      <path d="M-24 6Q-30 -30 -22 -100Q-18 -126 -4 -134L10 -134Q26 -122 30 -90Q36 -40 24 8Z"/>
-      <path d="M-30 -112Q-42 -50 -38 28Q-10 36 24 30Q34 -30 34 -106Z"/>
-      <path class="trazo" d="M-38 22Q-10 30 24 24"/>
+      <path class="camisa" d="M-20 10Q-25 -30 -21 -80Q-19 -108 -12 -122Q-8 -130 -4 -134L8 -134Q14 -128 20 -120Q27 -104 27 -78Q27 -40 23 10Z"/>
+      <path class="cinto" d="M-22 -3L24 -3L24 8L-22 8Z"/>
+      <path class="hebilla" d="M12 -4L21 -4L21 9L12 9Z"/>
+
+      <g data-parte="ruana" data-pos="-4 -128">
+        <g transform="translate(4 128)">
+          <path class="ruana" d="M-8 -134Q-30 -128 -34 -108Q-44 -50 -42 20L-45 54L-39 49L-36 57L-30 50L-26 59L-20 51L-14 59L-8 50L-2 58L4 50L10 57L16 49L22 54L29 44Q35 -20 30 -92Q28 -118 14 -130Z"/>
+          <path class="franja" d="M-43.4 26L31 26L30.4 35L-43 35Z"/>
+          <path class="franja" d="M-43.8 38L30 38L29.6 41L-43.6 41Z"/>
+          <path class="pliegue" d="M-30 -92Q-35 -30 -35 24"/>
+          <path class="pliegue" d="M-16 -104Q-20 -40 -18 24"/>
+          <path class="pliegue" d="M12 -110Q18 -50 20 24"/>
+        </g>
+      </g>
+
+      <path class="correa" d="M-5 -124Q4 -62 14 4" fill="none"/>
+      <g data-parte="carriel" data-pos="12 4">
+        <g transform="translate(-12 -4)">
+          <path class="cuero" d="M-4 8Q-6 5 -1 5L32 5Q38 5 38 12L37 44Q37 52 30 52L2 52Q-6 52 -6 44Z"/>
+          <path class="solapa" d="M-4 8L37 8L37 24Q17 34 -5 24Z"/><path class="hebilla" d="M14 24L20 24L20 31L14 31Z"/>
+          <path class="puntada" d="M-1 11L35 11M-2 47L34 47" fill="none"/>
+        </g>
+      </g>
+
       <g data-parte="cabeza" data-pos="0 -132">
-        <path d="M-8 8L-7 -12L9 -12L10 8Z"/>
-        <ellipse cx="4" cy="-38" rx="21" ry="26"/>
-        <path d="M22 -42Q33 -37 25 -29Z"/>
-        <ellipse cx="4" cy="-55" rx="54" ry="9"/>
-        <path d="M-20 -56Q-23 -90 4 -93Q31 -90 27 -56Z"/>
-        <path class="trazo" d="M-20 -62Q4 -55 27 -62"/>
+        <path class="piel" d="M-8 8L-7 -14Q2 -10 10 -14L11 8Z"/>
+        <path class="piel" d="M-9 -14Q-23 -24 -22 -40Q-22 -58 -8 -65Q6 -70 17 -62L20 -55L19.5 -51Q25 -47 30 -42Q30.5 -40 27 -39.5L23.5 -39Q25 -36 24 -34.5L22 -32.5Q24.5 -31 24 -29L21.5 -27Q24 -25 23 -21Q21 -13 11 -11Q2 -10 -5 -13Z"/>
+        <path class="pelo" d="M-22 -40Q-23 -56 -10 -64Q-2 -66 4 -64Q-6 -52 -9 -38Q-12 -30 -15 -22Q-20 -28 -22 -40Z"/>
+        <ellipse class="oreja" cx="-5" cy="-38" rx="4.5" ry="7"/>
+        <path class="rasgo" d="M11 -48Q15 -50 19 -48" fill="none"/>
+        <ellipse class="ojo" cx="15" cy="-45" rx="1.7" ry="2.1"/>
+        <path class="rasgo" d="M17 -31Q20.5 -30 22.5 -31.5" fill="none"/>
+        <path class="sombra-ala" d="M-14 -62Q4 -56 22 -60L22 -49Q4 -52 -14 -51Z"/>
+        <path class="copa" d="M-22 -64Q-26 -84 -18 -96Q-10 -104 4 -104Q18 -104 24 -96Q30 -84 25 -64Q2 -60 -22 -64Z"/>
+        <path class="banda" d="M-22.4 -66Q2 -62 25.4 -66L26 -73Q2 -69 -23.6 -73Z"/>
+        <path class="ala" d="M-52 -58Q-30 -67 4 -68Q40 -68 56 -56Q40 -48 4 -49Q-30 -49 -52 -58Z"/>
+        <path class="trazo-ala" d="M-48 -57Q-30 -62 4 -63Q38 -63 52 -56" fill="none"/>
+        <path class="trazo-copa" d="M-16 -80Q4 -76 20 -80M-18 -90Q4 -86 22 -90" fill="none"/>
       </g>
     </g>
+
     <g data-parte="muslo-d" data-pos="0 0" data-largo="100">
-      <path d="M-17 -6Q-19 50 -14 100L13 100Q18 50 16 -6Z"/>
+      <path class="pantalon" d="M-19 -10Q-23 30 -17 100L15 100Q21 40 20 -10Z"/><path class="pliegue-p" d="M-6 6Q-2 22 -8 40M6 14Q10 30 4 44" fill="none"/>
       <g data-parte="pierna-d" data-pos="0 100" data-largo="92">
-        <path d="M-14 0Q-19 35 -10 92L9 92Q14 40 13 0Z"/>
+        <path class="pantalon" d="M-15 -3Q-18 14 -15 40Q-12 70 -9 92L10 92Q11 70 14 44Q17 14 15 -3Z"/><path class="pliegue-p" d="M-7 6Q-4 14 -9 26M4 40Q8 56 2 70" fill="none"/>
         <g data-parte="pie-d" data-pos="0 92">
-          <path d="M-10 -3L10 -3L11 8Q34 8 40 16L40 20L-12 20Q-14 10 -10 -3Z"/>
+          <path class="bota" d="M-11 -24L12 -24L13 4Q36 4 42 13Q45 20 38 21L-13 21Q-16 6 -11 -24Z"/>
+          <path class="puno" d="M-11.4 -24L12.4 -24L12.7 -16L-11.2 -16Z"/>
+          <path class="suela" d="M-13.5 16L40 16Q44 16 44 19.5Q42 21 38 21L-13 21Z"/>
         </g>
       </g>
     </g>
+
     <g data-parte="brazo-d" data-pos="2 -122" data-largo="70">
-      <path d="M-9 -4Q-12 30 -8 70L8 70Q12 30 9 -4Z"/>
-      <g data-parte="antebrazo-d" data-pos="0 70" data-largo="66">
-        <path d="M-8 0Q-10 30 -6 64L6 64Q9 30 8 0Z"/>
-        <ellipse cx="0" cy="72" rx="7" ry="10"/>
+      <path class="camisa" d="M-10 -6Q-14 6 -12 28Q-10 52 -8 70L9 70Q11 50 12 28Q13 6 10 -6Q0 -10 -10 -6Z"/>
+      <g data-parte="antebrazo-d" data-pos="0 70" data-largo="72">
+        <path class="piel" d="M-8 0Q-9 20 -5 58L-4 64L5 64Q8 22 8 0Z"/>
+        <path class="camisa" d="M-11 -4L11 -4L10 8L-10 8Z"/>
+        <path class="piel" d="M-5 62Q-8 74 -6 84Q-3 91 2 91Q7 90 8 82Q8 72 5 62Z"/>
+        <path class="piel" d="M5 68Q12 74 10 83Q8 79 4 77Z"/>
       </g>
     </g>
+
   </g>
 </svg>

@@ -1704,6 +1704,37 @@ recorrió cada escena con el nuevo botón.
 - **No se probó** en Brave ni en un teléfono real, ni la reproducción de la introducción con
   sonido tras el clic del script (ver *Límite conocido* en el README).
 
+### Ronda 33 — La entrada, pulida: nubes con volumen, televisor apoyado y un campesino de verdad
+
+- **Directo sobre `main`**, sin rama.
+- **Pedido.** Tres cosas: mejorar las nubes, que el televisor **no flote** sino que descanse
+  sobre el tronco, y mejorar la silueta —lo más importante, según Camilo—. Además, se podía
+  buscar material gratuito en internet si servía.
+- **Recursos gratuitos.** Se buscaron (bancos de arte libre y juegos) y no se usó ninguno:
+  ninguno traía un campesino colombiano con las piezas articuladas que el paso necesita ni
+  encajaba con el estilo del paisaje. Se dejó anotado en el README por si se incorpora alguno.
+- **Nubes.** El primer intento (iluminación difusa de SVG) parecía manchas infladas con un borde
+  morado. Se rehízo como cúmulos de lóbulos con degradado radial más un desplazamiento en el
+  borde, y se **hornearon** a `nubes.webp` (2400×1350, ~70 KB) en lugar de pintar el filtro en
+  cada visita. Quedaron tapadas por el menú al principio; se bajaron unas 46 unidades.
+- **Televisor sobre el tocón.** `TV.cy` pasó a 506 y `giro` a −2°; se añadió una sombra de contacto
+  (`.entrada-contacto`) bajo el televisor, matas de pasto en la base del tocón y dos a los
+  lados del aparato. Las matas se desvanecen durante el zoom para no tapar la pantalla.
+  El relevo con el televisor real sigue en 0 px.
+- **Silueta (v2).** `caminante.svg` rehecho: campesino con sombrero de ala ancha, ruana con franjas,
+  carriel de cuero con costuras, camisa, pantalón con pliegues, botas con puño, rostro con ojo,
+  ceja y boca. `ruana` y `carriel` son piezas opcionales con su propio balanceo. La paleta pasó a
+  `entrada.css` y se añadió una **luz de borde** cálida (dos `drop-shadow`, lado según `--rim`).
+- **Trampas encontradas:**
+  1. Primera paleta: se leía como una mancha negra con mangas grises → se aclaró el tono de piel
+     y la camisa y se añadieron rasgos.
+  2. `will-change` seguía empeorando el render por software: no se usa.
+  3. Una comprobación de pruebas esperaba `rotate(-4/-5deg)`; con el −2° nuevo se ajustó.
+- **Comprobado:** `fase4` (escritorio, móvil 360×740, 768×1024, 1920×1080, 1024×600), `fase1`,
+  `fase2`, `fase3`, `optin` y `axall`, todas en verde; fotogramas revisados a mano en cada tamaño.
+- **No se probó** en Brave ni en un teléfono real, ni el rendimiento con GPU (en el entorno de
+  prueba, por software, ~15 fotogramas por segundo).
+
 ---
 
 ## Pendientes
