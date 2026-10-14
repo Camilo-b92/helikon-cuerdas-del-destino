@@ -94,10 +94,11 @@ Lo que eso implica al trabajar:
     ├── index.html
     ├── comic.css
     ├── comic.js
-    ├── entrada.js          La entrada: alguien camina por el campo, halla el televisor y lo enciende (GSAP)
+    ├── entrada.js          La entrada: Juan camina por el campo, halla el televisor y lo enciende (GSAP)
+    ├── entrada-juan.js     El rig y la animación de Juan (módulo sin DOM; lo usan el sitio y Remotion)
     ├── entrada.css
     └── assets/             Arte, video y animaciones Lottie
-        ├── entrada/         El paisaje en capas y el caminante de la entrada (sustituibles)
+        ├── entrada/         Juan (juan.json), el tocón y el arbusto del primer plano de la entrada
         ├── intro.mp4
         ├── tv.png
         ├── personajes/      Los cinco personajes, en SVG
@@ -776,18 +777,18 @@ defecto. No se enlaza `pulp.css` entera porque redefine `--ink` y `*`, y
 para que la trama de papel quede *debajo* del televisor y no empañe la
 pantalla. El interior del televisor conserva su propia paleta turquesa.
 
-### La entrada al cómic (`comic/entrada.js`)
+### La entrada al cómic (`comic/entrada.js` y `comic/entrada-juan.js`)
 
 Al abrir el cómic por primera vez en una sesión no aparece el televisor a pantalla
-completa: aparece **un paisaje de montaña del campo colombiano** (cordilleras en capas,
-palmas de cera, una finca con humo, cercas, una trocha, las mismas nubes del cómic) y,
-**apoyado sobre un tocón** (con su sombra de contacto y matas de pasto alrededor), **un
-televisor viejo y abandonado**, pequeño, ladeado y empañado. Un campesino con sombrero,
-ruana y carriel camina por la trocha, se detiene al verlo (le sale un globo de cómic con «¿?»), pasa
-frente al tocón, se vuelve hacia él, estira el brazo y **pulsa el botón de encendido**.
-Mientras estira el brazo la cámara empieza un **zoom** hacia el televisor; este se
-enciende a mitad del acercamiento y el zoom termina con el televisor real exactamente
-donde se coloca siempre. Dura unos 12 s en escritorio y unos 8 s en móvil vertical.
+completa: aparece **el paisaje real del cómic** (el mismo fondo de la escena I: casas,
+colinas, trocha y matas, con el cielo y las nubes del propio cómic) y, **apoyado sobre un
+tocón**, **un televisor viejo y abandonado**, pequeño, ladeado y empañado. **Juan**, el
+personaje del cómic, sale de detrás de un arbusto, camina hacia la izquierda, se frena al
+ver el televisor (salta, abre la boca y le sale un globo de cómic con «!»), se acerca con
+curiosidad, estira el brazo y **pulsa el botón de encendido**. Mientras presiona, la cámara
+hace un **zoom** hacia el televisor; este se enciende y el zoom termina con el televisor
+real exactamente donde se coloca siempre. Dura unos 11 s en escritorio y unos 7 s en móvil
+vertical.
 
 **El televisor es el de siempre.** No hay una copia para la escena: `entrada.js` le
 aplica un `transform` (trasladar, girar, escalar) para colocarlo en el paisaje y lo
@@ -803,60 +804,49 @@ lleva a «sin transformación» al final del zoom, de modo que el relevo es exac
 - **Reproducirla otra vez.** Por defecto es una vez por sesión; añadir `?entrada` a la
   dirección (`comic/?entrada`) la fuerza.
 - **Cómo se calcula.** Todo es función del tiempo: una sola animación de GSAP (un
-  contador de 0 a ~12 s) y en cada fotograma se calcula la cámara, el televisor y el
-  caminante. Por eso es predecible y se puede avanzar y retroceder. El lienzo del
-  paisaje es de 1600×900 unidades; se escala para *cubrir* la ventana, con el televisor
-  a la derecha del centro (en vertical, más a la izquierda). Las capas tienen
-  profundidad (paralaje): el cielo apenas se acerca y el pasto del frente se acerca más
-  que el televisor.
-- **El caminante.** `caminante.svg` está dividido en piezas articuladas. El paso es
-  cinemática directa: muslo, rodilla y pie por fase, con el pie más bajo siempre pegado
-  al suelo (de ahí sale el pequeño sube y baja del cuerpo) y la fase avanza con la
-  distancia recorrida, así que los pies no patinan al acelerar o frenar. El brazo que
-  pulsa usa cinemática inversa de dos huesos hacia el botón real. Para girarse se
-  voltea con `scaleX`. Su tamaño depende de la altura en la trocha (perspectiva).
-  La ruana y el carriel se balancean con el paso (son piezas opcionales: si faltan,
-  la figura funciona igual). Está dibujado con el lenguaje de los personajes del cómic:
-  contorno negro fino, colores planos, cabeza grande, ojos de dibujo animado, bigote,
-  guante blanco y zapatos grandes. Los colores van **dentro del SVG como atributos**
-  (el lector de SVG descarta las hojas de estilo), no en `entrada.css`. Tiene
-  expresión: parpadea, se sorprende al ver el televisor, mira hacia él y, al pulsar,
-  cambia al guante que señala (clases opcionales `.ojos`, `.pupilas`, `.cejas`,
-  `.boca`, `.boca-o`, `.puno` y `.senala`; si faltan, la figura funciona igual).
-- **Contrato del arte (sustituible sin tocar el código).** Todo vive en
-  `comic/assets/entrada/` y es una **base generada por código** con la identidad visual
-  del cómic; Gabriel y Brayhan pueden reemplazarlo respetando:
-  - Las capas `cielo`, `lejos`, `media`, `cerca` y `frente`, de **1600×900** y en `.svg`,
-    de atrás hacia delante; `tocon.svg` y `matas.svg` son piezas sueltas que se colocan
-    en las constantes `PIEZAS` de `entrada.js` (`matas.svg` se usa tres veces: base del
-    tocón y dos matas pequeñas sobre la cara superior, a los lados del televisor).
-  - Las **nubes no son un archivo de la entrada**: se reutilizan las del propio cómic
-    (`assets/capitulo-n1/scene1/img/nubes.png`, la hoja de nubes de la escena I), recortadas
-    con `NUBES` y cargadas con `RUTAS` en `entrada.js`. Así el cielo es el mismo y el
-    navegador ya las tiene en caché. Para usar otras, basta cambiar esas dos constantes.
-  - **Identidad visual (guía para quien dibuje).** Vectorial plano con contorno negro fino
-    (~2–3 unidades); paleta apagada de oliva, ocre y sepia, con cielo verde azulado en
-    degradado; colinas moteadas tipo camuflaje (`<pattern>` de manchas), trocha
-    punteada, follaje en lóbulos con contorno. Paleta del campesino: piel `#f5d2a0`, camisa
-    `#f3e6c9`, pantalón `#556f7c`, botas `#555a56`, ruana `#a35f3d`, cuero `#8e6540`,
-    pelo `#5a3a22`, sombrero `#f3e6c9` con cinta `#2a2119`. Los generadores en Python
-    que produjeron este arte **no están en el repositorio**.
-  - Los SVG no pueden usar `<style>`, scripts, `<use>`, `<image>` ni enlaces (se
-    descartan al leerlos): el color va en atributos.
-  - `cerca.svg` debe llevar un `<path id="senda" d="M x y L x y …">` (solo rectas) con
-    el eje de la trocha, de izquierda a derecha y sin relleno ni trazo: por ahí camina.
-  - El televisor va sobre el tocón en `TV` (`cx`, `cy`, `ancho`, `giro`, hoy 1000, 506,
-    150 y −2°) y la fracción del botón de encendido; deben coincidir con el dibujo del
-    tocón: `cy` es la altura de la base del televisor sobre la cara superior. `SUELO_TV`
-    es la elipse de contacto del televisor con la madera (de ahí sale la sombra).
-  - `caminante.svg`: `viewBox` con la figura mirando a la derecha, `data-suelo="x y"`
-    (entre los pies) y estas piezas con `data-parte` (y `data-pos="x y"` si cuelgan de
-    otra): `cuerpo`, `torso`, `cabeza`, `brazo-i`/`antebrazo-i`, `brazo-d`/`antebrazo-d`,
-    `muslo-i`/`pierna-i`/`pie-i` y `muslo-d`/`pierna-d`/`pie-d`; opcionales `ruana` y
-    `carriel` (cuelgan del torso). Cada miembro cuelga
-    hacia abajo desde su articulación (`brazo` 70 unidades, `antebrazo` 76; `muslo` 100,
-    `pierna` 92) y el `viewBox` es de 300×590. El SVG se lee como documento y se le
-    quitan scripts, enlaces y eventos antes de insertarlo.
+  contador de 0 a ~11 s) y en cada fotograma se calcula la cámara, el televisor y
+  Juan. Por eso es predecible y se puede avanzar y retroceder. El lienzo es de 1600×900
+  unidades; se escala para *cubrir* la ventana, con el televisor a la izquierda del
+  centro (en vertical, aún más a la izquierda). Las capas tienen profundidad (paralaje):
+  el cielo apenas se acerca, las nubes algo más y el paisaje con Juan y el televisor es
+  el plano que recibe todo el zoom.
+- **Juan (`comic/entrada-juan.js`).** Es un módulo sin DOM que recibe `juan.json` y
+  devuelve, para cada instante, la matriz de cada pieza. Las piezas (30 capas: torso,
+  pelvis, piernas, zapatos, brazos, manos, cuello, cabeza, pelo, cejas, ojos, pupilas,
+  nariz, oreja y boca) **se extrajeron de la animación Lottie del propio cómic**, no se
+  redibujaron; el módulo las articula con jerarquía padre-hijo. El paso es un ciclo de
+  18 cuadros a 25 fps con una tabla de avance sacada de la posición del tobillo
+  apoyado (los pies no patinan) y la fase avanza con la distancia, así que al frenar o
+  arrancar el paso se acompasa. Se frena con la pierna que pasa por debajo del cuerpo
+  y se relaja a la postura de reposo. La sorpresa es expresión (cejas arriba, ojos más
+  grandes, pupilas pequeñas y boca en «o»), un salto con aplastamiento y estiramiento
+  y un globo. El brazo que presiona usa **cinemática inversa**: un buscador numérico
+  halla los ángulos de hombro, codo y muñeca para que la punta del guante toque el botón
+  real del televisor, y la presión es un segundo objetivo cinco unidades más adentro.
+  También parpadea. Juan se pinta como un SVG pequeño (`.entrada-caminante`) que se
+  mueve con `transform`, igual que antes la figura, para que el repintado sea local.
+- **Remotion.** `herramientas/entrada-remotion/` es un proyecto de Remotion que importa
+  **ese mismo módulo** y dibuja la escena completa. Sirve para revisar fotogramas con
+  `npx remotion still` y para renderizar un video de vista previa; lo que se ve ahí es lo
+  que hace la página. No se publica con el sitio.
+- **Contrato del arte (sustituible sin tocar el código).** En `comic/assets/entrada/`:
+  - `juan.json` (44 KB): `origen` (el punto entre los pies), `vista` (la caja del SVG),
+    `capas` (de atrás hacia delante: `i` identificador, `p` padre, `l` matriz local,
+    `a` ancla de giro, `x` el SVG de la pieza y `b` la caja de los zapatos) y `boca` (las
+    bocas de sorpresa y curiosidad). Si Gabriel y Brayhan rehacen a Juan, basta con
+    respetar esos identificadores.
+  - `tocon.svg` (200×180) y `oclusor-der.png`: el recorte del arbusto del primer plano
+    (derecha) que se dibuja **encima** de Juan para que salga de detrás de él. Se obtuvo de
+    `fondo.png` con una máscara poligonal; si cambia el fondo del cómic hay que rehacerlo.
+  - El paisaje, el cielo y las nubes **no son archivos de la entrada**: se reutilizan los
+    del propio cómic (`assets/capitulo-n1/scene1/img/fondo.png`, `cielo.jpg`, `nubes.png`),
+    con `RUTAS` en `entrada.js`. Así la entrada tiene exactamente la identidad visual del
+    cómic y el navegador ya los tiene en caché al llegar a la escena I.
+  - El televisor va sobre el tocón en `TV` (`cx`, `cy`, `ancho`, `giro`, hoy 582, 674,
+    146 y −2°) y la fracción del botón de encendido; el tocón en `TOCON` y su sombra en
+    `SUELO_TV`. Juan llega siempre al punto desde donde su mano alcanza el botón: se
+    calcula con `posicionLlegada`, no a mano (`ALCANCE` es cuánto delante y debajo del
+    hombro está el botón).
 - **El televisor sucio.** Mientras la escena dura, el marco se oscurece y amarillea con
   un filtro CSS y la pantalla lleva un reflejo y polvo (`.entrada-mugre`); ambos se
   disipan durante el zoom (variable `--mugre`).
@@ -874,10 +864,11 @@ lleva a «sin transformación» al final del zoom, de modo que el relevo es exac
   Si el equipo va a menos de ~11 fotogramas por segundo en los dos primeros segundos, la
   escena se corta y enciende el televisor directamente (`'lenta'`). Si el arte no carga
   en 12 s, queda la página de siempre.
-- **Móvil vertical.** Versión corta: el caminante entra por el borde y el televisor se
+- **Móvil vertical.** Versión corta: Juan entra por el borde y el televisor se
   acerca en 2,6 s; sigue saliendo el aviso de girar el teléfono, oculto durante la escena.
-- **Peso.** El arte son unos 60 KB comprimidos (`cerca.svg` 24 KB, `media.svg` 20 KB; las nubes
-  ya las descargaba el cómic); las capas llevan `will-change: transform` para que el
+- **Peso.** Lo propio de la entrada son unos 150 KB (`juan.json` 8 KB comprimido,
+  `oclusor-der.png` 148 KB, `tocon.svg` 3 KB); el fondo, el cielo y las nubes ya los descarga
+  el cómic en la escena I. Las capas llevan `will-change: transform` para que el
   navegador las dibuje una vez y solo las mueva; GSAP (27 KB)
   se descarga **solo cuando hay escena**, con `Movimiento.cargar()`, no al abrir la
   página. Las siguientes visitas de la misma sesión no pagan nada.
@@ -1079,6 +1070,7 @@ Juanes tienen además condiciones de atribución, explicadas más abajo.
 
 | Recurso | Autor | Licencia | Enlace | Dónde se usa |
 |---|---|---|---|---|
+| Remotion 4 | Remotion | Gratuita para equipos de hasta 3 personas (licencia de Remotion) | [remotion.dev](https://www.remotion.dev) | `herramientas/entrada-remotion/`; solo para revisar y renderizar la entrada, no se publica |
 | GSAP 3.15, ScrollTrigger y DrawSVG | GreenSock | Licencia estándar "sin cargo" | [gsap.com/standard-license](https://gsap.com/standard-license) | `assets/vendor/gsap/`; la animación de la página de Helikón y la entrada del cómic |
 | three.js r170 | Autores de three.js | MIT | [threejs.org](https://threejs.org) | `assets/vendor/three/`; el vinilo de Juanes |
 | lottie-web 5.13.0 | Airbnb y colaboradores | MIT (según su repositorio; el archivo no lleva cabecera) | [github.com/airbnb/lottie-web](https://github.com/airbnb/lottie-web) | `comic/assets/`; las escenas del cómic |
@@ -1088,11 +1080,9 @@ Juanes tienen además condiciones de atribución, explicadas más abajo.
 | Aldabón de la casa familiar | laloking97 | CC BY-SA 2.0 | [Commons](https://commons.wikimedia.org/wiki/File:Aldab%C3%B3n-casa_de_los_pap%C3%A1s_de_Juanes.jpg) | Página de Juanes |
 | Estatua en Carolina del Príncipe | XalD | CC BY-SA 4.0 | [Commons](https://commons.wikimedia.org/wiki/File:Estatua_de_Juanes_en_Carolina_del_Pr%C3%ADncipe,_2023.jpg) | Página de Juanes |
 
-El arte de la entrada al cómic (paisaje, tocón y campesino) está hecho con código siguiendo
-el estilo de los fondos del cómic, y sus nubes son las del propio cómic; no lleva fila: se
-buscaron recursos gratuitos (OpenGameArt, itch.io y similares) y no se usó ninguno, porque
-ninguno encajaba con el estilo ni traía las piezas articuladas que necesita el paso; si se
-incorpora alguno, va aquí con su licencia.
+El arte de la entrada al cómic no es de terceros: el paisaje, el cielo y las nubes son los del
+propio cómic, Juan sale de su animación Lottie y el tocón está hecho con código con el estilo
+de los fondos. La herramienta Remotion solo se usa para revisar; no entra al sitio.
 
 Los dibujos, las animaciones y el texto del cómic son del equipo (Gabriel
 Torres, Brayhan Mosquera y Camilo Betancourt) y no llevan fila.

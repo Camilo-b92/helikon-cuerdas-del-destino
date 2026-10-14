@@ -3,47 +3,38 @@
 
   const CLAVE = 'helikon-entrada';
   const CARPETA = 'assets/entrada/';
+  const MUNDO = 'assets/capitulo-n1/scene1/img/';
   const LIENZO = { w: 1600, h: 900 };
-  const TV = { cx: 1000, cy: 506, ancho: 150, giro: -2, boton: [0.895, 0.886], proporcion: 925 / 1566 };
-  const PIEZAS = {
-    tocon: { x: 908, y: 530, w: 184 },
-    matasBase: { x: 875, y: 640, w: 250, archivo: 'matas' },
-    matasIzq: { x: 918, y: 538, w: 70, archivo: 'matas' },
-    matasDer: { x: 1030, y: 540, w: 64, archivo: 'matas' }
-  };
-  const RUTAS = { nubes: 'assets/capitulo-n1/scene1/img/nubes.png' };
-  const NUBES = [
-    { s: [830, 0, 617, 252], x: 110, y: 78, w: 440 },
-    { s: [1705, 76, 382, 161], x: 640, y: 150, w: 300 },
-    { s: [2280, 105, 366, 140], x: 1130, y: 86, w: 330 },
-    { s: [2069, 334, 378, 144], x: 1360, y: 232, w: 250 },
-    { s: [389, 350, 378, 140], x: 330, y: 276, w: 250 },
-    { s: [1212, 371, 293, 113], x: 860, y: 300, w: 190 },
-    { s: [0, 404, 173, 70], x: 40, y: 330, w: 120 },
-    { s: [1677, 389, 176, 69], x: 1010, y: 224, w: 130 }
-  ];
-  const SUELO_TV = { x: 1000, y: 551, rx: 78, ry: 9 };
+  const FPS = 25;
+  const TV = { cx: 582.3, cy: 674.4, ancho: 146, giro: -2, boton: [0.895, 0.886], proporcion: 925 / 1566 };
+  const ESCALA_PLATO = 1600 / 2268;
+  const OCLUSOR = { x: 1625 * ESCALA_PLATO, y: 1000 * ESCALA_PLATO - 28, w: 643 * ESCALA_PLATO, h: 336 * ESCALA_PLATO };
+  const TOCON = { x: 502, y: 699, w: 160, h: 112 };
+  const SUELO_TV = { x: 582, y: 807, rx: 108, ry: 14 };
+  const ALCANCE = { adelante: 60, abajo: 50 };
   const FONDOS = [
     { id: 'cielo', d: 0.1 },
-    { id: 'nubes', d: 0.18, deriva: 5 },
-    { id: 'lejos', d: 0.36 },
-    { id: 'media', d: 0.64 }
+    { id: 'nubes', d: 0.18, deriva: 15 }
   ];
-  const ALTURA = 0.7586;
-  const ZANCADA = 348;
-  const BRAZO = { a: 70, b: 76 };
-  const VELOCIDAD = 250;
-  const FRENADA = 150;
+  const RUTAS = {
+    cielo: MUNDO + 'cielo.jpg',
+    nubes: MUNDO + 'nubes.png',
+    plato: MUNDO + 'fondo.png',
+    tocon: CARPETA + 'tocon.svg',
+    oclusor: CARPETA + 'oclusor-der.png'
+  };
+  const IMAGENES = ['cielo', 'nubes', 'plato', 'tocon', 'oclusor'];
 
   const html = document.documentElement;
   const M = window.Movimiento;
+  const J = window.EntradaJuan;
   const tv = document.getElementById('tv');
   const pantalla = document.getElementById('tvScreen');
   const btnPower = document.getElementById('btnPower');
   const cartel = document.getElementById('tvCartel');
   const principal = document.getElementById('contenido');
 
-  const lista = !!(M && tv && pantalla && btnPower && principal);
+  const lista = !!(M && J && tv && pantalla && btnPower && principal);
 
   let fase = 'inactiva';
   let resolver = null;
@@ -63,11 +54,11 @@
   let reloj = null;
   let capas = [];
   let figura = null;
+  let juan = null;
   let sombra = null;
   let estallido = null;
   let pulso = null;
   let contacto = null;
-  let hierbas = [];
   let G = null;
 
   function activa(si){
@@ -124,17 +115,6 @@
     return [x * c - y * s, x * s + y * c];
   }
 
-  function curva(f, claves){
-    for (let i = 1; i < claves.length; i++){
-      if (f <= claves[i][0]){
-        const a = claves[i - 1];
-        const b = claves[i];
-        return mezcla(a[1], b[1], suave((f - a[0]) / (b[0] - a[0])));
-      }
-    }
-    return claves[claves.length - 1][1];
-  }
-
   function n3(v){
     return Math.round(v * 1000) / 1000;
   }
@@ -149,10 +129,10 @@
     });
   }
 
-  function cargarTexto(nombre){
+  function cargarJSON(nombre){
     return window.fetch(CARPETA + nombre).then((r) => {
       if (!r.ok) throw new Error(nombre);
-      return r.text();
+      return r.json();
     });
   }
 
@@ -164,7 +144,7 @@
       img.draggable = false;
       img.addEventListener('load', () => ok(img), { once: true });
       img.addEventListener('error', () => mal(new Error(nombre)), { once: true });
-      img.src = RUTAS[nombre] || (CARPETA + nombre + '.svg');
+      img.src = RUTAS[nombre];
     });
   }
 
@@ -176,83 +156,43 @@
     ]);
   }
 
-  function leerSVG(texto){
-    const doc = new DOMParser().parseFromString(texto, 'image/svg+xml');
-    const svg = doc.documentElement;
-    if (!svg || svg.nodeName.toLowerCase() !== 'svg' || doc.querySelector('parsererror')) return null;
-    svg.querySelectorAll('script, foreignObject, use, image, style').forEach((n) => n.remove());
-    svg.querySelectorAll('*').forEach((n) => {
-      Array.prototype.slice.call(n.attributes).forEach((a) => {
-        if (/^on/i.test(a.name) || /href$/i.test(a.name)) n.removeAttribute(a.name);
-      });
-    });
-    return { svg: svg, doc: doc };
-  }
-
-  function leerSenda(texto){
-    const leido = leerSVG(texto);
-    const trazo = leido && leido.doc.getElementById('senda');
-    const d = trazo && trazo.getAttribute('d');
-    if (!d) return null;
-    const n = d.match(/-?\d*\.?\d+/g);
-    if (!n || n.length < 8) return null;
-    const puntos = [];
-    for (let i = 0; i + 1 < n.length; i += 2) puntos.push([parseFloat(n[i]), parseFloat(n[i + 1])]);
-    return puntos.every((p) => isFinite(p[0]) && isFinite(p[1])) ? puntos : null;
-  }
-
-  function punto(txt, otro){
-    if (!txt) return otro;
-    const v = txt.trim().split(/[\s,]+/).map(Number);
-    return v.length === 2 && v.every(isFinite) ? v : otro;
-  }
-
-  function montarFigura(svgTexto){
-    const leido = leerSVG(svgTexto);
-    if (!leido) return null;
-    const svg = document.importNode(leido.svg, true);
+  function montarJuan(datos){
+    const NS = 'http://www.w3.org/2000/svg';
+    const v = datos.vista;
+    const svg = document.createElementNS(NS, 'svg');
     svg.setAttribute('class', 'entrada-caminante');
-    const vb = svg.viewBox.baseVal;
-    const suelo = punto(svg.getAttribute('data-suelo'), [0, 210]);
-    const partes = {};
-    svg.querySelectorAll('[data-parte]').forEach((n) => {
-      partes[n.getAttribute('data-parte')] = { el: n, pos: punto(n.getAttribute('data-pos'), [0, 0]) };
+    svg.setAttribute('viewBox', v.join(' '));
+    svg.setAttribute('width', String(v[2]));
+    svg.setAttribute('height', String(v[3]));
+    svg.setAttribute('focusable', 'false');
+    const piezas = {};
+    datos.capas.forEach((c) => {
+      const g = document.createElementNS(NS, 'g');
+      g.innerHTML = c.x;
+      svg.appendChild(g);
+      piezas[c.i] = { g: g, xml: c.x, vari: '' };
     });
-    const necesarias = ['cuerpo', 'torso', 'cabeza', 'brazo-i', 'antebrazo-i', 'brazo-d', 'antebrazo-d', 'muslo-i', 'pierna-i', 'pie-i', 'muslo-d', 'pierna-d', 'pie-d'];
-    if (!necesarias.every((k) => partes[k]) || !vb || !vb.width) return null;
-    const sel = (q) => svg.querySelector(q);
     return {
       svg: svg,
-      partes: partes,
-      cara: {
-        ojos: sel('.ojos'),
-        pupilas: sel('.pupilas'),
-        cejas: sel('.cejas'),
-        boca: sel('.boca'),
-        bocaO: sel('.boca-o'),
-        puno: sel('[data-parte="antebrazo-d"] .puno'),
-        senala: sel('[data-parte="antebrazo-d"] .senala')
-      },
-      ancla: [-vb.x, -vb.y],
-      ancho: vb.width,
-      alto: vb.height,
-      suelo: suelo
+      piezas: piezas,
+      boca: datos.boca,
+      ancla: [datos.origen[0] - v[0], datos.origen[1] - v[1]]
     };
   }
 
   function crearEstallido(){
     const e = crear('div', 'entrada-estallido');
     let p = '';
-    const n = 16;
+    const n = 9;
     for (let i = 0; i < n * 2; i++){
       const a = (i / (n * 2)) * Math.PI * 2 - Math.PI / 2;
-      const r = i % 2 === 0 ? 54 + (i % 4) * 2 : 37;
+      const r = i % 2 === 0 ? 52 : 36;
       p += (60 + Math.cos(a) * r * 1.1).toFixed(1) + ',' + (50 + Math.sin(a) * r * 0.92).toFixed(1) + ' ';
     }
     e.innerHTML =
       '<svg viewBox="0 0 120 100" width="120" height="100" focusable="false" aria-hidden="true">' +
       '<polygon points="' + p.trim() + '"/>' +
-      '<text x="60" y="66" text-anchor="middle">&#191;?</text></svg>';
+      '<text x="60" y="71" text-anchor="middle">!</text></svg>';
     return e;
   }
 
@@ -265,289 +205,81 @@
     return { vw: vw, vh: vh, tv: { cx: r.left + r.width / 2, cy: r.top + r.height / 2, w: r.width, h: r.height } };
   }
 
-  function calcular(pag, senda){
+  function calcular(pag){
     const vw = pag.vw;
     const vh = pag.vh;
     const retrato = vw < vh;
     const sc = Math.max(vw / LIENZO.w, vh / LIENZO.h);
     const oy = vh - LIENZO.h * sc;
-    const fx = retrato ? 0.4 : 0.58;
+    const fx = retrato ? 0.3 : 0.58;
     const ox = limitar(vw * fx - TV.cx * sc, vw - LIENZO.w * sc, 0);
     const a1 = [ox + TV.cx * sc, oy + TV.cy * sc];
     const zmax = pag.tv.w / (TV.ancho * sc);
     const izq = -ox / sc;
     const der = (vw - ox) / sc;
 
-    const xs = senda.map((p) => p[0]);
-    const ys = senda.map((p) => p[1]);
-    function yEn(x){
-      if (x <= xs[0]) return ys[0];
-      const n = xs.length - 1;
-      if (x >= xs[n]) return ys[n];
-      let a = 0;
-      let b = n;
-      while (b - a > 1){
-        const m = (a + b) >> 1;
-        if (xs[m] <= x) a = m; else b = m;
-      }
-      return mezcla(ys[a], ys[b], (x - xs[a]) / (xs[b] - xs[a]));
-    }
-    function escalaEn(y){
-      return ALTURA * limitar(mezcla(0.72, 1.1, (y - 585) / 175), 0.55, 1.18);
-    }
-
     const bx = TV.cx + (TV.boton[0] - 0.5) * TV.ancho;
     const by = TV.cy + (TV.boton[1] - 0.5) * TV.ancho * TV.proporcion;
     const bg = giro(bx - TV.cx, by - TV.cy, TV.giro);
-    const boton = [TV.cx + bg[0], TV.cy + bg[1]];
+    const diana = [TV.cx + bg[0], TV.cy + bg[1]];
 
-    const x0 = Math.max(-90, izq - 90);
-    const tvIzq = TV.cx - TV.ancho / 2;
-    const x1 = Math.max(tvIzq - 120, izq + (retrato ? 70 : 160));
-    const alcance = (BRAZO.a + BRAZO.b) * 0.9;
-    let xF = boton[0] + 108;
-    for (let i = 0; i < 6; i++){
-      const yy = yEn(xF);
-      const u = escalaEn(yy);
-      const hombro = yy - (210 + 122) * u;
-      const dy = boton[1] - hombro;
-      const dx = Math.sqrt(Math.max(400, Math.pow(alcance * u, 2) - dy * dy));
-      xF = boton[0] + dx;
-    }
-    xF = Math.min(xF, der - 50);
-
-    const corto = retrato;
-    const D = x1 - x0;
-    const Dd = Math.min(FRENADA, D * 0.6);
-    const tA0 = 0.4;
-    const tA1 = tA0 + (D + Dd) / VELOCIDAD;
-    const tB = tA1 + 0.25;
-    const tC0 = tA1 + (corto ? 1.1 : 1.5);
-    const tC1 = tC0 + Math.max(1.3, (xF - x1) / 165);
-    const tG0 = tC1;
-    const tG1 = tG0 + 0.32;
-    const tR0 = tG1 + 0.3;
-    const tR1 = tR0 + 0.9;
-    const tZ0 = tG1 + 0.1;
-    const tP0 = tR1 + 0.15;
-    const tZ1 = tZ0 + (corto ? 2.6 : 3.2);
-    const tFin = tZ1 + 0.5;
-
-    const xMin = x0 - 10;
-    const xMax = xF + 10;
-    const paso = 4;
-    const n = Math.ceil((xMax - xMin) / paso) + 1;
-    const fases = new Float32Array(n);
-    for (let i = 1; i < n; i++){
-      const xa = xMin + (i - 1) * paso;
-      const xb = xMin + i * paso;
-      const ya = yEn(xa);
-      const yb = yEn(xb);
-      const largo = Math.hypot(xb - xa, yb - ya);
-      fases[i] = fases[i - 1] + largo / (escalaEn((ya + yb) / 2) * ZANCADA);
-    }
-    function faseEn(x){
-      const p = limitar((x - xMin) / paso, 0, n - 1);
-      const i = Math.min(n - 2, Math.floor(p));
-      return mezcla(fases[i], fases[i + 1], p - i);
-    }
+    const llegada = juan.posicionLlegada(diana, ALCANCE.adelante, ALCANCE.abajo);
+    const plan = juan.plan({ der: der, boton: diana, llegada: llegada, vel: 1.25 });
+    const T = plan.T;
 
     return {
       vw: vw, vh: vh, sc: sc, ox: ox, oy: oy, a1: a1, zmax: zmax, izq: izq, der: der,
       t0: [pag.tv.cx, pag.tv.cy], tvAncho: pag.tv.w,
-      yEn: yEn, escalaEn: escalaEn, faseEn: faseEn,
-      boton: boton, x0: x0, x1: x1, xF: xF, D: D, Dd: Dd,
-      tA0: tA0, tA1: tA1, tB: tB, tC0: tC0, tC1: tC1, tG0: tG0, tG1: tG1,
-      tR0: tR0, tR1: tR1, tZ0: tZ0, tP0: tP0, tZ1: tZ1, tFin: tFin,
-      corto: corto
+      plan: plan, llegada: llegada, boton: diana,
+      tR0: T.alcanza0 / FPS, tP0: T.toca / FPS, tZ0: T.zoom0 / FPS, tZ1: T.zoom1 / FPS, tFin: T.fin / FPS
     };
-  }
-
-  function posX(t){
-    const g = G;
-    if (t <= g.tA0) return g.x0;
-    if (t <= g.tA1){
-      const s = t - g.tA0;
-      const tc = (g.D - g.Dd) / VELOCIDAD;
-      if (s <= tc) return g.x0 + VELOCIDAD * s;
-      const r = s - tc;
-      const Td = 2 * g.Dd / VELOCIDAD;
-      return g.x0 + (g.D - g.Dd) + VELOCIDAD * r - VELOCIDAD * r * r / (2 * Td);
-    }
-    if (t <= g.tC0) return g.x1;
-    if (t <= g.tC1) return g.x1 + (g.xF - g.x1) * (0.5 - 0.5 * Math.cos(Math.PI * (t - g.tC0) / (g.tC1 - g.tC0)));
-    return g.xF;
-  }
-
-  const PIE = [[0, -6], [0.12, -8], [0.28, 0], [0.5, 0], [0.74, 24], [1, -6]];
-
-  function pata(fi, w){
-    const f = fi - Math.floor(fi);
-    const a = 27 * Math.sin(2 * Math.PI * f) * w;
-    const rodilla = (4 + 48 * Math.pow(Math.max(0, Math.cos(2 * Math.PI * f)), 1.4)) * w;
-    const punta = curva(f, PIE) * w;
-    const t1 = -a;
-    const t2 = t1 + rodilla;
-    const p1 = giro(0, 100, t1);
-    const p2 = giro(0, 92, t2);
-    const ay = p1[1] + p2[1];
-    const h = giro(-20, 22, punta);
-    const d = giro(64, 22, punta);
-    return { muslo: t1, rodilla: rodilla, pie: punta - t2, bajo: ay + Math.max(h[1], d[1]) };
-  }
-
-  function resolverBrazo(sx, sy, tx, ty){
-    const vx = tx - sx;
-    const vy = ty - sy;
-    const d0 = Math.hypot(vx, vy) || 1;
-    const d = Math.min(d0, (BRAZO.a + BRAZO.b) * 0.985);
-    const k = d / d0;
-    const px = sx + vx * k;
-    const py = sy + vy * k;
-    const c = limitar((BRAZO.a * BRAZO.a + d * d - BRAZO.b * BRAZO.b) / (2 * BRAZO.a * d), -1, 1);
-    const delta = Math.acos(c) * 180 / Math.PI;
-    const objetivo = Math.atan2(-(px - sx), py - sy) * 180 / Math.PI;
-    const t1 = objetivo + delta;
-    const codo = giro(0, BRAZO.a, t1);
-    const t2 = Math.atan2(-(px - (sx + codo[0])), py - (sy + codo[1])) * 180 / Math.PI;
-    return [t1, t2 - t1];
-  }
-
-  function tr(x, y, a){
-    return 'translate(' + n3(x) + ' ' + n3(y) + ') rotate(' + n3(a) + ')';
   }
 
   function ver(n, si){
     if (n) n.setAttribute('opacity', si ? '1' : '0');
   }
 
-  function escalaEn2(n, cx, cy, sx, sy, dy){
-    if (!n) return;
-    n.setAttribute('transform', 'translate(0 ' + n3(dy) + ') translate(' + cx + ' ' + cy + ') scale(' + n3(sx) + ' ' + n3(sy) + ') translate(' + (-cx) + ' ' + (-cy) + ')');
-  }
-
-  const PARPADEOS = [1.25, 3.3, 5.1, 7.9, 9.7, 11.4];
-
-  function expresion(t, alcanza){
-    const g = G;
-    const c = figura.cara;
-    const dentro = suave((t - g.tB) / 0.12) * (1 - suave((t - (g.tC0 + 0.1)) / 0.5));
-    const sor = t > g.tB ? dentro : 0;
-    let parpado = 1;
-    for (let i = 0; i < PARPADEOS.length; i++){
-      const d = Math.abs(t - PARPADEOS[i]);
-      if (d < 0.09) parpado = Math.min(parpado, 0.12 + 0.88 * (d / 0.09));
-    }
-    const k = 1 + 0.2 * sor;
-    escalaEn2(c.ojos, 32, -77, k, k * parpado, 0);
-    const mira = suave((t - (g.tB + 0.5)) / 0.4);
-    const baja = suave((t - g.tR0) / 0.5);
-    const ps = 1 - 0.28 * sor;
-    if (c.pupilas) c.pupilas.setAttribute('transform', 'translate(' + n3(2.2 * mira) + ' ' + n3(3.2 * baja - 1.2 * sor) + ') translate(37 -76) scale(' + n3(ps) + ') translate(-37 76)');
-    escalaEn2(c.cejas, 32, -104, 1, 1, -9 * sor - 3 * alcanza);
-    ver(c.boca, sor < 0.5);
-    ver(c.bocaO, sor >= 0.5);
-    const senala = alcanza > 0.25;
-    ver(c.puno, !senala);
-    ver(c.senala, senala);
-  }
-
-  function enTorso(inclina, pos, ang){
-    return 'rotate(' + n3(inclina) + ') translate(' + n3(pos[0]) + ' ' + n3(pos[1]) + ') rotate(' + n3(ang) + ')';
+  function n4(v){
+    return Math.round(v * 10000) / 10000;
   }
 
   function figuraEn(t){
     const g = G;
     const f = figura;
-    const P = f.partes;
-    const x = posX(t);
-    const y = g.yEn(x);
-    const U = g.escalaEn(y);
-    const v = (posX(t + 0.03) - posX(t - 0.03)) / 0.06;
-    const w = suave((Math.abs(v) - 8) / 110);
-    const fi = g.faseEn(x);
-    const ph = fi * 2 * Math.PI;
-
-    const mira = suave((t - (g.tA1 - 0.3)) / 0.5) * (1 - suave((t - (g.tC0 - 0.1)) / 0.6));
-    const salto = t > g.tB && t < g.tB + 0.38 ? 15 * Math.sin(Math.PI * (t - g.tB) / 0.38) : 0;
-    const gi = limitar((t - g.tG0) / (g.tG1 - g.tG0), 0, 1);
-    const cara = Math.cos(Math.PI * suave(gi));
-    const signo = cara < 0 ? -1 : 1;
-    const alcanza = cubica((t - g.tR0) / (g.tR1 - g.tR0));
-    const pulsa = t > g.tP0 && t < g.tP0 + 0.34 ? Math.sin(Math.PI * (t - g.tP0) / 0.34) : 0;
-
-    const piernaI = pata(fi, w);
-    const piernaD = pata(fi + 0.5, w);
-    const bajada = 210 - Math.max(piernaI.bajo, piernaD.bajo) - salto;
-
-    const respira = Math.sin(t * 2.1);
-    const inclina = 3 * w + 1.2 * w * Math.sin(ph * 2) - 6 * mira + 3.5 * alcanza + 0.5 * respira * (1 - w);
-    const cabeza = -16 * mira - 5 * alcanza - 1.5 * pulsa + 0.9 * Math.sin(t * 1.3) * (1 - w) - 0.8 * inclina;
-
-    const hombro = giro(2, -122, inclina);
-    const balanceo = 17 * Math.sin(ph) * w;
-    const reposo = 3 * Math.sin(t * 1.7);
-    const lejosAng = balanceo + reposo * 0.4;
-    const lejosCodo = -(8 + 10 * Math.max(0, -balanceo / 17)) * w - 3 * (1 - w);
-    let cercaAng = -balanceo + reposo * 0.4;
-    let cercaCodo = -(8 + 10 * Math.max(0, balanceo / 17)) * w - 3 * (1 - w);
-
-    if (alcanza > 0){
-      const diana = [
-        (g.boton[0] + signo * 4.5 * pulsa - x) / U * signo,
-        (g.boton[1] - y) / U + 210 - bajada
-      ];
-      const ik = resolverBrazo(hombro[0], hombro[1], diana[0], diana[1]);
-      cercaAng = mezcla(cercaAng, ik[0], alcanza);
-      cercaCodo = mezcla(cercaCodo, ik[1], alcanza);
+    const st = g.plan.estado(t * FPS);
+    const M6 = st.M;
+    const piezas = f.piezas;
+    Object.keys(piezas).forEach((i) => {
+      const m = M6[i];
+      piezas[i].g.setAttribute('transform', 'matrix(' + n4(m[0]) + ' ' + n4(m[1]) + ' ' + n4(m[2]) + ' ' + n4(m[3]) + ' ' + n4(m[4]) + ' ' + n4(m[5]) + ')');
+    });
+    const b = piezas[juan.I.boca];
+    const v = st.vari[juan.I.boca] || '';
+    if (v !== b.vari){
+      b.g.innerHTML = v && f.boca[v] ? f.boca[v] : b.xml;
+      b.vari = v;
     }
 
-    P.cuerpo.el.setAttribute('transform', tr(0, bajada, 0));
-    P.torso.el.setAttribute('transform', tr(0, 0, inclina));
-    P.cabeza.el.setAttribute('transform', enTorso(inclina, P.cabeza.pos, cabeza));
-    expresion(t, alcanza);
-    P['brazo-i'].el.setAttribute('transform', tr(hombro[0], hombro[1], lejosAng));
-    P['antebrazo-i'].el.setAttribute('transform', tr(P['antebrazo-i'].pos[0], P['antebrazo-i'].pos[1], lejosCodo));
-    P['brazo-d'].el.setAttribute('transform', tr(hombro[0], hombro[1], cercaAng));
-    P['antebrazo-d'].el.setAttribute('transform', tr(P['antebrazo-d'].pos[0], P['antebrazo-d'].pos[1], cercaCodo));
-    if (P.ruana){
-      const vaiven = -3 * w + 4 * w * Math.sin(ph * 2 - 1.1) + 1.2 * Math.sin(t * 1.4) * (1 - w);
-      P.ruana.el.setAttribute('transform', enTorso(inclina, P.ruana.pos, vaiven));
-    }
-    if (P.carriel){
-      const cuelga = -4 * w * Math.sin(ph * 2 - 0.5) + 2 * w - 1 * Math.sin(t * 1.6) * (1 - w);
-      P.carriel.el.setAttribute('transform', enTorso(inclina, P.carriel.pos, cuelga));
-    }
-    P['muslo-i'].el.setAttribute('transform', tr(0, 0, piernaI.muslo));
-    P['pierna-i'].el.setAttribute('transform', tr(P['pierna-i'].pos[0], P['pierna-i'].pos[1], piernaI.rodilla));
-    P['pie-i'].el.setAttribute('transform', tr(P['pie-i'].pos[0], P['pie-i'].pos[1], piernaI.pie));
-    P['muslo-d'].el.setAttribute('transform', tr(0, 0, piernaD.muslo));
-    P['pierna-d'].el.setAttribute('transform', tr(P['pierna-d'].pos[0], P['pierna-d'].pos[1], piernaD.rodilla));
-    P['pie-d'].el.setAttribute('transform', tr(P['pie-d'].pos[0], P['pie-d'].pos[1], piernaD.pie));
-
-    const an = f.ancla;
-    const sx = cara * U;
+    const sx = juan.sentido * juan.escala * st.escalaX;
+    const sy = juan.escala * st.escalaY;
     f.svg.style.transform =
-      'translate(' + n3(x) + 'px,' + n3(y) + 'px) scale(' + n3(sx) + ',' + n3(U) + ') translate(' + (-(an[0] + f.suelo[0])) + 'px,' + (-(an[1] + f.suelo[1])) + 'px)';
-    sombra.style.transform =
-      'translate(' + n3(x) + 'px,' + n3(y) + 'px) scale(' + n3(U) + ') translate(-80px,-13px)';
+      'translate(' + n3(st.X) + 'px,' + n3(st.Y) + 'px) scale(' + n3(sx) + ',' + n3(sy) + ') translate(' + (-f.ancla[0]) + 'px,' + (-f.ancla[1]) + 'px)';
+    f.svg.style.opacity = n3(st.retira);
 
-    const apareceE = t - g.tB;
-    const sale = g.tC0 + 0.25;
-    let e = 0;
-    if (apareceE > 0 && t < sale) e = rebote(apareceE / 0.36) * (1 - suave((t - (sale - 0.2)) / 0.2));
-    if (e > 0.01){
-      const bx = x + 70 * U;
-      const by = y - 545 * U;
-      const k = e * U / 0.8;
-      const ladeo = 4 * Math.sin((t - g.tB) * 9) * (1 - suave((t - g.tB) / 1.2));
-      estallido.style.opacity = '1';
-      estallido.style.transform = 'translate(' + n3(bx) + 'px,' + n3(by) + 'px) rotate(' + n3(ladeo) + 'deg) scale(' + n3(k) + ') translate(-60px,-96px)';
+    const pie = juan.aMundo(juan.origen[0] + 6, juan.origen[1], st.X, g.llegada.Y);
+    const achica = 1 - 0.18 * limitar(st.saltando, 0, 1);
+    sombra.style.opacity = n3(st.retira);
+    sombra.style.transform = 'translate(' + n3(pie[0] + 4) + 'px,' + n3(pie[1] + 4) + 'px) scale(' + n3(achica) + ') translate(-62px,-10px)';
+
+    if (st.burbuja > 0.01){
+      const cab = juan.aMundo(juan.origen[0] + 14, 90, st.X, st.Y);
+      estallido.style.opacity = n3(Math.min(1, st.burbuja * 1.4));
+      estallido.style.transform = 'translate(' + n3(cab[0] + 14) + 'px,' + n3(cab[1] - 80) + 'px) scale(' + n3(st.burbuja * 1.12) + ') translate(-60px,-50px)';
     } else {
       estallido.style.opacity = '0';
     }
 
-    const brilla = t > g.tR0 - 0.4 && t < g.tP0 + 0.7;
+    const brilla = t > g.tR0 - 0.3 && t < g.tP0 + 0.7;
     if (brilla){
       const latido = 0.55 + 0.45 * Math.sin((t - g.tR0) * 9);
       const sal = 1 - suave((t - (g.tP0 + 0.25)) / 0.45);
@@ -557,8 +289,6 @@
     } else {
       pulso.style.opacity = '0';
     }
-
-    return x;
   }
 
   function cuadro(t){
@@ -589,18 +319,13 @@
     const rot = TV.giro * (1 - suave((t - g.tP0) / (g.tZ1 - g.tP0)));
     const veloOp = 1 - suave(t / 0.7);
     const salida = suave((t - g.tZ1 + 0.1) / 0.55);
-    const retira = 1 - suave((t - g.tP0 - 0.9) / 0.7);
-    figura.svg.style.opacity = n3(retira);
-    const hierba = 1 - suave((t - g.tZ0 - 0.2) / 1.1);
-    hierbas.forEach((h) => { h.style.opacity = n3(hierba); });
-    sombra.style.opacity = n3(0.34 * retira);
     tv.style.transform = 'translate(' + n3(ax - g.t0[0]) + 'px,' + n3(ay - g.t0[1]) + 'px) rotate(' + n3(rot) + 'deg) scale(' + n3(k) + ')';
     tv.style.setProperty('--mugre', n3(1 - suave((t - g.tZ0 - 0.6) / 2.2)));
     fondo.style.opacity = n3(1 - salida);
     frente.style.opacity = n3(1 - salida);
     velo.style.opacity = n3(veloOp);
 
-    if (!encendido && t >= g.tP0 + 0.18) pulsar();
+    if (!encendido && t >= g.tP0 + 0.12) pulsar();
   }
 
   function pulsar(){
@@ -609,7 +334,7 @@
     (btnPower.disabled ? cartel : btnPower).click();
   }
 
-  function crearEscena(figSVG, imagenes){
+  function crearEscena(datos, imagenes){
     raiz = crear('div', 'entrada');
     raiz.id = 'entrada';
     raiz.setAttribute('aria-hidden', 'true');
@@ -626,63 +351,38 @@
       capas.push(c);
       return c;
     }
-    function base(c, nombre){
+    function poner(c, nombre, clase, caja){
       const img = imagenes[nombre];
-      img.className = 'entrada-base';
-      c.el.appendChild(img);
-    }
-    function pieza(c, nombre){
-      const p = PIEZAS[nombre];
-      const fuente = imagenes[p.archivo || nombre];
-      const img = nombre === (p.archivo || nombre) ? fuente : fuente.cloneNode();
-      img.className = 'entrada-pieza';
-      img.style.left = p.x + 'px';
-      img.style.top = p.y + 'px';
-      img.style.width = p.w + 'px';
-      img.style.height = 'auto';
+      img.className = clase;
+      if (caja){
+        img.style.left = n3(caja.x) + 'px';
+        img.style.top = n3(caja.y) + 'px';
+        img.style.width = n3(caja.w) + 'px';
+        img.style.height = caja.h ? n3(caja.h) + 'px' : 'auto';
+      }
       c.el.appendChild(img);
     }
 
-    function nubes(c, img){
-      NUBES.forEach((n) => {
-        const k = n.w / n.s[2];
-        const d = crear('div', 'entrada-nube');
-        d.style.left = n.x + 'px';
-        d.style.top = n.y + 'px';
-        d.style.width = n.w + 'px';
-        d.style.height = (n.s[3] * k) + 'px';
-        d.style.backgroundImage = 'url("' + img.src + '")';
-        d.style.backgroundSize = (img.naturalWidth * k) + 'px ' + (img.naturalHeight * k) + 'px';
-        d.style.backgroundPosition = (-n.s[0] * k) + 'px ' + (-n.s[1] * k) + 'px';
-        c.el.appendChild(d);
-      });
-    }
     FONDOS.forEach((f) => {
-      const c = capa(fondo, f.d, f.deriva);
-      if (f.id === 'nubes') nubes(c, imagenes.nubes);
-      else base(c, f.id);
+      poner(capa(fondo, f.d, f.deriva), f.id, 'entrada-' + f.id);
     });
     const cerca = capa(fondo, 1);
-    base(cerca, 'cerca');
-    pieza(cerca, 'tocon');
-    pieza(cerca, 'matasBase');
+    poner(cerca, 'plato', 'entrada-plato');
     contacto = crear('div', 'entrada-contacto');
     contacto.style.left = (SUELO_TV.x - SUELO_TV.rx) + 'px';
     contacto.style.top = (SUELO_TV.y - SUELO_TV.ry) + 'px';
     contacto.style.width = (SUELO_TV.rx * 2) + 'px';
     contacto.style.height = (SUELO_TV.ry * 2) + 'px';
     cerca.el.appendChild(contacto);
+    poner(cerca, 'tocon', 'entrada-tocon', TOCON);
 
     const mundo = capa(frente, 1);
     sombra = crear('div', 'entrada-sombra');
-    figura = figSVG;
+    figura = montarJuan(datos);
     estallido = crearEstallido();
     pulso = crear('div', 'entrada-pulso');
     mundo.el.append(sombra, figura.svg, pulso, estallido);
-    pieza(mundo, 'matasIzq');
-    pieza(mundo, 'matasDer');
-    hierbas = Array.prototype.slice.call(mundo.el.querySelectorAll('.entrada-pieza'));
-    base(capa(frente, 1.4), 'frente');
+    poner(mundo, 'oclusor', 'entrada-oclusor', OCLUSOR);
 
     raiz.append(fondo, frente, velo);
     document.body.appendChild(raiz);
@@ -703,7 +403,7 @@
 
     aviso = crear('p', 'visualmente-oculto');
     aviso.setAttribute('role', 'status');
-    aviso.textContent = 'Se reproduce la entrada animada: alguien camina por el campo y enciende el televisor. Pulsa Escape o el botón Saltar la entrada para ir directo al televisor.';
+    aviso.textContent = 'Se reproduce la entrada animada: un niño camina por el campo, descubre un televisor viejo sobre un tocón y lo enciende. Pulsa Escape o el botón Saltar la entrada para ir directo al televisor.';
     document.body.appendChild(aviso);
   }
 
@@ -785,7 +485,6 @@
     if (mugre){ mugre.remove(); mugre = null; }
     if (raiz){ raiz.remove(); raiz = null; }
     fondo = frente = velo = sombra = estallido = pulso = contacto = figura = null;
-    hierbas = [];
     capas = [];
     tv.style.transform = '';
     tv.style.removeProperty('--mugre');
@@ -834,6 +533,33 @@
     });
   }
 
+  function iniciar(){
+    fase = 'curso';
+    liberar();
+    activa(true);
+    const total = G.tFin;
+    const cuenta = { t: 0 };
+    let cuadros = 0;
+    let revisado = false;
+    const inicio = window.performance.now();
+    cuadro(0);
+    reloj = gsapRef.to(cuenta, {
+      t: total,
+      duration: total,
+      ease: 'none',
+      onUpdate: () => {
+        if (fase !== 'curso') return;
+        cuadros += 1;
+        cuadro(cuenta.t);
+        if (!revisado && window.performance.now() - inicio >= 2000 && !reloj.paused()){
+          revisado = true;
+          if (cuadros < 22) terminar('lenta', true);
+        }
+      },
+      onComplete: () => terminar('completa')
+    });
+  }
+
   function arrancar(){
     marcarVista();
     anchoInicial = window.innerWidth;
@@ -846,12 +572,11 @@
     crearBoton();
     oyentes(true);
 
-    const nombres = FONDOS.map((f) => f.id).concat(['cerca', 'tocon', 'matas', 'frente']);
-    const imgs = nombres.map((n) => cargarImagen(n));
+    const imgs = IMAGENES.map((n) => cargarImagen(n));
     const limite = new Promise((ok, mal) => window.setTimeout(() => mal(new Error('tiempo')), 12000));
 
     Promise.race([
-      Promise.all([M.cargar([]), cargarTexto('caminante.svg'), cargarTexto('cerca.svg'), Promise.all(imgs), cargarFuente(), esperarTelevisor()]),
+      Promise.all([M.cargar([]), cargarJSON('juan.json'), Promise.all(imgs), cargarFuente(), esperarTelevisor()]),
       limite
     ]).then((r) => {
       if (fase !== 'preparando') return;
@@ -860,18 +585,19 @@
         terminar('sin-movimiento');
         return;
       }
-      const senda = leerSenda(r[2]);
-      const fig = montarFigura(r[1]);
-      if (!senda || !fig){
+      let modelo = null;
+      try { modelo = J.crear(r[1]); } catch (e) { modelo = null; }
+      if (!modelo){
         terminar('error');
         return;
       }
       gsapRef = g.gsap;
+      juan = modelo;
       const imagenes = {};
-      nombres.forEach((n, i) => { imagenes[n] = r[3][i]; });
+      IMAGENES.forEach((n, i) => { imagenes[n] = r[2][i]; });
       if (raiz) raiz.remove();
-      crearEscena(fig, imagenes);
-      G = calcular(medirPagina(), senda);
+      crearEscena(r[1], imagenes);
+      G = calcular(medirPagina());
       iniciar();
     }).catch(() => {
       if (fase === 'preparando') terminar('error');

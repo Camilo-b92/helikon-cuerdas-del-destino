@@ -1772,6 +1772,51 @@ recorrió cada escena con el nuevo botón.
 - **Pendiente:** fase 5 (Juanes, recorrido interactivo) bloqueada hasta que Camilo confirme
   esta revisión.
 
+### Ronda 35 — La entrada con Juan y el fondo real, hecha con Remotion
+
+- **Directo sobre `main`**, sin rama.
+- **Pedido.** A Camilo no le gustó el resultado de la ronda 34 y pidió usar el paquete de
+  skills de Remotion (ya instalado) para mejorar la calidad del fondo y del personaje.
+- **Decisión de fondo: no redibujar, reutilizar.** El problema de identidad se resuelve con
+  el propio arte del cómic: el fondo es `fondo.png` + `cielo.jpg` + `nubes.png` de la escena I,
+  y el personaje es **Juan**, cuyas 30 piezas se extrajeron de su animación Lottie
+  (lottie-web en modo SVG: cada capa sale como `<g transform=matrix>`, los padres del JSON dan la
+  jerarquía y la matriz local es `inv(M padre)·M`). Se descartaron los dos campesinos y los
+  paisajes dibujados por código.
+- **Un solo módulo.** `comic/entrada-juan.js` (sin DOM) contiene el rig, el ciclo de paso, la
+  cinemática inversa y la línea de tiempo; lo importan el sitio y el proyecto de Remotion
+  (`herramientas/entrada-remotion/`). Así el video de revisión y la página no pueden
+  diferir. `juan.json` pesa 44 KB (8 KB comprimido) tras redondear decimales y quitar variantes.
+- **Cambios de diseño.** Juan entra por la derecha y camina hacia la izquierda (se voltea el
+  rig con `scale(-1)`) porque el botón del televisor está en su borde derecho y el brazo de
+  Juan es corto (~95 px): desde la izquierda no lo alcanzaría. Sale de detrás del arbusto del
+  primer plano, para lo que se hizo un recorte con máscara poligonal (`oclusor-der.png`) que
+  se dibuja sobre él. El tocón es el de `tocon.svg`, estirado.
+- **Trampas encontradas:**
+  1. El ciclo de paso original avanzaba solo 45 unidades por ciclo (pasitos) y salía negativo
+     en un tramo: elegir el pie apoyado por «el más bajo» fallaba porque ambos pies están casi a
+     la misma altura. Se cambió a una fase de apoyo explícita y al tobillo como referencia, y
+     se subió la amplitud de 21° a 34° (70 unidades por ciclo); se midió el deslizamiento del
+     pie apoyado (menos de 0,5 px por fotograma).
+  2. Al parar, las piernas separadas obligarían a deslizar los pies; se frena con la pierna que
+     pasa (fase 0) y se relaja a reposo.
+  3. En móvil vertical Juan se frenaba justo en el borde derecho; se limitó la parada al borde
+     visible menos 75 unidades y el televisor se movió al 30 % del ancho.
+  4. Remotion no arranca con el Chrome completo del contenedor (modo headless antiguo): hay que
+     pasar `--browser-executable` apuntando a `chromium_headless_shell`.
+  5. La presión del botón empujaba hacia el lado equivocado por un signo; se corrigió con el
+     sentido del personaje.
+- **Comprobado:** `fase1`, `fase2`, `fase3`, `fase4` (escritorio, 360×740, 768×1024, 1920×1080,
+  1024×600), `optin` y `axall` (0 violaciones); en `fase4` se ajustaron dos esperas de tiempo y
+  el número mínimo de capas (4 en lugar de 6) porque ahora el paisaje es una sola imagen.
+  Fotogramas revisados a mano en escritorio y móvil, y un video de revisión de 11 s.
+- **No se probó** en Brave ni en un teléfono real, ni los fotogramas por segundo con GPU. Al
+  máximo zoom el fondo (2268 px de ancho) se amplía ~3,4 veces; queda tapado por el televisor
+  y se desvanece al final, pero es el límite de resolución. Juan es una decisión creativa que
+  conviene confirmar con el maestro: la versión anterior del campesino está en el commit `ed29536`.
+- **Pendiente:** fase 5 (Juanes, recorrido interactivo) bloqueada hasta que Camilo confirme
+  esta revisión.
+
 ---
 
 ## Pendientes

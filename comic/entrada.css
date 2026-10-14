@@ -36,7 +36,7 @@ html.entrada-activa .tv.is-off .tv-btn--power{
 }
 .entrada-fondo{
   z-index: 1;
-  background: #8ccfc6;
+  background: #6a9683;
 }
 .entrada-frente{
   z-index: 3;
@@ -66,27 +66,39 @@ html.entrada-activa .tv.is-off .tv-btn--power{
   position: absolute;
   background-repeat: no-repeat;
 }
-.entrada-capa .entrada-base{
+.entrada-capa .entrada-cielo{
   left: 0;
   top: 0;
   width: 1600px;
-  height: 900px;
+  height: 600px;
+}
+.entrada-capa .entrada-nubes{
+  left: 0;
+  top: 0;
+  width: auto;
+  height: 346px;
+}
+.entrada-capa .entrada-plato{
+  left: 0;
+  top: -28px;
+  width: 1600px;
+  height: auto;
 }
 
 .entrada-contacto{
   position: absolute;
   border-radius: 50%;
-  background: rgba(18, 12, 2, 0.5);
+  background: rgba(11, 26, 8, 0.34);
 }
 
 .entrada-sombra{
   position: absolute;
   left: 0;
   top: 0;
-  width: 190px;
-  height: 26px;
+  width: 124px;
+  height: 20px;
   border-radius: 50%;
-  background: rgba(14, 10, 2, 0.42);
+  background: rgba(11, 26, 8, 0.34);
   transform-origin: 0 0;
 }
 
@@ -95,8 +107,8 @@ html.entrada-activa .tv.is-off .tv-btn--power{
   left: 0;
   top: 0;
   display: block;
-  width: 300px;
-  height: 590px;
+  width: 160px;
+  height: 200px;
   overflow: visible;
   transform-origin: 0 0;
 }
@@ -125,7 +137,7 @@ html.entrada-activa .tv.is-off .tv-btn--power{
 .entrada-estallido text{
   fill: #17130e;
   font-family: 'Bangers', 'Impact', 'Arial Black', sans-serif;
-  font-size: 50px;
+  font-size: 68px;
   letter-spacing: 1px;
 }
 
