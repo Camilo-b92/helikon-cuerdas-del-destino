@@ -1,22 +1,23 @@
 import React from "react";
 import { AbsoluteFill, Img, staticFile, useCurrentFrame } from "remotion";
-import { Juan } from "./juan/Juan";
-import EJ = require("../../../comic/entrada-juan.js");
-import datos from "../../../comic/assets/entrada/juan.json";
+import { Caminante } from "./caminante/Caminante";
+import EJ = require("../../../comic/entrada-caminante.js");
+import datos from "../../../comic/assets/entrada/caminante.json";
 
 const modelo = EJ.crear(datos);
 const K: number = modelo.escala;
 const SENTIDO: number = modelo.sentido;
 const ORIGEN: number[] = modelo.origen;
 
-const PLATO = staticFile("capitulo-n1/scene1/img/fondo.png");
-const CIELO = staticFile("capitulo-n1/scene1/img/cielo.jpg");
-const NUBES = staticFile("capitulo-n1/scene1/img/nubes.png");
+const CIELO = staticFile("entrada/cielo.svg");
+const NUBES = staticFile("entrada/nubes.svg");
+const LEJOS = staticFile("entrada/lejos.svg");
+const MEDIO = staticFile("entrada/medio.svg");
+const PLATO = staticFile("entrada/plato.svg");
+const FRENTE = staticFile("entrada/frente.svg");
 const TV = staticFile("tv.png");
 const TOCON = staticFile("entrada/tocon.svg");
-const oclusorDer = staticFile("entrada/oclusor-der.png");
 
-const ESC_PLATO = 1600 / 2268;
 const TV_W = 146;
 const TV_H = (TV_W * 925) / 1566;
 const TV_GIRO = -2;
@@ -63,13 +64,14 @@ export const Escena: React.FC<{ zoom?: boolean }> = ({ zoom = true }) => {
   const frame = useCurrentFrame();
   const st = plan.estado(frame);
 
-  const z = zoom ? 1 + 3.6 * cubica((frame - T.zoom0) / (T.zoom1 - T.zoom0)) : 1;
+  const e = cubica((frame - T.zoom0) / (T.zoom1 - T.zoom0));
+  const z = zoom ? 1 + 3.6 * e : 1;
   const cx = TV_C[0];
   const cy = TV_C[1];
-  const e = cubica((frame - T.zoom0) / (T.zoom1 - T.zoom0));
   const centroX = 800 + (cx - 800) * e;
   const centroY = 450 + (cy - 450) * e;
-  const camara = `translate(${800 - centroX * z}px, ${450 - centroY * z}px) scale(${z})`;
+  const camaraX = 800 - centroX * z;
+  const camaraY = 450 - centroY * z;
 
   const cabeza = modelo.aMundo(ORIGEN[0] + 14, 90, st.X, st.Y);
 
@@ -79,22 +81,37 @@ export const Escena: React.FC<{ zoom?: boolean }> = ({ zoom = true }) => {
 
   const pie = modelo.aMundo(ORIGEN[0] + 6, ORIGEN[1] + 14, st.X, Y_SUELO);
 
+  const camara = (d: number): React.CSSProperties => {
+    const s = 1 + (z - 1) * d;
+    const anclaX = camaraX + cx * z;
+    const anclaY = camaraY + cy * z;
+    return {
+      position: "absolute",
+      left: 0,
+      top: 0,
+      width: 1600,
+      height: 900,
+      transformOrigin: "0 0",
+      transform: `translate(${anclaX - cx * s}px, ${anclaY - cy * s}px) scale(${s})`,
+    };
+  };
+
   return (
-    <AbsoluteFill style={{ background: "#6a9683", overflow: "hidden" }}>
-      <div
-        style={{
-          position: "absolute",
-          left: 0,
-          top: 0,
-          width: 1600,
-          height: 900,
-          transformOrigin: "0 0",
-          transform: camara,
-        }}
-      >
-        <Img src={CIELO} style={{ position: "absolute", left: 0, top: 0, width: 1600, height: 600 }} />
-        <Img src={NUBES} style={{ position: "absolute", left: -frame * 0.6, top: 0, height: 346 }} />
-        <Img src={PLATO} style={{ position: "absolute", left: 0, top: -28, width: 1600 }} />
+    <AbsoluteFill style={{ background: "#4f8d8c", overflow: "hidden" }}>
+      <div style={camara(0.1)}>
+        <Img src={CIELO} style={{ position: "absolute", left: 0, top: 0, width: 1600, height: 640 }} />
+      </div>
+      <div style={camara(0.18)}>
+        <Img src={NUBES} style={{ position: "absolute", left: -frame * 0.6, top: 0, width: 2000, height: 360 }} />
+      </div>
+      <div style={camara(0.4)}>
+        <Img src={LEJOS} style={{ position: "absolute", left: 0, top: 0, width: 1600, height: 900 }} />
+      </div>
+      <div style={camara(0.7)}>
+        <Img src={MEDIO} style={{ position: "absolute", left: 0, top: 0, width: 1600, height: 900 }} />
+      </div>
+      <div style={camara(1)}>
+        <Img src={PLATO} style={{ position: "absolute", left: 0, top: 0, width: 1600, height: 900 }} />
 
         <svg width={1600} height={900} viewBox="0 0 1600 900" style={{ position: "absolute", left: 0, top: 0 }}>
           <ellipse cx={TV_C[0]} cy={TOCON_TOP + 112 - 4} rx={108} ry={14} fill="#0b1a08" opacity={0.34} />
@@ -142,7 +159,7 @@ export const Escena: React.FC<{ zoom?: boolean }> = ({ zoom = true }) => {
             opacity={retira}
             transform={`translate(${st.X} ${st.Y}) scale(${SENTIDO * K * st.escalaX} ${K * st.escalaY}) translate(${-ORIGEN[0]} ${-ORIGEN[1]})`}
           >
-            <Juan capas={datos.capas} M={st.M} vari={st.vari} boca={datos.boca} />
+            <Caminante capas={datos.capas} M={st.M} vari={st.vari} boca={datos.boca} />
           </g>
           {st.burbuja > 0.01 && (
             <g
@@ -157,20 +174,10 @@ export const Escena: React.FC<{ zoom?: boolean }> = ({ zoom = true }) => {
           )}
         </svg>
 
-        <Img
-          src={oclusorDer}
-          style={{
-            position: "absolute",
-            left: 1625 * ESC_PLATO,
-            top: 1000 * ESC_PLATO - 28,
-            width: 643 * ESC_PLATO,
-            height: 336 * ESC_PLATO,
-          }}
-        />
+        <Img src={FRENTE} style={{ position: "absolute", left: 0, top: 0, width: 1600, height: 900 }} />
       </div>
       <AbsoluteFill style={{ background: "#ffffff", opacity: destello * 0.25, pointerEvents: "none" }} />
       <div style={{ position: "absolute", left: 10, top: 10, font: "14px sans-serif", color: "#fff" }}>{frame}</div>
     </AbsoluteFill>
   );
 };
-

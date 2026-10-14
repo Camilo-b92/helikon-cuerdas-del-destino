@@ -3,31 +3,33 @@
 
   const CLAVE = 'helikon-entrada';
   const CARPETA = 'assets/entrada/';
-  const MUNDO = 'assets/capitulo-n1/scene1/img/';
   const LIENZO = { w: 1600, h: 900 };
   const FPS = 25;
   const TV = { cx: 582.3, cy: 674.4, ancho: 146, giro: -2, boton: [0.895, 0.886], proporcion: 925 / 1566 };
-  const ESCALA_PLATO = 1600 / 2268;
-  const OCLUSOR = { x: 1625 * ESCALA_PLATO, y: 1000 * ESCALA_PLATO - 28, w: 643 * ESCALA_PLATO, h: 336 * ESCALA_PLATO };
+  const FRENTE = { x: 0, y: 0, w: 1600, h: 900 };
   const TOCON = { x: 502, y: 699, w: 160, h: 112 };
   const SUELO_TV = { x: 582, y: 807, rx: 108, ry: 14 };
   const ALCANCE = { adelante: 60, abajo: 50 };
   const FONDOS = [
     { id: 'cielo', d: 0.1 },
-    { id: 'nubes', d: 0.18, deriva: 15 }
+    { id: 'nubes', d: 0.18, deriva: 15 },
+    { id: 'lejos', d: 0.4 },
+    { id: 'medio', d: 0.7 }
   ];
   const RUTAS = {
-    cielo: MUNDO + 'cielo.jpg',
-    nubes: MUNDO + 'nubes.png',
-    plato: MUNDO + 'fondo.png',
+    cielo: CARPETA + 'cielo.svg',
+    nubes: CARPETA + 'nubes.svg',
+    lejos: CARPETA + 'lejos.svg',
+    medio: CARPETA + 'medio.svg',
+    plato: CARPETA + 'plato.svg',
     tocon: CARPETA + 'tocon.svg',
-    oclusor: CARPETA + 'oclusor-der.png'
+    frente: CARPETA + 'frente.svg'
   };
-  const IMAGENES = ['cielo', 'nubes', 'plato', 'tocon', 'oclusor'];
+  const IMAGENES = ['cielo', 'nubes', 'lejos', 'medio', 'plato', 'tocon', 'frente'];
 
   const html = document.documentElement;
   const M = window.Movimiento;
-  const J = window.EntradaJuan;
+  const J = window.EntradaCaminante;
   const tv = document.getElementById('tv');
   const pantalla = document.getElementById('tvScreen');
   const btnPower = document.getElementById('btnPower');
@@ -54,7 +56,7 @@
   let reloj = null;
   let capas = [];
   let figura = null;
-  let juan = null;
+  let caminante = null;
   let sombra = null;
   let estallido = null;
   let pulso = null;
@@ -156,7 +158,7 @@
     ]);
   }
 
-  function montarJuan(datos){
+  function montarCaminante(datos){
     const NS = 'http://www.w3.org/2000/svg';
     const v = datos.vista;
     const svg = document.createElementNS(NS, 'svg');
@@ -223,8 +225,8 @@
     const bg = giro(bx - TV.cx, by - TV.cy, TV.giro);
     const diana = [TV.cx + bg[0], TV.cy + bg[1]];
 
-    const llegada = juan.posicionLlegada(diana, ALCANCE.adelante, ALCANCE.abajo);
-    const plan = juan.plan({ der: der, boton: diana, llegada: llegada, vel: 1.25 });
+    const llegada = caminante.posicionLlegada(diana, ALCANCE.adelante, ALCANCE.abajo);
+    const plan = caminante.plan({ der: der, boton: diana, llegada: llegada, vel: 1.25 });
     const T = plan.T;
 
     return {
@@ -253,26 +255,26 @@
       const m = M6[i];
       piezas[i].g.setAttribute('transform', 'matrix(' + n4(m[0]) + ' ' + n4(m[1]) + ' ' + n4(m[2]) + ' ' + n4(m[3]) + ' ' + n4(m[4]) + ' ' + n4(m[5]) + ')');
     });
-    const b = piezas[juan.I.boca];
-    const v = st.vari[juan.I.boca] || '';
+    const b = piezas[caminante.I.boca];
+    const v = st.vari[caminante.I.boca] || '';
     if (v !== b.vari){
       b.g.innerHTML = v && f.boca[v] ? f.boca[v] : b.xml;
       b.vari = v;
     }
 
-    const sx = juan.sentido * juan.escala * st.escalaX;
-    const sy = juan.escala * st.escalaY;
+    const sx = caminante.sentido * caminante.escala * st.escalaX;
+    const sy = caminante.escala * st.escalaY;
     f.svg.style.transform =
       'translate(' + n3(st.X) + 'px,' + n3(st.Y) + 'px) scale(' + n3(sx) + ',' + n3(sy) + ') translate(' + (-f.ancla[0]) + 'px,' + (-f.ancla[1]) + 'px)';
     f.svg.style.opacity = n3(st.retira);
 
-    const pie = juan.aMundo(juan.origen[0] + 6, juan.origen[1], st.X, g.llegada.Y);
+    const pie = caminante.aMundo(caminante.origen[0] + 6, caminante.origen[1], st.X, g.llegada.Y);
     const achica = 1 - 0.18 * limitar(st.saltando, 0, 1);
     sombra.style.opacity = n3(st.retira);
     sombra.style.transform = 'translate(' + n3(pie[0] + 4) + 'px,' + n3(pie[1] + 4) + 'px) scale(' + n3(achica) + ') translate(-62px,-10px)';
 
     if (st.burbuja > 0.01){
-      const cab = juan.aMundo(juan.origen[0] + 14, 90, st.X, st.Y);
+      const cab = caminante.aMundo(caminante.origen[0] + 14, 90, st.X, st.Y);
       estallido.style.opacity = n3(Math.min(1, st.burbuja * 1.4));
       estallido.style.transform = 'translate(' + n3(cab[0] + 14) + 'px,' + n3(cab[1] - 80) + 'px) scale(' + n3(st.burbuja * 1.12) + ') translate(-60px,-50px)';
     } else {
@@ -378,11 +380,11 @@
 
     const mundo = capa(frente, 1);
     sombra = crear('div', 'entrada-sombra');
-    figura = montarJuan(datos);
+    figura = montarCaminante(datos);
     estallido = crearEstallido();
     pulso = crear('div', 'entrada-pulso');
     mundo.el.append(sombra, figura.svg, pulso, estallido);
-    poner(mundo, 'oclusor', 'entrada-oclusor', OCLUSOR);
+    poner(mundo, 'frente', 'entrada-frente-hojas', FRENTE);
 
     raiz.append(fondo, frente, velo);
     document.body.appendChild(raiz);
@@ -403,7 +405,7 @@
 
     aviso = crear('p', 'visualmente-oculto');
     aviso.setAttribute('role', 'status');
-    aviso.textContent = 'Se reproduce la entrada animada: un niño camina por el campo, descubre un televisor viejo sobre un tocón y lo enciende. Pulsa Escape o el botón Saltar la entrada para ir directo al televisor.';
+    aviso.textContent = 'Se reproduce la entrada animada: una joven camina por un sendero de montaña, descubre un televisor viejo sobre un tocón y lo enciende. Pulsa Escape o el botón Saltar la entrada para ir directo al televisor.';
     document.body.appendChild(aviso);
   }
 
@@ -576,7 +578,7 @@
     const limite = new Promise((ok, mal) => window.setTimeout(() => mal(new Error('tiempo')), 12000));
 
     Promise.race([
-      Promise.all([M.cargar([]), cargarJSON('juan.json'), Promise.all(imgs), cargarFuente(), esperarTelevisor()]),
+      Promise.all([M.cargar([]), cargarJSON('caminante.json'), Promise.all(imgs), cargarFuente(), esperarTelevisor()]),
       limite
     ]).then((r) => {
       if (fase !== 'preparando') return;
@@ -592,7 +594,7 @@
         return;
       }
       gsapRef = g.gsap;
-      juan = modelo;
+      caminante = modelo;
       const imagenes = {};
       IMAGENES.forEach((n, i) => { imagenes[n] = r[2][i]; });
       if (raiz) raiz.remove();

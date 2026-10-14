@@ -70,19 +70,21 @@ html.entrada-activa .tv.is-off .tv-btn--power{
   left: 0;
   top: 0;
   width: 1600px;
-  height: 600px;
+  height: 640px;
 }
 .entrada-capa .entrada-nubes{
   left: 0;
   top: 0;
-  width: auto;
-  height: 346px;
+  width: 2000px;
+  height: 360px;
 }
+.entrada-capa .entrada-lejos,
+.entrada-capa .entrada-medio,
 .entrada-capa .entrada-plato{
   left: 0;
-  top: -28px;
+  top: 0;
   width: 1600px;
-  height: auto;
+  height: 900px;
 }
 
 .entrada-contacto{

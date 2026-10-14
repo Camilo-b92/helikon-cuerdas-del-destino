@@ -1817,6 +1817,55 @@ recorrió cada escena con el nuevo botón.
 - **Pendiente:** fase 5 (Juanes, recorrido interactivo) bloqueada hasta que Camilo confirme
   esta revisión.
 
+### Ronda 36 — La entrada con arte propio: otra caminante y otro paisaje (coherencia con los capítulos)
+
+- **Directo sobre `main`**, sin rama.
+- **Pedido.** A Camilo le gustó cómo se ve y se mueve la entrada (la fluidez, el zoom, el
+  brazo), pero no los elementos: usaba el fondo de la escena I del capítulo uno y a Juanes
+  niño, así que el televisor se encendía por Juanes en el patio de su casa y esos mismos
+  elementos reaparecían después en el capítulo. Quería otro fondo y otro personaje para que
+  no hubiera incoherencias entre la entrada y las escenas.
+- **Lo que no cambió.** Todo el sistema de animación: el ciclo de paso, la parada con
+  sorpresa, la cinemática inversa del brazo, las capas con paralaje, el relevo con el
+  televisor real y el zoom. El código sigue siendo `comic/entrada.js` más el módulo del rig,
+  que se renombró a `comic/entrada-caminante.js` (global `EntradaCaminante`) porque ya no es
+  de Juan. `comic.js` no se tocó.
+- **Personaje nuevo.** Una joven caminante: pelo negro con flequillo recto, flor en el pelo,
+  trenza larga con lazo rojo, arete, mejillas rosadas, ruana roja con franjas y flecos,
+  pulsera turquesa, pantalón índigo con puños y botas de caucho amarillas. Se eligió para no
+  parecerse a nadie del cómic: el padre ya lleva sombrero y bigote, Juanes y el niño son de
+  pelo rojizo y la madre lleva pañuelo. Se redibujó **sobre el mismo esqueleto** (mismas 27
+  capas, mismos ids, anclas y matrices), así que el movimiento no cambió; solo se
+  recolorearon las piezas de las extremidades y se rehicieron torso, pelo, trenza, boca,
+  oreja y cabeza. Lo genera `herramientas/entrada-remotion/personaje/construir.js` a partir de
+  `esqueleto.json` y escribe `comic/assets/entrada/caminante.json`.
+- **Trenza con física sencilla.** La trenza cuelga con gravedad (contrarresta la inclinación
+  del cuerpo), se balancea con el paso, se va hacia delante al frenar y se agita con el salto
+  de la sorpresa (`rot[I.cola]` en `estado()`).
+- **Paisaje nuevo.** Un camino de montaña colombiano que no sale en ningún capítulo (los
+  capítulos son casa y patio, calle, ciudad y cuartos): cielo de atardecer con sol bajo y
+  aves, nubes crema con contorno, dos cordilleras con bruma y manchas de camuflaje (como las
+  lomas del cómic), palmas de cera y guaduales, una loma con cerca de alambre y flores, una
+  trocha de tierra que baja hacia la cámara, rocas y matas, y hojas grandes en el primer
+  plano que tapan a la caminante cuando entra por la derecha. Seis SVG (`cielo`, `nubes`,
+  `lejos`, `medio`, `plato`, `frente`), unos 250 KB sin comprimir, generados por código con
+  semilla fija en `herramientas/entrada-remotion/fondo/construir.js`. El tocón y el televisor
+  siguen en el mismo sitio, así que `TV`, `TOCON`, `SUELO_TV` y `ALCANCE` no cambiaron. Se
+  eliminaron `juan.json` y `oclusor-der.png`. Capas con paralaje: cielo 0,1; nubes 0,18; lejos 0,4;
+  medio 0,7; plano cercano 1.
+- **Comprobado:** `fase1`, `fase2`, `fase3`, `optin` y `axall` (0 violaciones) sin fallos.
+  `fase4` falló dos esperas cuando se ejecutó a la vez que otras cinco pruebas (la máquina
+  iba cargada y `axe` se tardó segundos con la escena corriendo); sola, pasa completa. Fotogramas
+  revisados a mano con Remotion y en el sitio real en 1366×768 y 360×740.
+- **Decisión sobre IA generativa.** Se probaron las herramientas de generación de imágenes
+  disponibles (Canva, Figma, Adobe), pero consumen créditos y ponen en duda la autoría
+  del equipo ante el maestro, así que el arte se dibujó con código y es editable por
+  Gabriel y Brayhan. Si el equipo prefiere arte hecho a mano, el contrato de archivos
+  (`caminante.json` y los seis SVG) permite sustituirlo sin tocar el código.
+- **No se probó** en Brave ni en teléfono real, ni los fotogramas por segundo con GPU.
+- **Pendiente:** fase 5 (Juanes, recorrido interactivo) sigue bloqueada hasta que Camilo
+  confirme esta revisión.
+
 ---
 
 ## Pendientes

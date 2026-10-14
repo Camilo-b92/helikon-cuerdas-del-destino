@@ -3,7 +3,7 @@ import React from "react";
 type Capa = { i: number; x: string };
 type Props = { capas: Capa[]; M: Record<number, number[]>; vari: Record<number, string>; boca: Record<string, string> };
 
-export const Juan: React.FC<Props> = ({ capas, M, vari, boca }) => (
+export const Caminante: React.FC<Props> = ({ capas, M, vari, boca }) => (
   <g>
     {capas.map((c) => {
       const v = vari[c.i];

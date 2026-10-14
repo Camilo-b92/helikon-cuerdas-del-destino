@@ -94,11 +94,11 @@ Lo que eso implica al trabajar:
     ├── index.html
     ├── comic.css
     ├── comic.js
-    ├── entrada.js          La entrada: Juan camina por el campo, halla el televisor y lo enciende (GSAP)
-    ├── entrada-juan.js     El rig y la animación de Juan (módulo sin DOM; lo usan el sitio y Remotion)
+    ├── entrada.js          La entrada: una joven camina por un sendero de montaña, halla el televisor y lo enciende (GSAP)
+    ├── entrada-caminante.js  El rig y la animación de la caminante (módulo sin DOM; lo usan el sitio y Remotion)
     ├── entrada.css
     └── assets/             Arte, video y animaciones Lottie
-        ├── entrada/         Juan (juan.json), el tocón y el arbusto del primer plano de la entrada
+        ├── entrada/         La caminante (caminante.json), el tocón y el paisaje de la entrada (seis SVG)
         ├── intro.mp4
         ├── tv.png
         ├── personajes/      Los cinco personajes, en SVG
@@ -777,18 +777,25 @@ defecto. No se enlaza `pulp.css` entera porque redefine `--ink` y `*`, y
 para que la trama de papel quede *debajo* del televisor y no empañe la
 pantalla. El interior del televisor conserva su propia paleta turquesa.
 
-### La entrada al cómic (`comic/entrada.js` y `comic/entrada-juan.js`)
+### La entrada al cómic (`comic/entrada.js` y `comic/entrada-caminante.js`)
 
 Al abrir el cómic por primera vez en una sesión no aparece el televisor a pantalla
-completa: aparece **el paisaje real del cómic** (el mismo fondo de la escena I: casas,
-colinas, trocha y matas, con el cielo y las nubes del propio cómic) y, **apoyado sobre un
-tocón**, **un televisor viejo y abandonado**, pequeño, ladeado y empañado. **Juan**, el
-personaje del cómic, sale de detrás de un arbusto, camina hacia la izquierda, se frena al
-ver el televisor (salta, abre la boca y le sale un globo de cómic con «!»), se acerca con
+completa: aparece **un paisaje de montaña colombiana propio de la entrada** (cordilleras con
+bruma, palmas de cera, guaduales, una cerca de alambre y una trocha de tierra, con el cielo
+de atardecer) y, **apoyado sobre un tocón**, **un televisor viejo y abandonado**, pequeño,
+ladeado y empañado. **Una joven caminante** (pelo negro con trenza, ruana roja, botas de
+caucho amarillas) sale de detrás de unas hojas grandes, camina hacia la izquierda, se frena
+al ver el televisor (salta, abre la boca y le sale un globo de cómic con «!»), se acerca con
 curiosidad, estira el brazo y **pulsa el botón de encendido**. Mientras presiona, la cámara
 hace un **zoom** hacia el televisor; este se enciende y el zoom termina con el televisor
 real exactamente donde se coloca siempre. Dura unos 11 s en escritorio y unos 7 s en móvil
 vertical.
+
+**Por qué es arte aparte.** La caminante y el paisaje no salen en ninguna escena de los
+capítulos (a propósito): así el televisor no se enciende «por Juanes en el patio de su casa»
+y luego el mismo fondo y el mismo personaje reaparecen en el capítulo uno. Comparten con el
+cómic la identidad visual (vectorial plano, contorno negro fino, colores apagados, lomas con
+manchas de camuflaje, guantes blancos y zapatos grandes), no los elementos.
 
 **El televisor es el de siempre.** No hay una copia para la escena: `entrada.js` le
 aplica un `transform` (trasladar, girar, escalar) para colocarlo en el paisaje y lo
@@ -805,48 +812,54 @@ lleva a «sin transformación» al final del zoom, de modo que el relevo es exac
   dirección (`comic/?entrada`) la fuerza.
 - **Cómo se calcula.** Todo es función del tiempo: una sola animación de GSAP (un
   contador de 0 a ~11 s) y en cada fotograma se calcula la cámara, el televisor y
-  Juan. Por eso es predecible y se puede avanzar y retroceder. El lienzo es de 1600×900
+  la caminante. Por eso es predecible y se puede avanzar y retroceder. El lienzo es de 1600×900
   unidades; se escala para *cubrir* la ventana, con el televisor a la izquierda del
   centro (en vertical, aún más a la izquierda). Las capas tienen profundidad (paralaje):
-  el cielo apenas se acerca, las nubes algo más y el paisaje con Juan y el televisor es
-  el plano que recibe todo el zoom.
-- **Juan (`comic/entrada-juan.js`).** Es un módulo sin DOM que recibe `juan.json` y
-  devuelve, para cada instante, la matriz de cada pieza. Las piezas (30 capas: torso,
-  pelvis, piernas, zapatos, brazos, manos, cuello, cabeza, pelo, cejas, ojos, pupilas,
-  nariz, oreja y boca) **se extrajeron de la animación Lottie del propio cómic**, no se
-  redibujaron; el módulo las articula con jerarquía padre-hijo. El paso es un ciclo de
-  18 cuadros a 25 fps con una tabla de avance sacada de la posición del tobillo
-  apoyado (los pies no patinan) y la fase avanza con la distancia, así que al frenar o
-  arrancar el paso se acompasa. Se frena con la pierna que pasa por debajo del cuerpo
-  y se relaja a la postura de reposo. La sorpresa es expresión (cejas arriba, ojos más
-  grandes, pupilas pequeñas y boca en «o»), un salto con aplastamiento y estiramiento
-  y un globo. El brazo que presiona usa **cinemática inversa**: un buscador numérico
-  halla los ángulos de hombro, codo y muñeca para que la punta del guante toque el botón
-  real del televisor, y la presión es un segundo objetivo cinco unidades más adentro.
-  También parpadea. Juan se pinta como un SVG pequeño (`.entrada-caminante`) que se
-  mueve con `transform`, igual que antes la figura, para que el repintado sea local.
+  el cielo apenas se acerca (0,1), las nubes algo más (0,18), las cordilleras (0,4) y las
+  lomas con palmas (0,7) se acercan menos que el plano cercano con la caminante y el
+  televisor, que recibe todo el zoom.
+- **La caminante (`comic/entrada-caminante.js`).** Es un módulo sin DOM que recibe
+  `caminante.json` y devuelve, para cada instante, la matriz de cada pieza. Las 27 piezas
+  (torso, pelvis, piernas, zapatos, brazos, manos, cuello, cabeza, pelo, trenza, cejas,
+  ojos, pupilas, nariz, oreja y boca) se articulan con jerarquía padre-hijo; el esqueleto
+  (ids, anclas y matrices) se extrajo de una animación Lottie del propio cómic y sobre él se
+  **redibujó el personaje** con otro diseño (`herramientas/entrada-remotion/personaje/`). El
+  paso es un ciclo de 18 cuadros a 25 fps con una tabla de avance sacada de la posición del
+  tobillo apoyado (los pies no patinan) y la fase avanza con la distancia, así que al frenar
+  o arrancar el paso se acompasa. Se frena con la pierna que pasa por debajo del cuerpo y se
+  relaja a la postura de reposo. La sorpresa es expresión (cejas arriba, ojos más grandes,
+  pupilas pequeñas y boca en «o»), un salto con aplastamiento y estiramiento y un globo. El
+  brazo que presiona usa **cinemática inversa**: un buscador numérico halla los ángulos de
+  hombro, codo y muñeca para que la punta del guante toque el botón real del televisor, y la
+  presión es un segundo objetivo cinco unidades más adentro. La trenza cuelga con gravedad y
+  se balancea con el paso, el frenazo y el salto. También parpadea. Se pinta como un SVG
+  pequeño (`.entrada-caminante`) que se mueve con `transform`, para que el repintado sea
+  local.
 - **Remotion.** `herramientas/entrada-remotion/` es un proyecto de Remotion que importa
   **ese mismo módulo** y dibuja la escena completa. Sirve para revisar fotogramas con
   `npx remotion still` y para renderizar un video de vista previa; lo que se ve ahí es lo
   que hace la página. No se publica con el sitio.
 - **Contrato del arte (sustituible sin tocar el código).** En `comic/assets/entrada/`:
-  - `juan.json` (44 KB): `origen` (el punto entre los pies), `vista` (la caja del SVG),
+  - `caminante.json`: `origen` (el punto entre los pies), `vista` (la caja del SVG),
     `capas` (de atrás hacia delante: `i` identificador, `p` padre, `l` matriz local,
     `a` ancla de giro, `x` el SVG de la pieza y `b` la caja de los zapatos) y `boca` (las
-    bocas de sorpresa y curiosidad). Si Gabriel y Brayhan rehacen a Juan, basta con
-    respetar esos identificadores.
-  - `tocon.svg` (200×180) y `oclusor-der.png`: el recorte del arbusto del primer plano
-    (derecha) que se dibuja **encima** de Juan para que salga de detrás de él. Se obtuvo de
-    `fondo.png` con una máscara poligonal; si cambia el fondo del cómic hay que rehacerlo.
-  - El paisaje, el cielo y las nubes **no son archivos de la entrada**: se reutilizan los
-    del propio cómic (`assets/capitulo-n1/scene1/img/fondo.png`, `cielo.jpg`, `nubes.png`),
-    con `RUTAS` en `entrada.js`. Así la entrada tiene exactamente la identidad visual del
-    cómic y el navegador ya los tiene en caché al llegar a la escena I.
+    bocas de sorpresa y curiosidad). Si Gabriel y Brayhan rehacen a la caminante, basta con
+    respetar esos identificadores. Se genera con
+    `node herramientas/entrada-remotion/personaje/construir.js`.
+  - Seis SVG de 1600×900 (el cielo y las nubes son más anchos para que deriven): `cielo`,
+    `nubes`, `lejos` (dos cordilleras con bruma), `medio` (loma con palmas de cera y
+    guadua), `plato` (el suelo: loma, cerca, trocha, rocas, matas y flores) y `frente`
+    (hojas grandes que se dibujan **encima** de la caminante para que salga de detrás de
+    ellas). Se generan con `node herramientas/entrada-remotion/fondo/construir.js` (semilla
+    fija: siempre sale igual). `RUTAS` y `FONDOS` en `entrada.js` dicen cuáles son y su
+    profundidad.
+  - `tocon.svg` (200×180).
   - El televisor va sobre el tocón en `TV` (`cx`, `cy`, `ancho`, `giro`, hoy 582, 674,
     146 y −2°) y la fracción del botón de encendido; el tocón en `TOCON` y su sombra en
-    `SUELO_TV`. Juan llega siempre al punto desde donde su mano alcanza el botón: se
+    `SUELO_TV`. La caminante llega siempre al punto desde donde su mano alcanza el botón: se
     calcula con `posicionLlegada`, no a mano (`ALCANCE` es cuánto delante y debajo del
-    hombro está el botón).
+    hombro está el botón). El suelo por donde camina está en `y = 800`; la trocha del
+    paisaje pasa por ahí.
 - **El televisor sucio.** Mientras la escena dura, el marco se oscurece y amarillea con
   un filtro CSS y la pantalla lleva un reflejo y polvo (`.entrada-mugre`); ambos se
   disipan durante el zoom (variable `--mugre`).
@@ -864,12 +877,12 @@ lleva a «sin transformación» al final del zoom, de modo que el relevo es exac
   Si el equipo va a menos de ~11 fotogramas por segundo en los dos primeros segundos, la
   escena se corta y enciende el televisor directamente (`'lenta'`). Si el arte no carga
   en 12 s, queda la página de siempre.
-- **Móvil vertical.** Versión corta: Juan entra por el borde y el televisor se
+- **Móvil vertical.** Versión corta: la caminante entra por el borde y el televisor se
   acerca en 2,6 s; sigue saliendo el aviso de girar el teléfono, oculto durante la escena.
-- **Peso.** Lo propio de la entrada son unos 150 KB (`juan.json` 8 KB comprimido,
-  `oclusor-der.png` 148 KB, `tocon.svg` 3 KB); el fondo, el cielo y las nubes ya los descarga
-  el cómic en la escena I. Las capas llevan `will-change: transform` para que el
-  navegador las dibuje una vez y solo las mueva; GSAP (27 KB)
+- **Peso.** Lo propio de la entrada son unos 250 KB de SVG sin comprimir (el suelo pesa 128 KB
+  y las cordilleras 100 KB; comprimidos con gzip, bastante menos) más `caminante.json`
+  (48 KB). Las capas llevan `will-change: transform` para que el navegador las dibuje una
+  vez y solo las mueva; GSAP (27 KB)
   se descarga **solo cuando hay escena**, con `Movimiento.cargar()`, no al abrir la
   página. Las siguientes visitas de la misma sesión no pagan nada.
 - **Sin sonido**, a propósito: no se prometió y las pisadas sin licencia clara no entran.
@@ -1080,9 +1093,10 @@ Juanes tienen además condiciones de atribución, explicadas más abajo.
 | Aldabón de la casa familiar | laloking97 | CC BY-SA 2.0 | [Commons](https://commons.wikimedia.org/wiki/File:Aldab%C3%B3n-casa_de_los_pap%C3%A1s_de_Juanes.jpg) | Página de Juanes |
 | Estatua en Carolina del Príncipe | XalD | CC BY-SA 4.0 | [Commons](https://commons.wikimedia.org/wiki/File:Estatua_de_Juanes_en_Carolina_del_Pr%C3%ADncipe,_2023.jpg) | Página de Juanes |
 
-El arte de la entrada al cómic no es de terceros: el paisaje, el cielo y las nubes son los del
-propio cómic, Juan sale de su animación Lottie y el tocón está hecho con código con el estilo
-de los fondos. La herramienta Remotion solo se usa para revisar; no entra al sitio.
+El arte de la entrada al cómic no es de terceros: el paisaje (seis SVG) y la caminante están
+dibujados por código para este proyecto, con el esqueleto de una animación Lottie del propio
+cómic, y el tocón está hecho con código con el estilo de los fondos. No se usó IA
+generativa. La herramienta Remotion solo se usa para revisar; no entra al sitio.
 
 Los dibujos, las animaciones y el texto del cómic son del equipo (Gabriel
 Torres, Brayhan Mosquera y Camilo Betancourt) y no llevan fila.

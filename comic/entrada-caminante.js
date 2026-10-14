@@ -1,7 +1,7 @@
 (function(raiz, fabrica){
   const api = fabrica();
   if (typeof module === 'object' && module.exports) module.exports = api;
-  else raiz.EntradaJuan = api;
+  else raiz.EntradaCaminante = api;
 })(typeof self !== 'undefined' ? self : this, function(){
   'use strict';
 
@@ -441,6 +441,12 @@
         const Y = llegada.Y + ESCALA * c.dy * w - 16 * salto;
 
         const burbuja = f < T.burbuja0 ? 0 : f < T.burbuja1 ? Math.min(1, rebote((f - T.burbuja0) / 8)) : 1 - suave((f - T.burbuja1) / 5);
+
+        const tras = f - T.para;
+        const freno = tras > 0 ? Math.exp(-tras / 10) * Math.cos(tras * 0.5) : 0;
+        const arranque = f >= T.camina0 ? Math.exp(-(f - T.camina0) / 8) : 0;
+        rot[I.cola] = -0.75 * ((rot[I.torso] || 0) + (rot[I.cuello] || 0) + (rot[I.cabeza] || 0)) +
+          w * 7 * Math.sin(c.fase * 4 * Math.PI - 1.1) - 13 * freno + 6 * arranque + 8 * salto - 4 * aterriza;
 
         const pose2 = { rot: rot, tr: tr, esc: esc, escY: escY };
         return {
