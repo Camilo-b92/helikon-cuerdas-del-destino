@@ -96,6 +96,8 @@ Lo que eso implica al trabajar:
     ├── index.html
     ├── comic.css
     ├── comic.js
+    ├── avisos.js           Avisos «Mira la escena» y «Escena terminada → Siguiente» (se monta sobre comic.js, sin tocarlo)
+    ├── avisos.css
     ├── entrada.js          La entrada: una joven camina por un sendero de montaña, halla el televisor y lo enciende (GSAP)
     ├── entrada-caminante.js  El rig y la animación de la caminante (módulo sin DOM; lo usan el sitio y Remotion)
     ├── entrada.css
@@ -729,9 +731,41 @@ tocarlas:
   Effects como `tituloTres.json` y se renombró al copiarlo.
 
 **Avisos de interacción.** Toda escena que se maneja con el ratón o el teclado
-lleva su aviso, con la clase compartida `.scene-hint`; las escenas que corren
-solas no llevan ninguno. Se ocultan con la clase `is-hidden` en cuanto el lector
-hace lo que piden, y cada escena los restablece al sintonizarla.
+lleva su aviso, con la clase compartida `.scene-hint`. Se ocultan con la clase
+`is-hidden` en cuanto el lector hace lo que piden, y cada escena los restablece
+al sintonizarla. Los avisos (y la leyenda bajo el televisor) miden ahora
+`max(1.3em, 12px)` sobre la tipografía de la pantalla, con fondo más oscuro,
+borde y parpadeo suave (`blinkHint` baja a 0,55 de opacidad, antes 0,25), para
+que se lean sobre cualquier fondo.
+
+**Fin de escena (`avisos.js`, `avisos.css`).** Es un módulo aparte que se monta
+sobre `comic.js` sin editarlo: envuelve `showChannel()` y `s7Etiqueta()`, y
+tras cada cambio de canal conecta el evento `complete` de las animaciones que
+cierran cada escena (la tabla `ESCENAS`). Cuando terminan **todas** las de la
+lista, sale una cápsula abajo con *Escena terminada* y el botón *Siguiente
+escena →* (o *Capítulo terminado* y *Siguiente capítulo →* si lo que viene es
+una presentación), y la perilla derecha del televisor late en turquesa
+(`.tv.fin-escena`). En las dos escenas que corren solas (canales 2 y 5) la
+cápsula dice desde el principio *Mira la escena: avanza sola*. En el último
+canal dice *Última escena disponible* y no ofrece botón. Un `role="status"`
+oculto lo anuncia a lector de pantalla. La cápsula se oculta al cambiar de
+canal y al apagar. En el canal 8 el botón *Correr* ya existía: al llegar al
+final solo cambia su texto a *Siguiente capítulo →* y enciende la perilla.
+Para que una escena nueva avise, se añade su canal a `ESCENAS` con la lista de
+animaciones que la cierran. Con movimiento reducido no hay pulsos: la perilla
+queda con un anillo fijo.
+
+| Canal | Fin de escena (cuándo sale el aviso) |
+|---|---|
+| 1 | Al terminar Juanes de correr, tras tocar la puerta (~12 s) |
+| 2 | Al terminar la caja y el texto (~12 s, automática) |
+| 3 | Al terminar el texto de papá, tras tocarlo (~10 s) |
+| 5 | Al terminar Juan y su texto (~9 s, automática) |
+| 6 | Al terminar el texto de Juanes, tras tocarlo (~3,5 s) |
+| 7 | Al terminar el texto del fantasma, tras el segundo toque (~21 s) |
+| 8 | Cuando Juan llega al final del recorrido |
+| 10 | Al terminar el globo de Juanes, tras tocarlo (~14 s) |
+| 11 | Al terminar el globo de la mamá, tras tocar a Juanes (~32 s) |
 
 | Canal | Escena | Cómo se maneja | Aviso |
 |---|---|---|---|

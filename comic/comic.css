@@ -187,7 +187,7 @@ a{ color: inherit; }
 }
 .channel.is-active{ display: block; }
 
-@keyframes blinkHint{ 0%,100%{ opacity: 1; } 50%{ opacity: 0.25; } }
+@keyframes blinkHint{ 0%,100%{ opacity: 1; } 50%{ opacity: 0.55; } }
 
 .pres-stage{
   position: absolute;
@@ -216,13 +216,18 @@ a{ color: inherit; }
   transform: translateX(-50%);
   z-index: 2;
   margin: 0;
-  font-size: 0.8em;
+  width: max-content;
+  max-width: 92%;
+  font-family: var(--font-sub);
+  font-size: max(1.3em, 12px);
+  font-weight: 600;
   letter-spacing: 0.03em;
-  color: var(--turquoise);
-  background: rgba(0,0,0,0.55);
-  padding: 0.35em 0.9em;
-  border-radius: 20px;
-  white-space: nowrap;
+  text-align: center;
+  color: #5ce3d6;
+  background: rgba(0,0,0,0.78);
+  border: 1px solid rgba(92,227,214,0.45);
+  padding: 0.4em 1em;
+  border-radius: 1.6em;
   pointer-events: none;
   visibility: hidden;
   animation: blinkHint 2s ease-in-out infinite;
@@ -257,13 +262,19 @@ a{ color: inherit; }
   left: 50%;
   transform: translateX(-50%);
   z-index: 2;
-  font-size: 0.8em;
+  margin: 0;
+  width: max-content;
+  max-width: 92%;
+  font-family: var(--font-sub);
+  font-size: max(1.3em, 12px);
+  font-weight: 600;
   letter-spacing: 0.03em;
-  color: var(--mist);
-  background: rgba(0,0,0,0.5);
-  padding: 0.35em 0.9em;
-  border-radius: 20px;
-  white-space: nowrap;
+  text-align: center;
+  color: #fff;
+  background: rgba(0,0,0,0.78);
+  border: 1px solid rgba(207,232,235,0.45);
+  padding: 0.4em 1em;
+  border-radius: 1.6em;
   pointer-events: none;
   animation: blinkHint 2s ease-in-out infinite;
 }
@@ -271,7 +282,6 @@ a{ color: inherit; }
 #scene7Hint{
   left: 4%;
   transform: none;
-  white-space: normal;
   max-width: 55%;
 }
 
@@ -675,6 +685,9 @@ a{ color: inherit; }
 }
 #s9-textMom.s9-visible{ opacity: 1; }
 #scene9Hint{ left: 24%; }
+@media (max-width: 640px){
+  #scene8Hint, #scene9Hint{ left: 50%; }
+}
 
 .scanlines{
   position: absolute;
@@ -833,7 +846,7 @@ a{ color: inherit; }
   color: var(--mist, #cfe8eb);
   font-family: var(--font-sub);
   font-weight: 600;
-  font-size: max(0.95em, 13px);
+  font-size: max(1.2em, 13px);
   letter-spacing: 0.05em;
   text-transform: uppercase;
   cursor: pointer;
@@ -886,7 +899,7 @@ a{ color: inherit; }
 
 .tv-caption{
   font-family: 'Special Elite', serif;
-  font-size: 0.82rem;
+  font-size: clamp(0.95rem, 1.3vw, 1.2rem);
   letter-spacing: 0.04em;
   color: #17130e;
   text-align: center;
@@ -897,7 +910,7 @@ a{ color: inherit; }
   display: none;
   margin: 0;
   max-width: 28em;
-  font-size: 0.8rem;
+  font-size: 0.95rem;
   line-height: 1.4;
   font-family: 'Special Elite', serif;
   color: #17130e;

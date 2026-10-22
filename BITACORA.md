@@ -2023,6 +2023,41 @@ recorrió cada escena con el nuevo botón.
 
 ---
 
+### Ronda 41 — Indicaciones del cómic más claras
+
+- **Directo sobre `main`**, sin rama. Camilo pidió que la navegación sea más intuitiva: textos indicativos
+  más grandes y un aviso cuando una escena automática termina.
+- **Textos más grandes.** Los avisos de escena y de presentación pasaron de `0.8em` a `max(1.3em, 12px)`
+  (en escritorio de ~7–12 px a ~12–19 px), con tipografía de subtítulo, fondo más oscuro, borde y
+  centrado; el parpadeo ya no baja de 0,55. La leyenda bajo el televisor pasó de 0,82 rem a
+  `clamp(0.95rem, 1.3vw, 1.2rem)`, el aviso de girar el teléfono a 0,95 rem y el botón *Correr* a
+  `max(1.2em, 13px)`. En pantallas de hasta 640 px los avisos de los canales 10 y 11 se centran, porque a
+  la derecha y a la izquierda, ya más grandes, se salían.
+- **Aviso de fin de escena.** Archivos nuevos `comic/avisos.js` y `comic/avisos.css`; **`comic.js` no se
+  tocó**. Detalle en el README (*Fin de escena*). Se midió cuánto tarda cada escena en terminar, con el
+  mismo recorrido que haría un lector: de ~3,5 s (canal 6) a ~32 s (canal 11).
+- **Decisiones:**
+  - El fin se calcula con el evento `complete` de las animaciones que cierran la escena, no con
+    tiempos fijos: si Camilo cambia una animación, el aviso la sigue.
+  - Las escenas interactivas avisan solo después de que el lector hace lo que piden; no se le dice
+    «terminada» a quien aún no tocó nada.
+  - La cápsula es un botón y además se resalta la perilla del televisor: en celular la perilla es
+    pequeña y el botón se alcanza sin buscarla.
+  - Se distingue *escena* de *capítulo* según lo que viene después (las presentaciones están en los
+    canales 0, 4 y 9, constante `PRESENTACIONES`).
+  - Al envolver `showChannel` y `s7Etiqueta` desde otro archivo se evita editar `comic.js`; el
+    inconveniente es que `avisos.js` depende de nombres de `comic.js` (`s1`…`s9`, `changeChannel`,
+    `TOTAL_CHANNELS`), y si cambian hay que actualizar la tabla `ESCENAS`.
+- **Error encontrado en las pruebas:** el primer intento de ocultar el aviso al apagar usaba un
+  `MutationObserver` sobre la clase del televisor que, al quitar una clase, volvía a dispararse sin
+  fin (cada `classList.remove` cuenta como cambio). Ahora solo actúa si hay algo que ocultar.
+- **Probado:** cada canal con su recorrido (1, 2, 3, 5, 6, 7, 8, 10 y 11) en 1366x768, 844x390 y 360x740;
+  clic y teclado (Enter sobre el botón) en el aviso; avisar «capítulo» en el canal 3; apagado; movimiento
+  reducido; axe en 0 con el aviso visible. fase1, fase3, fase4, optin y axall, sin fallos.
+- **Sin probar:** lector de pantalla real (solo se comprobó que la región `role="status"` recibe el texto).
+
+---
+
 ## Pendientes
 
 En orden de lo que más aporta:
