@@ -44,7 +44,7 @@
   if (/[?&]entrada(=|&|$)/.test(location.search)) visto = false;
   if (M && !M.reducido() && !visto){
     h.classList.add('entrada-espera');
-    setTimeout(function(){ if (!document.getElementById('entrada')) h.classList.remove('entrada-espera'); }, 6000);
+    setTimeout(function(){ if (!document.getElementById('entrada') && !document.getElementById('entrada-inicio')) h.classList.remove('entrada-espera'); }, 6000);
   }
 })();
 </script>

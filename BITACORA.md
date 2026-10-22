@@ -2090,6 +2090,33 @@ recorrió cada escena con el nuevo botón.
 
 ---
 
+### Ronda 43 — Pantalla «Toca para comenzar»
+
+- **Directo sobre `main`**, sin rama. Camilo aprobó la idea de una pantalla previa para garantizar el
+  sonido de la introducción.
+- **Qué hace.** Antes de la entrada animada, si el navegador no permitiría audio automático, aparece el
+  título, un botón *Toca para comenzar* y la nota *Este cómic se escucha: sube el volumen*. El toque es
+  el gesto que desbloquea el audio: la entrada y la introducción siguen solas y con sonido. Si el
+  navegador ya lo permite (porque el lector ya tocó la página o Chrome ya lo conoce), no sale.
+  Detalles en el README (*La entrada al cómic*).
+- **Decisiones:**
+  - Se decide con `getAutoplayPolicy` y no mostrándola siempre, para no añadir un toque a quien no lo
+    necesita. En un navegador sin esa API se usa `userActivation.hasBeenActive`, lo que puede
+    mostrarla una vez de más, nunca de menos.
+  - Toda la pantalla es el botón, el foco va al botón y Enter o Espacio sirven; el menú superior
+    sigue accesible por si alguien quiere irse.
+  - El respaldo de la ronda 42 (video en silencio y botón *Activar sonido*) se mantiene por si aun así
+    el navegador lo bloquea.
+- **Probado:** con el bloqueo simulado, la pantalla sale con el foco en el botón, resiste más de 6 s sin
+  destapar el televisor, al tocar arranca la entrada y la introducción suena sin silencio, recargar la
+  vuelve a mostrar, Enter también arranca, sin desborde a 390 px, axe 0; con el navegador permitiendo
+  sonido, no sale. fase4 ahora fija `getAutoplayPolicy` en «allowed» (el navegador de pruebas no tiene la
+  API y mostraría la pantalla); fase1, fase3, optin, axall, e9, av2 sin fallos.
+- **Sin probar:** Chrome o Safari reales; lo que decide cada uno con `getAutoplayPolicy` es lo que
+  Camilo verá al recargar.
+
+---
+
 ## Pendientes
 
 En orden de lo que más aporta:

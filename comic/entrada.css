@@ -226,3 +226,61 @@ html[data-movimiento="reducido"] .entrada-mugre{
 html[data-movimiento="reducido"].entrada-espera::after{
   display: none;
 }
+
+.entrada-inicio{
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  text-align: center;
+  background: #0b1210;
+  color: #fafac8;
+  cursor: pointer;
+}
+.entrada-inicio-marca{
+  margin: 0;
+  font-family: var(--font-title, 'Fredoka'), sans-serif;
+  font-weight: 600;
+  font-size: clamp(1.9rem, 5.5vw, 3.6rem);
+  letter-spacing: 0.04em;
+  line-height: 1.1;
+}
+.entrada-inicio-boton{
+  min-height: 56px;
+  padding: 0.7em 1.8em;
+  border: 3px solid var(--turquoise, #09cbbb);
+  border-radius: 999px;
+  background: var(--turquoise, #09cbbb);
+  color: #04201d;
+  font-family: var(--font-title, 'Fredoka'), sans-serif;
+  font-weight: 600;
+  font-size: clamp(1.25rem, 2.8vw, 1.9rem);
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  animation: entradaInicioPulso 1.8s ease-in-out infinite;
+}
+.entrada-inicio-boton:focus-visible{
+  outline: 4px solid #fff;
+  outline-offset: 4px;
+}
+.entrada-inicio-nota{
+  margin: 0;
+  font-family: 'Special Elite', serif;
+  font-size: clamp(1rem, 1.8vw, 1.25rem);
+  color: #cfe8eb;
+}
+@keyframes entradaInicioPulso{
+  0%, 100%{ box-shadow: 0 0 0 0 rgba(9,203,187,0.6); }
+  50%{ box-shadow: 0 0 0 16px rgba(9,203,187,0); }
+}
+@media (prefers-reduced-motion: reduce){
+  .entrada-inicio-boton{ animation: none; }
+}
+html[data-movimiento="reducido"] .entrada-inicio{
+  display: none;
+}

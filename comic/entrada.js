@@ -89,6 +89,34 @@
     try { window.sessionStorage.setItem(CLAVE, '1'); } catch (e) { return; }
   }
 
+  function sonidoPermitido(){
+    try {
+      if (typeof window.navigator.getAutoplayPolicy === 'function'){
+        return window.navigator.getAutoplayPolicy('mediaelement') === 'allowed';
+      }
+    } catch (e) {}
+    const ua = window.navigator.userActivation;
+    return !!(ua && ua.hasBeenActive);
+  }
+
+  function mostrarInicio(seguir){
+    const capa = crear('div', 'entrada-inicio');
+    capa.id = 'entrada-inicio';
+    capa.setAttribute('role', 'dialog');
+    capa.setAttribute('aria-modal', 'true');
+    capa.setAttribute('aria-labelledby', 'entrada-inicio-marca');
+    capa.innerHTML = '<p class="entrada-inicio-marca" id="entrada-inicio-marca">Cuerdas del Destino</p>' +
+      '<button type="button" class="entrada-inicio-boton">Toca para comenzar</button>' +
+      '<p class="entrada-inicio-nota">Este cómic se escucha: sube el volumen.</p>';
+    document.body.appendChild(capa);
+    tv.inert = true;
+    capa.addEventListener('click', () => {
+      capa.remove();
+      seguir();
+    }, { once: true });
+    capa.querySelector('button').focus({ preventScroll: true });
+  }
+
   function crear(etiqueta, clase){
     const n = document.createElement(etiqueta);
     if (clase) n.className = clase;
@@ -626,7 +654,8 @@
         return;
       }
       fase = 'preparando';
-      arrancar();
+      if (sonidoPermitido()) arrancar();
+      else mostrarInicio(arrancar);
     });
     return promesa;
   }

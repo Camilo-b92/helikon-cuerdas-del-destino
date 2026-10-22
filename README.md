@@ -992,6 +992,18 @@ lleva a «sin transformación» al final del zoom, de modo que el relevo es exac
   disipan durante el zoom (variable `--mugre`).
 - **Sin parpadeos.** Nada destella: la luz del botón late despacio y el relevo es un
   fundido (WCAG 2.3.1).
+- **Pantalla «Toca para comenzar».** Un navegador solo deja sonar el video de
+  introducción si el lector ya hizo un gesto en la página. Antes de arrancar la
+  entrada, `sonidoPermitido()` consulta `navigator.getAutoplayPolicy('mediaelement')`
+  (o, si no existe, `navigator.userActivation.hasBeenActive`). Si no está permitido,
+  `mostrarInicio()` pone una pantalla oscura con el título, un botón grande
+  (*Toca para comenzar*) y la nota *Este cómic se escucha: sube el volumen*; toda la
+  pantalla es el área táctil y Enter o Espacio también sirven. Ese toque es el
+  gesto que desbloquea el audio, y de ahí en adelante entrada e introducción corren
+  solas y con sonido. Si el navegador ya permite el sonido, no se ve. Mientras
+  está, la página sigue tapada (`entrada-espera`) y el televisor, inerte. Para
+  probar la entrada en un navegador sin esa API (como el de pruebas) hay que
+  fijar `navigator.getAutoplayPolicy = () => 'allowed'`.
 - **Salvaguardas.** Una vez por sesión (`sessionStorage`, clave `helikon-entrada`),
   **salvo al recargar**: `esRecarga()` (y el mismo chequeo en el script del `<head>`)
   mira `performance.getEntriesByType('navigation')` y, si es una recarga, ignora la
