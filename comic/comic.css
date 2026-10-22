@@ -928,6 +928,56 @@ a{ color: inherit; }
   min-height: 1.4em;
 }
 
+.tv-sonido{
+  position: fixed;
+  right: max(12px, env(safe-area-inset-right));
+  bottom: max(8px, env(safe-area-inset-bottom));
+  z-index: 40;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  min-height: 40px;
+  padding: 0 1em;
+  border: 3px solid #17130e;
+  background: #fffdf6;
+  color: #17130e;
+  font-family: 'Special Elite', serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  box-shadow: 3px 3px 0 #17130e;
+  transition: translate 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
+}
+.tv-sonido:hover{
+  translate: -1px -1px;
+  box-shadow: 4px 4px 0 #17130e;
+}
+.tv-sonido:active{
+  translate: 2px 2px;
+  box-shadow: 1px 1px 0 #17130e;
+}
+.tv-sonido:focus-visible{
+  outline: 3px solid #254f68;
+  outline-offset: 3px;
+}
+.tv-sonido-estado{
+  min-width: 2.2ch;
+  padding: 1px 6px;
+  background: #17130e;
+  color: #fffdf6;
+  text-align: center;
+}
+.tv-sonido.is-silencio .tv-sonido-estado{
+  background: transparent;
+  color: inherit;
+  box-shadow: inset 0 0 0 2px currentColor;
+}
+.tv-sonido-tacha{ display: none; }
+.tv-sonido.is-silencio{ background: #e8dfc9; }
+.tv-sonido.is-silencio .tv-sonido-tacha{ display: inline; }
+.tv-sonido.is-silencio .tv-sonido-onda{ display: none; }
+
 .tv-giro{
   display: none;
   margin: 0;

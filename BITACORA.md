@@ -2117,6 +2117,35 @@ recorrió cada escena con el nuevo botón.
 
 ---
 
+### Ronda 44 — Sonido en la animación y en las escenas
+
+- **Pedido.** Camilo: el cómic se siente plano sin sonidos que den sentido a las acciones.
+- **Directo sobre `main`**, sin rama. `comic/comic.js` no se modificó.
+- **Qué se hizo.** Tres archivos nuevos (`sonido-motor.js`, `sonido-cues.js`, `sonido-escenas.js`) con
+  un motor de Web Audio que **sintetiza** los 44 sonidos: sin archivos de audio, sin licencias. Suena
+  la entrada (pasos, sorpresa, burbuja, brazo, zoom), el televisor (encendido, estática, zumbido,
+  botones), la presentación de cada capítulo, cada escena (puertas, pasos según el suelo, golpe, caja,
+  rebotes, susto, fantasma, latido, texto y burbujas), un ambiente por canal y la música de las
+  escenas con guitarra. Botón «Sonido sí/no» persistente (`helikon-sonido`) que también silencia el
+  video de introducción.
+- **Decisiones:**
+  - Sincronía por contenedor de Lottie: se envuelve `loadAnimation` y cada animación avisa por su `id`;
+    el retraso de cada texto sale de los fotogramas del JSON. Así no hay que tocar `comic.js`.
+  - Una guitarra Karplus-Strong con afinación fraccionaria: la primera versión sonaba hasta +39
+    centésimas desafinada; corregido a ±4.
+  - El botón de sonido va **fijo en la esquina**: dentro del flujo añadía ~50 px de alto y el
+    televisor empezaba a desplazarse; un ítem en el menú de animaciones desbordaba a 390 px.
+  - Autoplay: sin gesto previo no se crea el contexto; se reanuda con el primer toque (la pantalla
+    «Toca para comenzar» ya lo da).
+- **Probado:** todos los sonidos renderizados sin conexión (finitos, sin saturar), afinación, `son1`
+  (todos los canales, televisor, silencio, sin errores de consola) y `son2` (eventos de la entrada),
+  más fase1, fase3, fase4, optin, axall, e9, av2, in1 e in2. fase1 e in1 se ajustaron para fijar
+  `getAutoplayPolicy` en «allowed» (ya fallaban en la base por la pantalla de comenzar).
+- **Sin probar:** escucharlo. Lo verificado es nivel, afinación y tiempos; el balance entre sonidos y
+  la sensación de cada uno hay que afinarlos oyéndolos en el navegador.
+
+---
+
 ## Pendientes
 
 En orden de lo que más aporta:

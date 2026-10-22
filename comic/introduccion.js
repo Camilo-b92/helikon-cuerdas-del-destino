@@ -7,6 +7,10 @@
 
   const reproducir = video.play.bind(video);
 
+  function silencio(){
+    return !!(window.Sonido && window.Sonido.silenciado());
+  }
+
   const EVENTOS = ['pointerdown', 'keydown', 'touchend'];
   let escuchando = false;
 
@@ -17,7 +21,7 @@
 
   function alPrimerGesto(){
     if (navigator.userActivation && !navigator.userActivation.isActive) return;
-    video.muted = false;
+    video.muted = silencio();
     mostrar(false);
   }
 
@@ -34,23 +38,32 @@
   }
 
   video.play = function(){
-    video.muted = false;
+    video.muted = silencio();
     mostrar(false);
     const promesa = reproducir();
     if (!promesa || !promesa.catch) return promesa;
     return promesa.catch((error) => {
       if (!error || error.name !== 'NotAllowedError') throw error;
       video.muted = true;
-      mostrar(true);
-      escuchar();
+      if (!silencio()){
+        mostrar(true);
+        escuchar();
+      }
       return reproducir();
     });
   };
 
   boton.addEventListener('click', () => {
-    video.muted = false;
+    video.muted = silencio();
     mostrar(false);
   });
+
+  if (window.Sonido){
+    window.Sonido.alCambiar((si) => {
+      video.muted = si;
+      if (!si) mostrar(false);
+    });
+  }
 
   ['ended', 'error', 'pause'].forEach((tipo) => video.addEventListener(tipo, () => mostrar(false)));
   document.getElementById('skipButton').addEventListener('click', () => mostrar(false));

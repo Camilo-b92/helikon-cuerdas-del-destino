@@ -68,6 +68,7 @@
     aviso.classList.add('es-fin');
     aviso.hidden = false;
     hablar(hayMas ? texto + '. Pulsa el botón derecho o «' + boton.textContent + '» para continuar.' : texto + '.');
+    document.dispatchEvent(new CustomEvent('escena-fin'));
   }
 
   function conectar(anim, indice){
@@ -100,6 +101,7 @@
     s7Boton.innerHTML = 'Siguiente capítulo &rarr;';
     tvEl.classList.add('fin-escena');
     hablar('Capítulo terminado. Pulsa el botón derecho o «Siguiente capítulo» para continuar.');
+    document.dispatchEvent(new CustomEvent('escena-fin'));
   };
 
   new MutationObserver(() => {

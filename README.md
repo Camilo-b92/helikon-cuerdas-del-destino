@@ -101,6 +101,9 @@ Lo que eso implica al trabajar:
     ├── entrada.js          La entrada: una joven camina por un sendero de montaña, halla el televisor y lo enciende (GSAP)
     ├── entrada-caminante.js  El rig y la animación de la caminante (módulo sin DOM; lo usan el sitio y Remotion)
     ├── entrada.css
+    ├── sonido-motor.js     Motor de sonido: Web Audio sintetizado, sin archivos de audio (API `window.Sonido`)
+    ├── sonido-cues.js      Los 44 sonidos del cómic (televisor, escenas, ambientes, música, entrada)
+    ├── sonido-escenas.js   Pega los sonidos a las animaciones: qué suena, cuándo y en qué canal
     └── assets/             Arte, video y animaciones Lottie
         ├── entrada/         La caminante (caminante.json), el tocón y el paisaje de la entrada (seis SVG)
         ├── intro.mp4
@@ -1028,12 +1031,46 @@ lleva a «sin transformación» al final del zoom, de modo que el relevo es exac
   vez y solo las mueva; GSAP (27 KB)
   se descarga **solo cuando hay escena**, con `Movimiento.cargar()`, no al abrir la
   página. Las siguientes visitas de la misma sesión no pagan nada.
-- **Sin sonido**, a propósito: no se prometió y las pisadas sin licencia clara no entran.
+- **El sonido de la entrada** lo pone `sonido-escenas.js` (pasos sobre hierba, sorpresa, burbuja, brazo, pulso y zoom), enganchado a los eventos `entrada:inicio` y `entrada:fin` que dispara `entrada.js`.
 - **Límite conocido.** El clic final lo hace el script, no una persona. Los navegadores
   solo dejan reproducir con sonido sin gesto previo si la persona ya interactuó con el
   sitio (lo normal al llegar desde la portada); si no, `comic.js` ya salta la
   introducción por su cuenta (es lo que hace cuando `video.play()` es rechazado) y va
   directo al canal 0.
+
+### El sonido (`comic/sonido-motor.js`, `sonido-cues.js`, `sonido-escenas.js`)
+
+Todo el sonido se **sintetiza en el navegador** con Web Audio: no hay un solo archivo de audio, así
+que no hay licencias que revisar ni peso que descargar (los tres archivos suman unos 70 KB).
+
+- **`sonido-motor.js`** crea el `AudioContext`, un compresor maestro y tres buses (efectos, música,
+  ambiente) con una reverberación generada. Expone `window.Sonido`: `registrar(nombre, def)`,
+  `tocar(nombre, opciones)`, `linea(...)` (programa varios sonidos en el reloj de audio),
+  `bucle(...)`, `parar(grupo, fade)`, `silenciar/alternar/silenciado`, `alCambiar(fn)`, `render(...)`
+  (renderiza un sonido sin conexión, para pruebas) y `H` (herramientas: guitarra Karplus-Strong,
+  campanas FM, ruido filtrado, rasgueo, colchones…).
+- **`sonido-cues.js`** registra los 44 sonidos, en grupos: `tv` (encender, apagar, estática, botón,
+  zumbido), `ui` (aviso de fin de escena, sonido activado), `escena` (pasos por tipo de suelo, puerta,
+  cortina, libros, silbido, golpe, caja, rebotes, revólver, susto, fantasma, latido, texto, burbuja,
+  panel, títulos y capítulos), `entrada`, `ambiente` (campo, interior, ciudad, noche) y `musica` (la
+  del papá, la de la calle, la del sueño, la del cuarto y el final de 38 s).
+- **`sonido-escenas.js`** es el único que conoce el cómic. Envuelve `lottie.loadAnimation` y cada
+  animación avisa por el `id` de su contenedor; un mapa `EVENTOS` dice qué suena y con qué retraso
+  (los tiempos salen de los fotogramas de entrada de cada capa de texto del JSON). También envuelve
+  `showChannel`, `s6Entrar` y `s6Salir`, observa el encendido del televisor y la estática, y mantiene
+  el ambiente y el zumbido de cada canal. **`comic.js` no se tocó.**
+- **Silenciar.** El botón «Sonido sí/no» (esquina inferior derecha, fijo para no mover el televisor)
+  guarda la elección en `localStorage` con la clave `helikon-sonido`. El video de introducción sigue
+  ese mismo estado.
+- **Autoplay.** El contexto de audio solo se crea si el lector ya interactuó (`userActivation`); un
+  contexto suspendido se reanuda con el primer gesto; al ocultar la pestaña se suspende.
+- **Eventos nuevos:** `entrada:inicio` (con los tiempos de la entrada) y `entrada:fin`, en `entrada.js`;
+  `escena-fin`, en `avisos.js`.
+- **Cambiar un sonido por uno real.** Basta con volver a registrar el nombre en
+  `Sonido.registrar('puerta-abre', ...)` con una definición que cargue un archivo; el resto del
+  sistema (mapa de eventos, mute, buses, parada por grupo) no cambia.
+- **Nota.** Los niveles, afinación y sincronía se verificaron numéricamente (renderizado sin conexión,
+  sin saturar), no de oído: el volumen relativo entre sonidos se afina escuchando.
 
 ### Puntos no obvios del CSS
 

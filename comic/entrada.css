@@ -14,11 +14,13 @@ html.entrada-activa .tv-cartel{
 }
 
 .tv-caption,
-.tv-giro{
+.tv-giro,
+.tv-sonido{
   transition: opacity 0.6s ease;
 }
 html.entrada-activa .tv-caption,
-html.entrada-activa .tv-giro{
+html.entrada-activa .tv-giro,
+html.entrada-activa .tv-sonido{
   opacity: 0;
 }
 

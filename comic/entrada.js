@@ -536,6 +536,7 @@
     limpiar();
     activa(false);
     liberar();
+    document.dispatchEvent(new CustomEvent('entrada:fin', { detail: { motivo: motivo } }));
     if (encender && !encendido){
       encendido = true;
       (btnPower.disabled ? cartel : btnPower).click();
@@ -545,37 +546,27 @@
     if (resolver) resolver(motivo);
   }
 
-  function iniciar(){
-    fase = 'curso';
-    liberar();
-    activa(true);
-    const total = G.tFin;
-    const cuenta = { t: 0 };
-    let cuadros = 0;
-    let revisado = false;
-    const inicio = window.performance.now();
-    cuadro(0);
-    reloj = gsapRef.to(cuenta, {
-      t: total,
-      duration: total,
-      ease: 'none',
-      onUpdate: () => {
-        if (fase !== 'curso') return;
-        cuadros += 1;
-        cuadro(cuenta.t);
-        if (!revisado && window.performance.now() - inicio >= 2000 && !reloj.paused()){
-          revisado = true;
-          if (cuadros < 22) terminar('lenta', true);
-        }
-      },
-      onComplete: () => terminar('completa')
-    });
+  function cuando(){
+    if (!G) return null;
+    const T = G.plan.T;
+    return {
+      pasos: G.plan.pasos.map((f) => f / FPS),
+      sorpresa: T.pop0 / FPS,
+      burbuja: T.burbuja0 / FPS,
+      camina0: T.camina0 / FPS,
+      alcanza0: T.alcanza0 / FPS,
+      toca: G.tP0,
+      zoom0: G.tZ0,
+      zoom1: G.tZ1,
+      fin: G.tFin
+    };
   }
 
   function iniciar(){
     fase = 'curso';
     liberar();
     activa(true);
+    document.dispatchEvent(new CustomEvent('entrada:inicio', { detail: cuando() }));
     const total = G.tFin;
     const cuenta = { t: 0 };
     let cuadros = 0;
@@ -662,7 +653,8 @@
 
   window.Entrada = {
     caminarHastaTelevisor: caminarHastaTelevisor,
-    get linea(){ return reloj; }
+    get linea(){ return reloj; },
+    get cuando(){ return cuando(); }
   };
 
   if (html.classList.contains('entrada-espera')) caminarHastaTelevisor();

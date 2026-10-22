@@ -464,7 +464,15 @@
         };
       }
 
-      return { T: T, estado: estado, posX: posX, PINI: PINI, PPARADA: PPARADA, PLL: PLL };
+      const pasos = [];
+      let previo = Math.floor(hermite(nodos, 0) / 9);
+      for (let f = 1; f <= T.fin; f++){
+        const k = Math.floor(hermite(nodos, f) / 9);
+        if (k > previo && caminando(f) > 0.5) pasos.push(f);
+        previo = k;
+      }
+
+      return { T: T, estado: estado, posX: posX, PINI: PINI, PPARADA: PPARADA, PLL: PLL, pasos: pasos };
     }
 
     return {

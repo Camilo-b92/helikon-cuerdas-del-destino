@@ -262,6 +262,15 @@
   </div>
 
   <p class="tv-caption" id="tvCaption">Televisor apagado</p>
+  <button type="button" class="tv-sonido" id="btnSonido" aria-pressed="true">
+    <svg class="tv-sonido-icono" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false">
+      <path class="tv-sonido-cono" d="M3 9v6h4l5 4V5L7 9H3z" fill="currentColor"/>
+      <path class="tv-sonido-onda" d="M15.5 8.5a5 5 0 0 1 0 7M18 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      <path class="tv-sonido-tacha" d="M16 9l6 6M22 9l-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+    <span class="tv-sonido-texto">Sonido</span>
+    <span class="tv-sonido-estado" aria-hidden="true">sí</span>
+  </button>
   <p class="visualmente-oculto" id="avisoVoz" role="status" aria-live="polite"></p>
   <p class="tv-giro">Mejor en horizontal: gira el teléfono para ver el televisor más grande.</p>
 
@@ -270,6 +279,9 @@
 <script src="assets/lottie-web-5.13.0.min.js"></script>
 <script src="comic.js"></script>
 <script src="entrada-caminante.js"></script>
+<script src="sonido-motor.js"></script>
+<script src="sonido-cues.js"></script>
+<script src="sonido-escenas.js"></script>
 <script src="entrada.js"></script>
 <script src="avisos.js"></script>
 <script src="introduccion.js"></script>
