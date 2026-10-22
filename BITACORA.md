@@ -1887,11 +1887,13 @@ recorrió cada escena con el nuevo botón.
   - Se quitó la contraportada entera (Continuará…, botón "Enciende el televisor" y créditos del
     equipo). **La atribución de la foto de Juanes (CC BY 3.0) se conservó** en una línea al
     final de la página, porque la licencia la exige donde se use la foto y vivía en esos créditos.
-- **Helikón.** Se quitó el sello circular. El titular pasa a ancho completo y la entradilla
-  crece. El relato del origen gana una frase de entrada, un título corto por cartucho y texto
-  más grande (de 0,82 a 0,98–1,1 rem); las filas de viñetas son más altas y el cartucho de la
-  viñeta del nombre va en el flujo. El `og:image` de Helikón sigue siendo la imagen del sello
-  (es la vista previa al compartir el enlace, no la página); si se quiere, se cambia aparte.
+- **Helikón.** Se quitó el sello circular y se subió el texto de los cartuchos de las viñetas
+  (de 0,82 a 0,98–1,1 rem). Un primer rediseño más amplio (titular a ancho completo, frase
+  de entrada, títulos por cartucho, viñetas más altas) **se revirtió a petición de Camilo**: la
+  página quedó como estaba antes de esta ronda, salvo esos dos cambios y un ajuste del alto del
+  dibujo de la viñeta de las musas para que el cartucho más grande no le tape la estrella. El
+  `og:image` de Helikón sigue siendo la imagen del sello (es la vista previa al compartir el
+  enlace, no la página).
 - **Pruebas.** fase1, fase2, fase3 (actualizada: indicación visible, clic en la tapa anima,
   sin botones ni contraportada), fase4, opt-in y axe en las cuatro páginas: 0 fallos.
 - **No se probó** en Brave ni en teléfono real. En el sandbox no cargan Bangers ni Special

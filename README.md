@@ -356,17 +356,14 @@ Cuenta el origen del estudio que hace el cómic y presenta a su equipo; no hay
 nada más. Se lee de arriba abajo:
 
 1. **Menú común**, con "Helikón" resaltado.
-2. **Titular**: ocupa todo el ancho (ya no hay sello circular) y la entradilla,
-   a 1,05–1,22 rem, dice qué es Helikón (el estudio que dibuja, anima y programa
-   el cómic) antes de contar su origen.
+2. **Titular**: la entradilla dice qué es Helikón (el estudio que dibuja, anima y
+   programa el cómic) antes de contar su origen. Ya no hay sello circular junto
+   al título.
 3. **El monte de las musas**, el origen en cuatro viñetas
    (`.vineta-origen`): el Monte Helicón, Pegaso golpeando la roca, la fuente
    Hipocrene con las nueve musas y el nombre HELIKÓN. Los dibujos son SVG en
-   línea con trazo de tinta. Una frase de entrada (`.origen-intro`) abre el
-   relato, y cada cartucho lleva un título corto en Bangers (`.cartucho-titulo`:
-   El monte, El golpe, La fuente, El nombre) y el texto a 0,98–1,1 rem; las filas
-   de viñetas se hicieron más altas (340 / 380 / 340 px) para que el cartucho no
-   tape el dibujo, y el del nombre va en el flujo, no encima del título.
+   línea con trazo de tinta. Los textos de los cartuchos
+   van a 0,98–1,1 rem (0,95 rem en móvil), más grandes que los 0,82 rem originales.
 4. **Manifiesto** como página de impacto, con la lira.
 5. **Quién es quién**: fichas del equipo al estilo del *Who's Who* de los
    cómics.
