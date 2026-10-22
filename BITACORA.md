@@ -1899,6 +1899,50 @@ recorrió cada escena con el nuevo botón.
 - **No se probó** en Brave ni en teléfono real. En el sandbox no cargan Bangers ni Special
   Elite, así que las capturas usaron tipografías de reserva: conviene mirar la página real.
 
+
+### Ronda 38 — Fase 5, subfase 1: investigación y fuentes de la página de Juanes
+
+- **Directo sobre `main`**, sin rama. Solo investigación y un arreglo de contenido; **no se
+  construyó nada interactivo todavía**: el plan pide que Camilo revise esta tabla antes de seguir.
+- **Error corregido en la página:** el «Cuarto Grammy» (2024, *Vida Cotidiana*) decía «Mejor Álbum
+  Pop Latino»; la Recording Academy lo registra como **Mejor Álbum de Rock o Alternativo Latino**.
+  Se añadió esa fuente a «Fuentes de esta biografía».
+- **Tabla de fuentes verificadas** (consultadas el 22 oct 2026):
+
+| Dato | Resultado | Fuente |
+|---|---|---|
+| 10 álbumes de estudio: Fíjate Bien 2000, Un Día Normal 2002, Mi Sangre 2004, La Vida… Es un Ratico 2007, P.A.R.C.E. 2010, Loco de Amor 2014, Mis planes son amarte 2017, Más futuro que pasado 2019, Origen 2021, Vida Cotidiana 2023 | Coincide con la página | Wikipedia (en), *Juanes discography* |
+| En vivo: La Vida… (En Vivo) 2008, MTV Unplugged 2012, Tigo Music Sessions 2014 | Nuevo, utilizable | misma |
+| 4 Grammy: 2009 y 2013 (Mejor Álbum Pop Latino), 2022 *Origen* y 2024 *Vida Cotidiana* (Rock o Alternativo Latino) | Coincide, salvo la categoría de 2024 (corregida) | grammy.com/artists/juanes/9195 |
+| Latin Grammy: 26 premios contados en la tabla de Wikipedia (2001×3, 2002×1, 2003×5, 2005×3, 2008×5, 2009×1, 2012×2, 2014×1, 2015×1, 2017×1, 2018×1, 2021×1, 2023×1) | La página dice «+25»; las fuentes siguen sin coincidir (26 o 27) | Wikipedia (en), *List of awards and nominations received by Juanes* |
+| Álbum del Año (Latin Grammy): 2003, 2008, 2012 | Coincide | Wikipedia (en) |
+| Fundación Mi Sangre: creada en 2006 con Catalina Cock Duque; empezó con víctimas de minas y hoy trabaja liderazgo y paz; cifra de la propia fundación: 2.111.626 personas en 281 municipios (a 2026) | Coincide; cifra citable con atribución | El Colombiano; Foro Económico Mundial (ficha de la organización) |
+| Paz sin Fronteras: 16 mar 2008, puente Simón Bolívar (Cúcuta), más de 600.000 personas; 20 sep 2009, Plaza de la Revolución, La Habana, más de un millón (Wikipedia en español: 1.150.000 según Miguel Bosé) | Coincide; la cifra de La Habana varía según la fuente | Wikipedia (es y en) |
+| Time 100: 2005. Caballero de las Artes y las Letras: 19 jul 2006. Persona del Año (Latin Recording Academy): 2019 | Coincide | Wikipedia (en) |
+| Juanesteban: 16 canciones, lanzado el viernes 6 de marzo de 2026; el medio lo llama su álbum número 12 y habla de «26 años» como solista | La página dice «más de 25 años»; sigue siendo correcto | El País (Cali) |
+| Spotify: perfil de artista `0UWZUmn7sybxMCqrw9tGa7` («Juanes \| Spotify», 21,4 M oyentes) | Hay que confirmar que es el perfil oficial (la verificación no se vio en la página) | open.spotify.com |
+
+- **Puntos donde las fuentes no coinciden (la página debe decirlo, como ya hace con Ekhymosis):**
+  1. **Ekhymosis**: fundada en 1987 (El Colombiano) o 1988 (Wikipedia en); disuelta en 1997 (Wikipedia
+     es, y una sección de la en) o 1998 (otra sección de la en). La página usa «1988» y «1997–98».
+  2. **Infancia en Carolina del Príncipe**: Wikipedia en español dice que la vivió «entre Medellín y
+     Carolina del Príncipe»; un artículo de El Colombiano dice que nació y vivió en Medellín y visitaba
+     Carolina. La página dice «entre Medellín y Carolina del Príncipe». Para la ruta animada del acto
+     «Vida» conviene escribir «raíces familiares en Carolina del Príncipe» en vez de «creció allí».
+  3. **Primeras lecciones de música**: hermanos mayores le enseñaron guitarra (Wikipedia es); piano a
+     los 2 años y guitarra a los 7 con su padre y hermanos (Wikipedia en); a los ~10 sacaba canciones
+     de oído (El Colombiano); su primera guitarra eléctrica a los 14 en una casa de empeño. No se usarán
+     edades concretas.
+- **No se pudo verificar hoy:** que «de siete nominaciones gana tres» en 2001 (hito de la página); el
+  origen exacto del aldabón y de la estatua (las páginas de Commons no se pudieron abrir; la atribución
+  ya está en el README); la ruta física Medellín–Carolina del Príncipe (solo consta «a unas dos horas
+  de Medellín», Blu Radio) y las causas distintas de Mi Sangre y Paz sin Fronteras.
+- **Reglas que se mantienen:** música solo por el reproductor oficial incrustado, sin letras ni
+  carátulas propias; vida personal solo lo público (no se usarán datos de familiares ni de la muerte
+  de su madre en 2025); fotos solo con licencia verificable.
+- **Pendiente:** Camilo revisa esta tabla; si da el visto bueno, siguen las subfases 2 a 6 (entrada con
+  tres puertas, Vida, Música, Activismo y premios, recorte de texto y pruebas).
+
 ---
 
 ## Pendientes
