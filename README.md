@@ -61,7 +61,7 @@ Lo que eso implica al trabajar:
 │   ├── css/
 │   │   ├── pulp.css        Base visual común: paleta, papel, viñetas
 │   │   ├── menu.css        Menú común de las cuatro páginas y bloque "Sigue explorando"
-│   │   ├── scroll.css      Efectos ligados al scroll y el escenario del vinilo 3D
+│   │   ├── scroll.css      Efectos ligados al scroll (paralaje y cifras de Premios)
 │   │   ├── movimiento.css  Reglas de "movimiento reducido" para el interruptor de animaciones
 │   │   ├── libro.css       El libro que se abre al bajar (escenario, cubierta y tapa en CSS 3D)
 │   │   ├── cartas.css      Cartas del reparto: inclinación, brillo de tramado y cambio de gesto
@@ -73,7 +73,9 @@ Lo que eso implica al trabajar:
 │   │   ├── libro.js        La línea de tiempo del libro que se abre (GSAP + ScrollTrigger)
 │   │   ├── cartas.js       Cartas del reparto: entrada en abanico, inclinación y gesto
 │   │   ├── scroll.js       Parallax (data-parallax) y progreso de sección (data-scroll)
-│   │   ├── vinilo.js       El vinilo 3D de Juanes (three.js, carga diferida)
+│   │   ├── escena3d.js     Un solo contexto WebGL compartido por las vistas 3D (carga diferida)
+│   │   ├── guitarra.js     La guitarra 3D tocable de Juanes y su sonido (Web Audio)
+│   │   ├── disco.js        El vinilo 3D que cambia de etiqueta con la línea de tiempo
 │   │   └── home.js         Solo lo propio de la portada
 │   ├── vendor/three/       three.js r170 local (módulo ES) y su licencia
 │   ├── vendor/gsap/        GSAP 3.15 y sus plugins (ScrollTrigger, DrawSVG) locales, con la nota de licencia
@@ -439,7 +441,13 @@ Reglas de esta página:
   (`+15M`), así que se separa con `/^(\D*)(\d+)(.*)$/` y solo se anima la
   parte numérica; al terminar se restituye el texto original. No se ejecuta
   si el usuario pidió movimiento reducido.
-- `initLinea()` — la línea de tiempo interactiva. Ver abajo.
+- `initLinea()` — la línea de tiempo interactiva. Ver abajo. Cada vez que cambia de hito
+  emite `linea:hito` (año, título y clase) en `document`; el vinilo lo escucha.
+- `initRuta()` — el mapa de la ruta (pestañas con flechas, paradas del mapa y el pin que recorre el trazo).
+- `initCartas()` — las cartas de Activismo (botón con `aria-pressed`; la cara oculta queda `inert`).
+- `initMuro()` — el muro de premios: genera las estatuillas desde `data-grammy` y `data-latin`, filtra y muestra el detalle.
+- `initReproductor()` — inserta el iframe de Spotify solo al pulsar «Cargar el reproductor».
+- `cargarCuandoSeAcerque()` — importa `guitarra.js` y `disco.js` solo cuando su escenario está a menos de 600 px.
 
 ### El libro que se abre y las cartas (portada, `libro.js` y `cartas.js`)
 
@@ -536,7 +544,7 @@ sigue apagado.
   comprimidos como máximo; imágenes nuevas, 200 KB cada una; el 3D, siempre en
   diferido. GSAP + ScrollTrigger son unos 46 KB comprimidos.
 
-### Scroll y 3D (`scroll.js`, `vinilo.js`)
+### Scroll y 3D (`scroll.js`, `escena3d.js`)
 
 - `data-parallax="0.07"` en un elemento lo desplaza según su distancia al
   centro de la pantalla; el factor puede ser negativo. Escribe `--py`, que
@@ -545,26 +553,74 @@ sigue apagado.
   pantalla; el CSS lo usa con `calc()` para girar, inclinar o escalar.
 - Ambos se apagan con `prefers-reduced-motion` y con el interruptor de animaciones
   (ver *Movimiento y animaciones*); al volver a activarlo, se encienden sin recargar.
-- `vinilo.js` es un módulo ES: importa three.js solo cuando `#vinilo` está cerca
-  de la pantalla, pausa el render fuera de vista y deja el disco SVG si no hay
-  WebGL. Hay que servir el sitio por HTTP.
+- `escena3d.js` es un módulo ES que importa three.js una sola vez y crea **un solo
+  `WebGLRenderer`** fuera del DOM. Cada vista (la guitarra y el vinilo) pinta su escena
+  en ese renderizador con `viewport` y `scissor`, y copia el resultado a su propio
+  `<canvas>` 2D con `drawImage`. Solo se renderizan las vistas visibles y solo cuando
+  algo cambia (`continuo()` o `invalidar()`); con movimiento reducido no hay bucle
+  continuo. Si no hay WebGL, queda el dibujo SVG de respaldo. Hay que servir el sitio
+  por HTTP.
 
 ### La página de Juanes: "Basado en hechos reales"
 
-La biografía contada como un cómic: menú común, titular con
-el retrato tramado y un sello, **un aviso de que es una página no oficial**
-(`.aviso-no-oficial`, justo bajo la entradilla), el índice de la página, el origen, **la línea de tiempo**, su música,
-cifras en estallidos, el activismo, el paso al cómic, un bloque **Sigue explorando** y las **fuentes**.
+La biografía contada como un recorrido en tres actos, más premios y el paso al cómic.
+Orden: menú común, titular con el retrato tramado, **un aviso de que es una página no
+oficial** (`.aviso-no-oficial`), **las tres puertas** (Vida, Música, Activismo: tarjetas
+inclinadas que llevan a cada acto), el índice, los actos, **Premios**, el paso al cómic, **Sigue
+explorando** y las **fuentes**. Sin «Ver más» abierto lleva unas 760 palabras; la carga
+inicial pesa unos 81 KB comprimidos (con el retrato) y three.js (168 KB) solo llega al
+acercarse a la guitarra.
 
 **Esta página habla de una persona real, así que cada dato está contrastado**
-y citado en la sección de fuentes al final. Antes de añadir o cambiar un dato,
-compruébalo y añade su fuente. Donde las fuentes no coinciden, la página no
-elige una: lo dice (el fin de Ekhymosis aparece como "1997–98" y los Latin
-Grammy como "+25").
+y citado. Antes de añadir o cambiar un dato, compruébalo y añade su fuente (en el bloque
+donde aparece y en «Fuentes de esta biografía»). Donde las fuentes no coinciden, la página no
+elige una: lo dice (Ekhymosis «1987 o 1988» y «1997–98», cuánto vivió en Carolina del Príncipe,
+y los Latin Grammy como «+25»). Reglas: **sin letras de canciones, sin carátulas** (los discos
+3D llevan solo título y año; el reproductor oficial muestra las suyas), solo fotos con
+licencia verificable, y vida personal solo si es pública y está citada.
+
+#### Acto Vida (`#vida`)
+
+Mapa esquemático (no a escala) Medellín → Barbosa → Porce → Gómez Plata → Carolina del
+Príncipe. El trazo rojo (`#rutaCamino`, `pathLength="100"`) se dibuja con
+`stroke-dashoffset` hasta donde está el pin, que se mueve con `getPointAtLength`. Hay
+cuatro fichas, accesibles como pestañas (`role="tablist"`, flechas, Inicio y Fin): Medellín,
+el pueblo, la casa (aldabón) y la estatua. Las paradas del mapa son botones HTML encima del
+SVG, posicionados en %. «Ver más» guarda lo de la familia, con fuentes.
+
+#### Acto Música (`#musica`)
+
+- **La guitarra** (`guitarra.js`): modelo procedural en three.js, sin archivos externos.
+  Seis cuerdas, de la 6 (Mi grave, disco más antiguo) a la 1 (Mi agudo, el más reciente). Cada cuerda
+  guarda un disco con premios (Fíjate Bien, Un Día Normal, La Vida… Es un Ratico, MTV
+  Unplugged, Origen, Vida Cotidiana); los datos viven en los `data-*` de los botones
+  `.cuerda-boton`. Se toca con el ratón (arrastrar rasga), con los seis botones, o con
+  las teclas 1 a 6 dentro de `.guitarra`. El sonido es Karplus-Strong generado en un
+  `AudioBuffer` (sin grabaciones), con volumen bajo, **solo suena tras una acción tuya** y
+  el botón «Sonido: sí/no» lo silencia. Con movimiento reducido la cuerda solo destella.
+- **La carrera en discos**: la línea de tiempo de abajo (1988–2026, solo música), con el
+  vinilo 3D (`disco.js`): cambia de etiqueta (año, título, clase) al girar sobre su borde
+  cada vez que cambia el hito.
+- **Escúchalo**: el iframe oficial de Spotify (`0UWZUmn7sybxMCqrw9tGa7`) se carga solo al pulsar.
+
+#### Acto Activismo (`#activismo`)
+
+Tres cartas que se voltean en CSS 3D (Fundación Mi Sangre, Paz sin Fronteras 2008 y 2009), con
+dos líneas y el enlace a la fuente al dorso. Cada una tiene su botón «Dar la vuelta»
+(`aria-pressed`); la cara oculta queda `inert`. Con movimiento reducido se cambia de cara
+sin giro.
+
+#### Premios (`#premios`)
+
+Las cuatro cifras animadas y **el muro**: una estatuilla por premio y año (26 Latin Grammy y
+4 Grammy, de la tabla de Wikipedia y de grammy.com), con filtro Todos / Grammy / Latin Grammy
+y detalle al tocar un año. Tres reconocimientos más (Time 100, Caballero de las Artes y las
+Letras, Persona del Año) van debajo. Para añadir un año, un `<li class="muro-anio"
+data-anio data-latin data-grammy data-detalle>` en `#muroLista`.
 
 #### La línea de tiempo
 
-La cuerda de guitarra es el eje de años, de 1972 a 2026, y **la púa es el
+La cuerda de guitarra es el eje de años, de 1988 a 2026, y **la púa es el
 cursor que se arrastra**. Encima va una tira de viñetas, una por hito, que se
 arrastra, se desliza o se recorre con los botones.
 
@@ -575,14 +631,11 @@ Qué se puede hacer:
 - **Deslizar la tira** con el dedo o arrastrarla con el ratón; al soltar, se
   centra el hito más cercano.
 - **Pulsar una viñeta** para ir a ella.
-- **Filtrar** por Música, Premios, Activismo o Vida. Si el hito activo queda
-  oculto, salta al visible de año más cercano.
 - **Reproducir**: avanza un hito cada 2,8 s. Se pausa con cualquier
   interacción y al cambiar de pestaña.
 - **Teclado**: flechas, Inicio y Fin en la tira; en la cuerda, que es un
   `role="slider"`, también arriba y abajo.
-- **El marcador** muestra el año, el título, los álbumes y Grammy acumulados
-  hasta ese punto, y la posición entre los hitos visibles.
+- **El marcador** muestra el año, el título, los álbumes acumulados hasta ese punto y la posición.
 
 **Para añadir un hito**, basta un `<li class="hito">` más, en su orden
 cronológico, dentro de `#lineaTira`:
@@ -591,16 +644,17 @@ cronológico, dentro de `#lineaTira`:
 <li class="hito" data-anio="2027" data-tipo="musica" data-disco>
   <span class="hito-anio">2027</span>
   <span class="hito-tipo">Álbum</span>
-  <h3 class="hito-titulo">Título</h3>
+  <h4 class="hito-titulo">Título</h4>
   <p class="hito-texto">Una o dos frases, con su fuente comprobada.</p>
   <svg class="hito-icono" aria-hidden="true"><use href="#icono-musica"/></svg>
 </li>
 ```
 
-- `data-tipo`: `musica`, `premio`, `activismo` o `vida`. Decide el color, la
-  onomatopeya y el filtro.
-- `data-disco` suma al contador de álbumes, y `data-grammy` al de Grammy.
-- Si el año pasa de 2026, hay que subir `MAX` en `juanes.js`,
+- `data-tipo`: `musica` o `vida`. Decide el color y la onomatopeya. El texto de
+  `.hito-tipo` (Álbum, En vivo, Banda, Cambio) decide el color de la etiqueta del vinilo.
+- `data-disco` suma al contador de álbumes. Premios y activismo ya no van en esta línea:
+  tienen su propio acto.
+- Si el año pasa de 2026, hay que subir `MAX` (y `MIN` si cambia el inicio) en `juanes.js`,
   `aria-valuemax` en la cuerda y recolocar las marcas de década.
 - **El orden importa**: los contadores suman todo lo que va antes en la lista.
 
@@ -1092,7 +1146,7 @@ Juanes tienen además condiciones de atribución, explicadas más abajo.
 |---|---|---|---|---|
 | Remotion 4 | Remotion | Gratuita para equipos de hasta 3 personas (licencia de Remotion) | [remotion.dev](https://www.remotion.dev) | `herramientas/entrada-remotion/`; solo para revisar y renderizar la entrada, no se publica |
 | GSAP 3.15, ScrollTrigger y DrawSVG | GreenSock | Licencia estándar "sin cargo" | [gsap.com/standard-license](https://gsap.com/standard-license) | `assets/vendor/gsap/`; la animación de la página de Helikón y la entrada del cómic |
-| three.js r170 | Autores de three.js | MIT | [threejs.org](https://threejs.org) | `assets/vendor/three/`; el vinilo de Juanes |
+| three.js r170 | Autores de three.js | MIT | [threejs.org](https://threejs.org) | `assets/vendor/three/`; la guitarra y el vinilo de Juanes |
 | lottie-web 5.13.0 | Airbnb y colaboradores | MIT (según su repositorio; el archivo no lleva cabecera) | [github.com/airbnb/lottie-web](https://github.com/airbnb/lottie-web) | `comic/assets/`; las escenas del cómic |
 | Bangers, Patrick Hand SC, Inter, Boogaloo, Fredoka, Montserrat, Work Sans | Varios; ver cada familia | SIL Open Font License 1.1 | [fonts.google.com](https://fonts.google.com) | Google Fonts. Patrick Hand SC e Inter: portada, Juanes y Helikón; Boogaloo, Fredoka, Montserrat y Work Sans: solo el cómic; Bangers: las cuatro |
 | Special Elite | Astigmatic | Apache 2.0 | [fonts.google.com/specimen/Special+Elite](https://fonts.google.com/specimen/Special+Elite) | Cartuchos y menú de las cuatro páginas |

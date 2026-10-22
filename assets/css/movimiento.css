@@ -31,13 +31,11 @@ html[data-movimiento="reducido"] .team-card:hover .team-portrait::after{ transfo
 html[data-movimiento="reducido"] .team-card:hover .team-grito,
 html[data-movimiento="reducido"] .clipping:hover{ scale: 1; }
 
-html[data-movimiento="reducido"] .equalizer span{ animation: none; height: 60%; }
 html[data-movimiento="reducido"] .cuerda.vibra .cuerda-hilo,
 html[data-movimiento="reducido"] .marcador-anio.late .marcador-anio-valor{ animation: none; }
 
 html[data-movimiento="reducido"] [data-parallax]{ translate: none; will-change: auto; }
-html[data-movimiento="reducido"] .splash[data-scroll] .splash-burst,
-html[data-movimiento="reducido"] .cifras-seccion[data-scroll] .cifra-grande{ rotate: none; scale: none; translate: none; }
+html[data-movimiento="reducido"] .premios[data-scroll] .cifra-grande{ rotate: none; scale: none; translate: none; }
 
 html[data-movimiento="reducido"] .pres-hint,
 html[data-movimiento="reducido"] .scene-hint,

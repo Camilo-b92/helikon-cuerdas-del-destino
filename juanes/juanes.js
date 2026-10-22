@@ -77,7 +77,7 @@ function initLinea(){
   const cuerda = document.getElementById('lineaCuerda');
   if (!tira || !cuerda) return;
 
-  const MIN = 1972;
+  const MIN = 1988;
   const MAX = 2026;
   const PAUSA_REPRODUCCION = 2800;
 
@@ -86,7 +86,6 @@ function initLinea(){
   const marcadorAnio = anioEl.parentElement;
   const tituloEl = document.getElementById('lineaTituloActivo');
   const discosEl = document.getElementById('lineaDiscos');
-  const grammyEl = document.getElementById('lineaGrammy');
   const posicionEl = document.getElementById('lineaPosicion');
   const totalEl = document.getElementById('lineaTotal');
   const anuncio = document.getElementById('lineaAnuncio');
@@ -94,7 +93,6 @@ function initLinea(){
   const btnPlay = document.getElementById('lineaPlay');
   const btnAnterior = document.getElementById('lineaAnterior');
   const btnSiguiente = document.getElementById('lineaSiguiente');
-  const filtros = Array.from(document.querySelectorAll('.filtro'));
 
   const fraccion = (anio) => (anio - MIN) / (MAX - MIN);
   const anioDe = (h) => Number(h.dataset.anio);
@@ -157,7 +155,6 @@ function initLinea(){
     anioEl.textContent = etiquetaDe(hito);
     tituloEl.textContent = tituloDe(hito);
     discosEl.textContent = hitos.filter((h, n) => n <= i && h.hasAttribute('data-disco')).length;
-    grammyEl.textContent = hitos.filter((h, n) => n <= i && h.hasAttribute('data-grammy')).length;
 
     const lista = visibles();
     posicionEl.textContent = lista.indexOf(hito) + 1;
@@ -173,6 +170,14 @@ function initLinea(){
       reiniciarAnimacion(marcadorAnio, 'late');
       reiniciarAnimacion(cuerda, 'vibra');
     }
+
+    document.dispatchEvent(new CustomEvent('linea:hito', {
+      detail: {
+        anio: etiquetaDe(hito),
+        titulo: tituloDe(hito),
+        clase: hito.querySelector('.hito-tipo').textContent.trim()
+      }
+    }));
 
     clearTimeout(anuncioTimer);
     anuncioTimer = setTimeout(() => {
@@ -357,22 +362,6 @@ function initLinea(){
   btnSiguiente.addEventListener('click', () => { parar(); paso(1); });
   btnPlay.addEventListener('click', () => { reproduciendo ? parar() : reproducir(); });
 
-  filtros.forEach(boton => {
-    boton.addEventListener('click', () => {
-      const filtro = boton.dataset.filtro;
-      filtros.forEach(b => b.setAttribute('aria-pressed', String(b === boton)));
-      hitos.forEach((h, n) => {
-        const entra = filtro === 'todo' || h.dataset.tipo === filtro;
-        h.hidden = !entra;
-        puntos[n].hidden = !entra;
-      });
-      apilar();
-      parar();
-      const destino = hitos[activo].hidden ? masCercanoAlAnio(anioDe(hitos[activo])) : activo;
-      irA(destino, false);
-    });
-  });
-
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) parar();
   });
@@ -388,3 +377,249 @@ function initLinea(){
 }
 
 initLinea();
+
+function initRuta(){
+  const ruta = document.getElementById('ruta');
+  const camino = document.getElementById('rutaCamino');
+  const pin = document.getElementById('rutaPin');
+  if (!ruta || !camino || !pin) return;
+
+  const pestanas = Array.from(ruta.querySelectorAll('.ruta-pestana'));
+  const paradas = Array.from(ruta.querySelectorAll('.ruta-parada'));
+  const largo = camino.getTotalLength();
+  const destinos = { medellin: 0, carolina: 1, casa: 1, estatua: 1 };
+
+  let fraccion = 0;
+  let viaje = null;
+
+  function colocar(f){
+    fraccion = f;
+    const p = camino.getPointAtLength(largo * f);
+    pin.setAttribute('transform', 'translate(' + p.x.toFixed(1) + ' ' + p.y.toFixed(1) + ')');
+    camino.style.strokeDashoffset = String(100 * (1 - f));
+  }
+
+  function suavizar(t){
+    return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  }
+
+  function moverA(destino){
+    if (viaje) cancelAnimationFrame(viaje);
+    viaje = null;
+    if (reduceMotion.matches || Math.abs(destino - fraccion) < 0.001){
+      colocar(destino);
+      return;
+    }
+    const desde = fraccion;
+    const duracion = 500 + Math.abs(destino - desde) * 1700;
+    const inicio = performance.now();
+    function paso(ahora){
+      const t = Math.min(1, (ahora - inicio) / duracion);
+      colocar(desde + (destino - desde) * suavizar(t));
+      viaje = t < 1 ? requestAnimationFrame(paso) : null;
+    }
+    viaje = requestAnimationFrame(paso);
+  }
+
+  function elegir(id, enfocar){
+    pestanas.forEach((pestana) => {
+      const activa = pestana.dataset.parada === id;
+      pestana.setAttribute('aria-selected', String(activa));
+      pestana.tabIndex = activa ? 0 : -1;
+      const panel = document.getElementById(pestana.getAttribute('aria-controls'));
+      panel.hidden = !activa;
+      if (activa && enfocar) pestana.focus();
+    });
+    paradas.forEach((parada) => {
+      parada.setAttribute('aria-pressed', String(parada.dataset.parada === id));
+    });
+    moverA(destinos[id]);
+  }
+
+  pestanas.forEach((pestana, n) => {
+    pestana.addEventListener('click', () => elegir(pestana.dataset.parada, false));
+    pestana.addEventListener('keydown', (e) => {
+      const teclas = { ArrowRight: 1, ArrowLeft: -1 };
+      let destino = null;
+      if (teclas[e.key]) destino = (n + teclas[e.key] + pestanas.length) % pestanas.length;
+      if (e.key === 'Home') destino = 0;
+      if (e.key === 'End') destino = pestanas.length - 1;
+      if (destino === null) return;
+      e.preventDefault();
+      elegir(pestanas[destino].dataset.parada, true);
+    });
+  });
+
+  paradas.forEach((parada) => {
+    parada.addEventListener('click', () => elegir(parada.dataset.parada, false));
+  });
+
+  reduceMotion.addEventListener('change', () => colocar(fraccion));
+
+  colocar(0);
+  elegir('medellin', false);
+}
+
+function initCartas(){
+  const lista = document.querySelector('.cartas');
+  if (!lista) return;
+  lista.classList.add('cartas--activas');
+
+  lista.querySelectorAll('.carta').forEach((carta) => {
+    const boton = carta.querySelector('.carta-voltear');
+    const frente = carta.querySelector('.carta-frente');
+    const dorso = carta.querySelector('.carta-dorso');
+
+    function pintar(volteada){
+      carta.classList.toggle('volteada', volteada);
+      boton.setAttribute('aria-pressed', String(volteada));
+      frente.inert = volteada;
+      dorso.inert = !volteada;
+    }
+
+    boton.addEventListener('click', () => pintar(!carta.classList.contains('volteada')));
+    pintar(false);
+  });
+}
+
+function initMuro(){
+  const lista = document.getElementById('muroLista');
+  const detalle = document.getElementById('muroDetalle');
+  const muro = document.getElementById('muro');
+  if (!lista || !detalle || !muro) return;
+
+  const anios = Array.from(lista.querySelectorAll('.muro-anio'));
+  const filtros = Array.from(muro.querySelectorAll('.filtro'));
+  const NS = 'http://www.w3.org/2000/svg';
+
+  function estatuilla(serie, orden){
+    const svg = document.createElementNS(NS, 'svg');
+    svg.setAttribute('class', 'est est--' + serie);
+    svg.setAttribute('aria-hidden', 'true');
+    svg.style.setProperty('--orden', orden);
+    const uso = document.createElementNS(NS, 'use');
+    uso.setAttribute('href', '#icono-premio');
+    svg.appendChild(uso);
+    return svg;
+  }
+
+  anios.forEach((li) => {
+    const grammy = Number(li.dataset.grammy) || 0;
+    const latin = Number(li.dataset.latin) || 0;
+    const anio = li.dataset.anio;
+    const partes = [];
+    if (grammy) partes.push(grammy + ' Grammy');
+    if (latin) partes.push(latin + ' Latin Grammy');
+
+    const boton = document.createElement('button');
+    boton.type = 'button';
+    boton.className = 'muro-boton';
+    boton.setAttribute('aria-pressed', 'false');
+    boton.setAttribute('aria-label', anio + ': ' + partes.join(' y '));
+
+    const pila = document.createElement('span');
+    pila.className = 'muro-pila';
+    pila.setAttribute('aria-hidden', 'true');
+    for (let k = 0; k < latin; k++) pila.appendChild(estatuilla('latin', k));
+    for (let k = 0; k < grammy; k++) pila.appendChild(estatuilla('grammy', latin + k));
+
+    const etiqueta = document.createElement('span');
+    etiqueta.className = 'muro-etiqueta';
+    etiqueta.setAttribute('aria-hidden', 'true');
+    etiqueta.textContent = anio;
+
+    boton.append(pila, etiqueta);
+    li.append(boton);
+
+    boton.addEventListener('click', () => {
+      anios.forEach((otro) => {
+        const b = otro.querySelector('.muro-boton');
+        b.setAttribute('aria-pressed', String(b === boton));
+      });
+      detalle.textContent = anio + '. ' + li.dataset.detalle;
+    });
+  });
+
+  filtros.forEach((boton) => {
+    boton.addEventListener('click', () => {
+      const filtro = boton.dataset.filtro;
+      filtros.forEach((b) => b.setAttribute('aria-pressed', String(b === boton)));
+      muro.dataset.filtro = filtro;
+      anios.forEach((li) => {
+        const tiene = filtro === 'todo' ||
+          (filtro === 'grammy' && li.dataset.grammy) ||
+          (filtro === 'latin' && li.dataset.latin);
+        li.hidden = !tiene;
+      });
+      detalle.textContent = 'Elige un año del muro.';
+      anios.forEach((li) => {
+        const b = li.querySelector('.muro-boton');
+        if (b) b.setAttribute('aria-pressed', 'false');
+      });
+    });
+  });
+
+  if ('IntersectionObserver' in window){
+    const vigia = new IntersectionObserver((entradas) => {
+      if (entradas[0].isIntersecting){
+        muro.classList.add('muro--lleno');
+        vigia.disconnect();
+      }
+    }, { threshold: 0.25 });
+    vigia.observe(lista);
+  } else {
+    muro.classList.add('muro--lleno');
+  }
+}
+
+function initReproductor(){
+  const caja = document.getElementById('reproductor');
+  const boton = document.getElementById('reproductorCargar');
+  if (!caja || !boton) return;
+
+  boton.addEventListener('click', () => {
+    const marco = document.createElement('iframe');
+    marco.title = 'Reproductor de Spotify — Juanes';
+    marco.src = 'https://open.spotify.com/embed/artist/0UWZUmn7sybxMCqrw9tGa7?utm_source=generator&theme=0';
+    marco.width = '100%';
+    marco.height = '352';
+    marco.setAttribute('allow', 'autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture');
+    marco.setAttribute('allowfullscreen', '');
+    marco.className = 'reproductor-marco';
+
+    const panel = document.createElement('div');
+    panel.className = 'music-panel';
+    panel.appendChild(marco);
+
+    boton.replaceWith(panel);
+    marco.focus();
+  });
+}
+
+function cargarCuandoSeAcerque(selector, modulo){
+  const objetivo = document.querySelector(selector);
+  if (!objetivo) return;
+
+  function cargar(){
+    import(modulo).catch(() => {});
+  }
+
+  if ('IntersectionObserver' in window){
+    const vigia = new IntersectionObserver((entradas) => {
+      if (entradas[0].isIntersecting){
+        vigia.disconnect();
+        cargar();
+      }
+    }, { rootMargin: '600px 0px' });
+    vigia.observe(objetivo);
+  } else {
+    cargar();
+  }
+}
+
+initRuta();
+initCartas();
+initMuro();
+initReproductor();
+cargarCuandoSeAcerque('#guitarraEscenario', '../assets/js/guitarra.js');
+cargarCuandoSeAcerque('#disco', '../assets/js/disco.js');

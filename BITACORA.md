@@ -1953,6 +1953,42 @@ recorrió cada escena con el nuevo botón.
 - **Pendiente:** Camilo revisa esta tabla; si da el visto bueno, siguen las subfases 2 a 6 (entrada con
   tres puertas, Vida, Música, Activismo y premios, recorte de texto y pruebas).
 
+### Ronda 39 — Fase 5, subfases 2 a 6: la página de Juanes como recorrido
+
+- **Directo sobre `main`**, sin rama. Camilo dio luz verde y pidió una guitarra 3D «sin elementos sin
+  sentido ni propósito». Se mantuvo: sin letras, sin carátulas, fotos solo con licencia, aviso de página
+  no oficial. Sobre la vida privada se incluyó solo lo público y citado: padres y hermanos (Wikipedia
+  es) y, en un «Ver más», la muerte de su madre en septiembre de 2025 (El Colombiano y Metro Puerto Rico).
+  No se usó lo del padre ni «Para ser eterno»: no se pudo verificar.
+- **Estructura nueva:** titular → tres puertas (Vida, Música, Activismo) → actos → Premios → cómic.
+  Desaparecen el sello «Basado en hechos reales», el pull-quote del origen, las dos viñetas
+  de texto, el ecualizador y el bloque «splash»: no aportaban información.
+- **Vida:** mapa esquemático Medellín–Barbosa–Porce–Gómez Plata–Carolina del Príncipe con pin y
+  trazo animados, y cuatro fichas (Medellín, el pueblo, la casa, la estatua) como pestañas.
+  Redacción «raíces» en lugar de «creció allí», porque las fuentes no coinciden.
+- **Música:** guitarra 3D procedural con seis cuerdas; cada una es un disco con premios (las seis
+  más antiguas a las más recientes: Fíjate Bien → Vida Cotidiana). Sonido Karplus-Strong en un
+  `AudioBuffer`, con volumen bajo, sin arrancar solo y con botón de silencio. La línea de tiempo se
+  recortó a la música (1988–2026, 14 hitos) y ahora **gobierna el vinilo 3D**, que cambia de etiqueta
+  (año y título, sin carátula). **Decisión:** no se hizo la «estantería de discos» del plan, porque
+  repetía lo que ya muestran la línea de tiempo y el vinilo.
+- **Un solo contexto WebGL** (`escena3d.js`): guitarra y vinilo comparten renderizador, con `scissor` y
+  copia a canvas 2D. three.js (168 KB comprimidos) solo se descarga al acercarse a la guitarra.
+- **Activismo:** tres cartas que se voltean (Mi Sangre, Paz sin Fronteras 2008 y 2009) con fuente al dorso.
+  **Premios:** cifras animadas y muro filtrable de 26 Latin Grammy y 4 Grammy por año.
+- **Datos que cambiaron o se dejaron fuera por no verificarse:** población, temperatura y distancia
+  exacta de Carolina del Príncipe (Wikipedia dice 105 km y 666 habitantes; antes se anotó 97,6 km y 4.174):
+  se dejó «unos 100 km, cerca de dos horas». Altura: «unos 1.800 m» (1.807 y 1.822 según la fuente).
+  La ruta por Barbosa, Porce y Gómez Plata se cita a la Gobernación de Antioquia sin enlace profundo.
+- **Medidas:** 763 palabras visibles por defecto (meta ≈900); carga inicial 81 KB comprimidos
+  (meta <120). axe en 0 en las cuatro páginas; sin desbordes a 1366/768/360/320; consola limpia;
+  teclado (teclas 1–6, flechas en pestañas, botones) y movimiento reducido probados. fase1, fase3,
+  optin y axall siguen en 0 fallos.
+- **Retirado:** `assets/js/vinilo.js` y sus reglas en `scroll.css`/`movimiento.css`.
+- **Pendiente para Camilo:** probar la guitarra con altavoces reales (en el sandbox solo se
+  verificó que se crea el audio, no cómo suena) y decidir si quiere IDs de álbum de Spotify para
+  que el reproductor abra un disco concreto en vez del perfil.
+
 ---
 
 ## Pendientes
