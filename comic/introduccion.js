@@ -7,8 +7,30 @@
 
   const reproducir = video.play.bind(video);
 
+  const EVENTOS = ['pointerdown', 'keydown', 'touchend'];
+  let escuchando = false;
+
   function mostrar(si){
     boton.classList.toggle('is-visible', si);
+    if (!si) dejarDeEscuchar();
+  }
+
+  function alPrimerGesto(){
+    if (navigator.userActivation && !navigator.userActivation.isActive) return;
+    video.muted = false;
+    mostrar(false);
+  }
+
+  function escuchar(){
+    if (escuchando) return;
+    escuchando = true;
+    EVENTOS.forEach((tipo) => document.addEventListener(tipo, alPrimerGesto, true));
+  }
+
+  function dejarDeEscuchar(){
+    if (!escuchando) return;
+    escuchando = false;
+    EVENTOS.forEach((tipo) => document.removeEventListener(tipo, alPrimerGesto, true));
   }
 
   video.play = function(){
@@ -20,6 +42,7 @@
       if (!error || error.name !== 'NotAllowedError') throw error;
       video.muted = true;
       mostrar(true);
+      escuchar();
       return reproducir();
     });
   };

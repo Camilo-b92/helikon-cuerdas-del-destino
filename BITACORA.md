@@ -2080,6 +2080,13 @@ recorrió cada escena con el nuevo botón.
   introducción. fase4 se ajustó: ahora comprueba que volver a entrar sin recargar no repite la entrada y
   que recargar sí. fase1, fase3, optin, axall, e9 y av2 sin fallos.
 - **Para Camilo:** conviene comprobarlo en su Chrome real recargando sin haber tocado la página.
+- **Después, a pregunta suya (¿no puede ser automático el sonido?):** un navegador no deja sonar un video
+  con audio sin un gesto previo del lector, y no hay manera de forzarlo desde la página. Lo que sí se hizo:
+  si la introducción arranca en silencio, el primer clic, toque o tecla en cualquier parte de la página
+  le devuelve el sonido sin tener que buscar el botón. Si el navegador ya tiene permiso (el lector tocó la
+  página antes, o Chrome ya sabe que el sitio suele reproducir con sonido), suena desde el principio.
+  Queda abierta la opción de una pantalla previa «Toca para comenzar» antes de la entrada, que garantiza
+  el sonido pero añade un toque al arrancar.
 
 ---
 

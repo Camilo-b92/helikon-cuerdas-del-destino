@@ -852,7 +852,10 @@ al recargar, cuando la entrada enciende el televisor sola. Antes eso hacía que
 `play()` fallara y la introducción se saltara directo a la bienvenida.
 `introduccion.js` envuelve `introVideo.play()`: si falla con `NotAllowedError`
 lo reintenta **en silencio** y muestra el botón *Activar sonido*
-(`#introSonido`), que quita el silencio con el gesto del lector. Los demás
+(`#introSonido`), y además quita el silencio **sola** en cuanto el lector hace
+cualquier gesto en la página (clic, toque o tecla; se comprueba con
+`navigator.userActivation.isActive`, porque desilenciar sin gesto haría que el
+navegador pausara el video). Los demás
 errores siguen saltando la introducción. El botón de saltar aparece al primer
 segundo (`SKIP_DELAY_MS`).
 
