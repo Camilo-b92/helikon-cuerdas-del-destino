@@ -32,7 +32,15 @@
 <script>
 (function(){
   var h = document.documentElement, M = window.Movimiento, visto = false;
-  try { visto = sessionStorage.getItem('helikon-entrada') === '1'; } catch (e) {}
+  var recarga = false;
+  try {
+    var nav = performance.getEntriesByType('navigation')[0];
+    recarga = nav ? nav.type === 'reload' : !!(performance.navigation && performance.navigation.type === 1);
+  } catch (e) {}
+  if (recarga){
+    try { history.scrollRestoration = 'manual'; } catch (e) {}
+  }
+  try { visto = !recarga && sessionStorage.getItem('helikon-entrada') === '1'; } catch (e) {}
   if (/[?&]entrada(=|&|$)/.test(location.search)) visto = false;
   if (M && !M.reducido() && !visto){
     h.classList.add('entrada-espera');
@@ -77,6 +85,7 @@
         <button class="skip-button" id="skipButton" aria-label="Saltar introducción">
           Saltar <span class="skip-icon">&#9654;&#9654;</span>
         </button>
+        <button type="button" class="intro-sonido" id="introSonido">Activar sonido</button>
       </div>
 
       <div class="screen-content" id="screenContent">
@@ -263,5 +272,6 @@
 <script src="entrada-caminante.js"></script>
 <script src="entrada.js"></script>
 <script src="avisos.js"></script>
+<script src="introduccion.js"></script>
 </body>
 </html>

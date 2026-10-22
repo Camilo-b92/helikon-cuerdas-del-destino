@@ -845,9 +845,16 @@ apagados.
 **Video de introducción.** Se reproduce una vez por encendido y entrega
 directo al canal 0. El fin se detecta por el evento `ended`, con un respaldo
 por `timeupdate` que compara contra la **duración real del archivo**. Si el
-autoplay está bloqueado o el archivo falta, `finishIntro()` corre igual para
-no dejar al lector atascado. El botón de saltar aparece al primer segundo
-(`SKIP_DELAY_MS`).
+archivo falta, `finishIntro()` corre igual para no dejar al lector atascado.
+**Autoplay bloqueado.** El video tiene audio, y los navegadores no dejan sonar
+un video con sonido si el lector aún no ha tocado la página: justo lo que pasa
+al recargar, cuando la entrada enciende el televisor sola. Antes eso hacía que
+`play()` fallara y la introducción se saltara directo a la bienvenida.
+`introduccion.js` envuelve `introVideo.play()`: si falla con `NotAllowedError`
+lo reintenta **en silencio** y muestra el botón *Activar sonido*
+(`#introSonido`), que quita el silencio con el gesto del lector. Los demás
+errores siguen saltando la introducción. El botón de saltar aparece al primer
+segundo (`SKIP_DELAY_MS`).
 
 **Teclado.** Flechas izquierda y derecha cambian de canal. **Excepción en el
 canal 8:** ahí la flecha derecha hace correr a Juan (`s7ControlaFlecha()`), y
@@ -982,7 +989,11 @@ lleva a «sin transformación» al final del zoom, de modo que el relevo es exac
   disipan durante el zoom (variable `--mugre`).
 - **Sin parpadeos.** Nada destella: la luz del botón late despacio y el relevo es un
   fundido (WCAG 2.3.1).
-- **Salvaguardas.** Una vez por sesión (`sessionStorage`, clave `helikon-entrada`); el
+- **Salvaguardas.** Una vez por sesión (`sessionStorage`, clave `helikon-entrada`),
+  **salvo al recargar**: `esRecarga()` (y el mismo chequeo en el script del `<head>`)
+  mira `performance.getEntriesByType('navigation')` y, si es una recarga, ignora la
+  marca de sesión y repite todo desde el principio (entrada, encendido e introducción);
+  también desactiva la restauración del scroll para que la página arranque arriba. El
   botón **Saltar la entrada** está siempre a la vista y lleva al estado de siempre (con el
   foco en el botón rojo); **Esc** salta; **Enter**, **Espacio** o **un toque sobre el
   televisor** saltan y además lo encienden (si ya se pulsó, no lo vuelven a alternar).

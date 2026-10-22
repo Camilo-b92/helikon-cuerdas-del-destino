@@ -71,7 +71,16 @@
     html.classList.remove('entrada-espera');
   }
 
+  function esRecarga(){
+    try {
+      const nav = window.performance.getEntriesByType('navigation')[0];
+      if (nav) return nav.type === 'reload';
+      return !!(window.performance.navigation && window.performance.navigation.type === 1);
+    } catch (e) { return false; }
+  }
+
   function yaVista(){
+    if (esRecarga()) return false;
     if (/[?&]entrada(=|&|$)/.test(window.location.search)) return false;
     try { return window.sessionStorage.getItem(CLAVE) === '1'; } catch (e) { return false; }
   }

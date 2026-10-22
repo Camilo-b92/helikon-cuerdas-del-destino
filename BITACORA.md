@@ -2058,6 +2058,31 @@ recorrió cada escena con el nuevo botón.
 
 ---
 
+### Ronda 42 — Recargar reinicia todo y la introducción nunca se salta sola
+
+- **Directo sobre `main`**, sin rama. Camilo pidió dos cosas: que al recargar el cómic empiece de cero
+  (entrada animada incluida) y que, al encender el televisor la caminante, salga primero el video de
+  introducción y no la bienvenida.
+- **Recarga.** Antes la entrada se saltaba durante toda la sesión, también al recargar. Ahora una recarga
+  la repite (`esRecarga()` en `entrada.js` y en el script del `<head>` de `index.html`); entrar de nuevo
+  desde otra página de la misma sesión sigue sin repetirla, porque eso no es recargar. `?entrada` sigue
+  forzándola. Con movimiento reducido sigue sin haber entrada, como antes.
+- **Por qué se saltaba la introducción.** La entrada enciende el televisor con un clic hecho por el
+  código, que no cuenta como gesto del lector. `intro.mp4` tiene audio (AAC), así que el navegador
+  rechazaba `play()` con `NotAllowedError` y `playIntro()` lo trataba como fallo: `finishIntro()` y
+  directo al canal 0. Es una causa probable, no la pude ver en un Chrome real: en el sandbox el
+  navegador de pruebas no aplica esa política, así que se simuló el rechazo.
+- **Arreglo, sin tocar `comic.js`.** Nuevo `comic/introduccion.js`: envuelve `introVideo.play()` y, si
+  falla por `NotAllowedError`, reintenta en silencio y enseña el botón *Activar sonido*. Otros errores
+  (archivo ausente o corrupto) siguen saltando la introducción, para no dejar a nadie atascado.
+- **Probado:** con el rechazo simulado, tras la entrada el video corre en silencio con su botón, el botón
+  activa el audio sin cortar el video, *Saltar* lleva al canal 0; recargar repite la entrada y luego la
+  introducción. fase4 se ajustó: ahora comprueba que volver a entrar sin recargar no repite la entrada y
+  que recargar sí. fase1, fase3, optin, axall, e9 y av2 sin fallos.
+- **Para Camilo:** conviene comprobarlo en su Chrome real recargando sin haber tocado la página.
+
+---
+
 ## Pendientes
 
 En orden de lo que más aporta:
