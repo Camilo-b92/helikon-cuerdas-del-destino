@@ -16,8 +16,8 @@ README y luego esto.
 | Repositorio | `github.com/Camilo-b92/helikon-cuerdas-del-destino` (público) |
 | Rama | `main` |
 | Publicado en línea | Todavía no |
-| Canales del televisor | 0–10 (once en total), solo cómic |
-| Peso total | ~21 MB, casi todo arte del cómic |
+| Canales del televisor | 0–11 (doce en total), solo cómic |
+| Peso total | ~24 MB, casi todo arte del cómic |
 | Personajes | En la portada: expediente a pantalla completa desde *El reparto* |
 | Presentaciones | Canal 0: nombre del cómic y luego capítulo uno · Canal 4: capítulo dos · Canal 9: capítulo tres |
 | Fichas de personaje | `assets/js/personajes.js`, compartidas por portada y cómic |
@@ -1991,6 +1991,38 @@ recorrió cada escena con el nuevo botón.
 
 ---
 
+### Ronda 40 — Escena II del capítulo tres (canal 11)
+
+- **Directo sobre `main`**, sin rama. Llegó como la carpeta `Escena 2-C3`, igual que la anterior: página
+  de prueba, fuentes de After Effects y de Illustrator, dos fondos y cuatro animaciones. Al repositorio
+  entran solo los dos fondos y los cuatro `.json`, en `comic/assets/capitulo-n3/scene2/`; los fuentes no
+  entran, igual que en las rondas anteriores. No se tocó ningún archivo de animación.
+- **El dial pasa a 0–11.** `TOTAL_CHANNELS = 11` y el código la llama `Scene9`. La leyenda dice
+  *Capítulo 3 — Escena II · 12 de 12*. Para esto hubo que editar `comic.js`, como en cada escena anterior:
+  la constante, el nombre del canal, `scaleScene9`, `prefetchScene9`, `initScene9`/`resetScene9`/`stopScene9`,
+  el bloque de `showChannel` y la parada al apagar.
+- **Qué se cambió respecto a su página de prueba:**
+  - La página original cargaba lottie desde un CDN y registraba tres escuchas de clic con `{ once: true }`
+    sobre el mismo elemento; aquí se usa la copia local y **un solo** manejador con el seguro `s9.played`.
+  - La entrada de su panel por la izquierda era una animación CSS que corría una sola vez al cargar la
+    página. En el televisor tiene que repetirse cada vez que se sintoniza el canal, así que pasó a una
+    transición que `resetScene9()` rearma (clase `s9-lista`).
+  - Los dos globos y el panel de la mamá llevan `pointer-events: none`, por el mismo motivo que el globo
+    de la escena anterior.
+  - Los plazos (7 s y 9 s) pasaron de `setTimeout` sueltos a temporizadores guardados en `s9.timers`.
+    En la página de prueba salir a mitad de la secuencia no era posible; en el televisor sí, y sin
+    cancelarlos la mamá habría entrado en una escena ya abandonada.
+- **Fondos reescalados.** Los PNG venían de 3047x1947 y 3048x1948 para mostrarse a 731x467; pasaron a
+  1463x935 (el doble, para pantallas densas): 108 KB → 93 KB y 42 KB → 28 KB. La transparencia se conserva.
+- **Aviso de la escena:** *Toca a Juanes para que hable*, a la izquierda para no tapar el globo.
+- **Peso.** `textMom.json` tiene casi 1 MB; se precarga desde el canal 10, como `txt.json` en la escena I.
+- **Probado** en un navegador de pruebas: llegada al canal 11 y tope del dial, leyenda, secuencia con sus
+  tiempos (mamá a los 7 s, globo a los 9 s, desvanecimiento al terminar), salir y volver, salir a mitad
+  de la secuencia, apagar el televisor, escritorio 1366, móvil 390, 320 y movimiento reducido. axe en 0 y
+  sin desborde en esas tres medidas. fase1, fase3, fase4, optin y axall siguen en 0 fallos.
+
+---
+
 ## Pendientes
 
 En orden de lo que más aporta:
@@ -2020,7 +2052,7 @@ En orden de lo que más aporta:
 
 7. **Unificar las escenas en `.scene-stage` y `.scene-container`.** Las escenas
    1 a 5 tienen un par de reglas propias, casi idénticas entre sí; las
-   escenas 6, 7 y 8 ya usan las compartidas. Solo se ahorra CSS, no cambia nada
+   escenas 6, 7, 8 y 9 ya usan las compartidas. Solo se ahorra CSS, no cambia nada
    a la vista.
 
 8. **Dos archivos sin usar.** Ninguno lo referencia ningún HTML, CSS ni JS.

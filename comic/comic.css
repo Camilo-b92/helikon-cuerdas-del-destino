@@ -646,6 +646,36 @@ a{ color: inherit; }
 #s8-txt{ position: absolute; left: 400px; top: 150px; width: 300px; opacity: 1; transition: opacity 0.3s ease-out; pointer-events: none; }
 #s8-txt.s8-oculto{ opacity: 0; }
 
+#s9-fondoJ{
+  position: absolute; width: 731.22px; height: 467.26px; left: 0; top: 0;
+  background-image: url(assets/capitulo-n3/scene2/img/fondoJ.png);
+  background-size: 100% 100%;
+  transform: translateX(-731.22px);
+  transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+#scene9Container.s9-lista #s9-fondoJ{ transform: translateX(0); }
+#s9-jua{ position: absolute; width: 400px; left: 30px; top: -57px; cursor: pointer; }
+#s9-jua.is-locked{ cursor: default; }
+#s9-textJuan{ position: absolute; width: 350px; left: 380px; top: 50px; pointer-events: none; }
+#s9-fondoM{
+  position: absolute; width: 731.22px; height: 467.26px; left: 402.78px; top: 190.74px;
+  background-image: url(assets/capitulo-n3/scene2/img/fondoM.png);
+  background-size: 100% 100%;
+  transform: translateX(731.22px);
+  transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  pointer-events: none;
+}
+#s9-fondoM.s9-entra{ transform: translateX(0); }
+#s9-mom{ position: absolute; width: 230px; left: 365px; top: 33px; }
+#s9-textMom{
+  position: absolute; width: 350px; left: 460px; top: 150px;
+  opacity: 0;
+  transition: opacity 0.3s ease-out;
+  pointer-events: none;
+}
+#s9-textMom.s9-visible{ opacity: 1; }
+#scene9Hint{ left: 24%; }
+
 .scanlines{
   position: absolute;
   inset: 0;

@@ -1,4 +1,4 @@
-const TOTAL_CHANNELS = 10;
+const TOTAL_CHANNELS = 11;
 let currentChannel = 0;
 let tvOn = false;
 let isAnimating = false;
@@ -54,12 +54,16 @@ const scene8Stage = document.getElementById('scene8Stage');
 const scene8Container = document.getElementById('scene8Container');
 const scene8Hint = document.getElementById('scene8Hint');
 
+const scene9Stage = document.getElementById('scene9Stage');
+const scene9Container = document.getElementById('scene9Container');
+const scene9Hint = document.getElementById('scene9Hint');
+
 const channelNames = [
   'Capítulo 1 — Presentación', 'Capítulo 1 — Escena I: El llamado',
   'Capítulo 1 — Escena II', 'Capítulo 1 — Escena III',
   'Capítulo 2 — Presentación', 'Capítulo 2 — Escena I', 'Capítulo 2 — Escena II',
   'Capítulo 2 — Escena III', 'Capítulo 2 — Escena IV',
-  'Capítulo 3 — Presentación', 'Capítulo 3 — Escena I'
+  'Capítulo 3 — Presentación', 'Capítulo 3 — Escena I', 'Capítulo 3 — Escena II'
 ];
 
 const esTactil = window.matchMedia('(hover: none)').matches;
@@ -135,9 +139,10 @@ function scaleScene5(){ scaleStage(scene5Stage, scene5Container); }
 function scaleScene6(){ scaleStage(scene6Stage, scene6Container); }
 function scaleScene7(){ scaleStage(scene7Stage, scene7Container); }
 function scaleScene8(){ scaleStage(scene8Stage, scene8Container); }
+function scaleScene9(){ scaleStage(scene9Stage, scene9Container); }
 
 window.addEventListener('resize', () => {
-  scaleScene1(); scaleScene2(); scaleScene3(); scaleScene4(); scaleScene5(); scaleScene6(); scaleScene7(); scaleScene8();
+  scaleScene1(); scaleScene2(); scaleScene3(); scaleScene4(); scaleScene5(); scaleScene6(); scaleScene7(); scaleScene8(); scaleScene9();
 });
 
 let s2 = { juanesBusca: null, caja: null, texto: null, ready: false, textoTimer: null, playTimer: null };
@@ -254,6 +259,19 @@ function prefetchScene8(){
   img.src = 'assets/capitulo-n3/scene1/img/fondo.jpg';
   ['mamaAsomada', 'puertaAbriendo', 'cortinaAbriendo', 'libros', 'juanesSentado', 'txt'].forEach(name => {
     fetch(`assets/capitulo-n3/scene1/json/${name}.json`).catch(() => {});
+  });
+}
+
+let scene9Prefetched = false;
+function prefetchScene9(){
+  if (scene9Prefetched) return;
+  scene9Prefetched = true;
+  ['fondoJ', 'fondoM'].forEach(name => {
+    const img = new Image();
+    img.src = `assets/capitulo-n3/scene2/img/${name}.png`;
+  });
+  ['jua', 'textJuan', 'mom', 'textMom'].forEach(name => {
+    fetch(`assets/capitulo-n3/scene2/json/${name}.json`).catch(() => {});
   });
 }
 
@@ -771,6 +789,72 @@ function stopScene8(){
   Object.values(s8.anims).forEach(a => a && a.pause());
 }
 
+const S9_ENTRA_MAMA_MS = 7000;
+const S9_TEXTO_MAMA_MS = 9000;
+
+let s9 = { anims: {}, ready: false, played: false, timers: [] };
+
+function s9Limpiar(){
+  s9.timers.forEach(clearTimeout);
+  s9.timers = [];
+}
+
+function initScene9(){
+  if (s9.ready || typeof lottie === 'undefined') return;
+
+  const load = (name, elId) => lottie.loadAnimation({
+    container: document.getElementById(elId),
+    renderer: 'svg', loop: false, autoplay: false,
+    path: `assets/capitulo-n3/scene2/json/${name}.json`
+  });
+
+  s9.anims.jua = load('jua', 's9-jua');
+  s9.anims.textJuan = load('textJuan', 's9-textJuan');
+  s9.anims.mom = load('mom', 's9-mom');
+  s9.anims.textMom = load('textMom', 's9-textMom');
+
+  s9.anims.textMom.addEventListener('complete', () => {
+    document.getElementById('s9-textMom').classList.remove('s9-visible');
+  });
+
+  document.getElementById('s9-jua').addEventListener('click', () => {
+    if (s9.played) return;
+    s9.played = true;
+    document.getElementById('s9-jua').classList.add('is-locked');
+    scene9Hint.classList.add('is-hidden');
+    s9.anims.jua.play();
+    s9.anims.textJuan.play();
+    s9.timers.push(setTimeout(() => {
+      document.getElementById('s9-fondoM').classList.add('s9-entra');
+      s9.anims.mom.play();
+    }, S9_ENTRA_MAMA_MS));
+    s9.timers.push(setTimeout(() => {
+      document.getElementById('s9-textMom').classList.add('s9-visible');
+      s9.anims.textMom.play();
+    }, S9_TEXTO_MAMA_MS));
+  });
+
+  s9.ready = true;
+}
+
+function resetScene9(){
+  s9Limpiar();
+  s9.played = false;
+  Object.values(s9.anims).forEach(a => a && a.goToAndStop(0, true));
+  document.getElementById('s9-jua').classList.remove('is-locked');
+  document.getElementById('s9-fondoM').classList.remove('s9-entra');
+  document.getElementById('s9-textMom').classList.remove('s9-visible');
+  scene9Hint.classList.remove('is-hidden');
+  scene9Container.classList.remove('s9-lista');
+  void scene9Container.offsetWidth;
+  requestAnimationFrame(() => scene9Container.classList.add('s9-lista'));
+}
+
+function stopScene9(){
+  s9Limpiar();
+  Object.values(s9.anims).forEach(a => a && a.pause());
+}
+
 const PRES_DELAY_MS = 450;
 const PRES_SAFETY_MS = 6000;
 
@@ -1028,8 +1112,17 @@ function showChannel(index){
     requestAnimationFrame(scaleScene8);
     clearTimeout(s8.playTimer);
     s8.playTimer = setTimeout(playScene8, 1000);
+    prefetchScene9();
   } else if (s8.ready){
     stopScene8();
+  }
+
+  if (index === 11){
+    initScene9();
+    resetScene9();
+    requestAnimationFrame(scaleScene9);
+  } else if (s9.ready){
+    stopScene9();
   }
 
   tvCaption.textContent = leyendaCanal(index);
@@ -1236,6 +1329,7 @@ function powerOff(){
     if (s6.ready) stopScene6();
     if (s7.ready) stopScene7();
     if (s8.ready) stopScene8();
+    if (s9.ready) stopScene9();
     cerrarCapituloUno();
     pres2.stop();
     pres3.stop();

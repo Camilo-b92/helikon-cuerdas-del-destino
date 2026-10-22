@@ -110,7 +110,7 @@ Lo que eso implica al trabajar:
         ├── presentacion-c3/ Presentación animada del capítulo tres
         ├── capitulo-n1/     Escenas 1 a 3, cada una con su img/ y su json/
         ├── capitulo-n2/     Escenas 1 a 4, cada una con su img/ y su json/
-        └── capitulo-n3/     Escena 1, con su img/ y su json/
+        └── capitulo-n3/     Escenas 1 y 2, cada una con su img/ y su json/
 ```
 
 Cada sección es autocontenida: su HTML, su CSS y su JS viven juntos. Lo que
@@ -692,14 +692,14 @@ los demás, adelanta la carga del siguiente y actualiza el pie de foto.
 **Escalado.** `scaleStage(stage, container)` encaja el lienzo de diseño fijo
 de **1134x658** dentro del hueco de la pantalla usando `Math.max` de las dos
 proporciones, es decir en modo *cover*: llena la pantalla y recorta lo que
-sobre, sin deformar. Lo usan las ocho escenas y las tres presentaciones, y se
+sobre, sin deformar. Lo usan las nueve escenas y las tres presentaciones, y se
 vuelve a llamar en cada `resize`.
 
 **Numeración de escenas en el código.** `SceneN` cuenta las escenas de todo el
 cómic, no las de cada capítulo: `Scene1` a `Scene3` son el capítulo uno y
-`Scene4` a `Scene7` son las cuatro escenas del capítulo dos y `Scene8` es la
-primera del capítulo tres. Las tres últimas (`Scene6`, `Scene7` y `Scene8`)
-usan las clases compartidas `.scene-stage` y `.scene-container`; las
+`Scene4` a `Scene7` son las cuatro escenas del capítulo dos, `Scene8` es la
+primera del capítulo tres y `Scene9` la segunda. Las cuatro últimas (`Scene6` a
+`Scene9`) usan las clases compartidas `.scene-stage` y `.scene-container`; las
 anteriores conservan las suyas, idénticas entre sí, y pueden pasarse a las
 compartidas cuando convenga.
 
@@ -777,6 +777,28 @@ lleva `pointer-events: none`: se superpone a la cortina y a los libros y, aun
 invisible, se comería sus clics. El aviso se oculta al tocar a Juanes y se
 coloca a la derecha (`#scene8Hint`) para no tapar al personaje.
 
+**Canal 11 — Escena II del capítulo tres.** Juanes y su mamá, en dos viñetas
+diagonales. Hay una sola cosa que tocar: Juanes (`#s9-jua`). El clic se
+atiende **una vez** (`s9.played`, clase `is-locked` que quita el cursor de
+mano) y lanza dos Lottie a la vez, Juanes y su globo (`jua.json` y
+`textJuan.json`, 225 cuadros a 25 fps = 9 s). A los **7 s** entra desde la
+derecha el panel de la mamá (`#s9-fondoM`, clase `s9-entra`) y arranca su
+animación (`mom.json`); a los **9 s** se enciende su globo (`#s9-textMom`,
+clase `s9-visible`, `textMom.json`, 576 cuadros = 23 s) y, al terminar, se
+desvanece solo con el evento `complete`. Los dos plazos son las constantes
+`S9_ENTRA_MAMA_MS` y `S9_TEXTO_MAMA_MS`, y sus temporizadores se guardan en
+`s9.timers` para que `stopScene9()` y `resetScene9()` los cancelen todos: si
+el lector cambia de canal a mitad de la secuencia, nada se dispara después.
+Ambos globos y el panel de la mamá llevan `pointer-events: none` para no
+tapar a Juanes. El panel de Juanes entra por la izquierda cada vez que se
+sintoniza el canal: `resetScene9()` quita y vuelve a poner `s9-lista` con un
+cuadro de por medio para que la transición se repita. El aviso (*Toca a
+Juanes para que hable*) va a la izquierda (`#scene9Hint { left: 24% }`) y se
+oculta al tocar. Los dos fondos son PNG con transparencia, reescalados al
+doble de su tamaño en pantalla (de 3047x1947 a 1463x935; 108 KB → 93 KB y
+42 KB → 28 KB). `textMom.json` pesa casi 1 MB, así que se precarga desde el
+canal 10 (`prefetchScene9()`).
+
 **Estática del cambio de canal.** `runStatic(duration, onMid, done)` dibuja
 ruido en un buffer **seis veces más pequeño** y lo escala hacia arriba sin
 suavizado: mismo efecto, una fracción del costo. El cambio de canal se aplica
@@ -812,7 +834,7 @@ un celular se solapaba con la perilla de "canal anterior" y un toque de más
 podía apagar el aparato.
 
 **Leyenda bajo el televisor.** Ya no dice "Canal 3 / 10": `leyendaCanal()` arma
-*Capítulo 2 — Escena I · 6 de 11*, con el nombre de `channelNames` y el
+*Capítulo 2 — Escena I · 6 de 12*, con el nombre de `channelNames` y el
 contador calculado desde `TOTAL_CHANNELS`, así que no se desactualiza al añadir
 escenas. Hasta que el lector cambia de canal por primera vez (`ayudaVista`), la
 leyenda añade cómo hacerlo: *usa ← → o las perillas* con teclado y *desliza o
@@ -1224,8 +1246,8 @@ tocaron las flechas del televisor (43 px, van dibujadas en la imagen), el botón
 ## Estado del contenido
 
 El cómic tiene el capítulo uno completo (tres escenas), las cuatro escenas del
-capítulo dos, la presentación del capítulo tres y la primera escena del
-capítulo tres, repartidos en once canales (0 a 10). Al encender, el televisor
+capítulo dos, la presentación del capítulo tres y la primera y segunda escena
+del capítulo tres, repartidos en doce canales (0 a 11). Al encender, el televisor
 reproduce el video de introducción y entrega directo al canal 0.
 
 **El televisor es solo el cómic.** Los personajes se conocen en la portada,
@@ -1245,6 +1267,7 @@ capítulos: cada capítulo empieza con su presentación y la historia sigue.
 | 8 | Capítulo dos, escena IV | `s7` |
 | 9 | Presentación del capítulo tres | `pres3` |
 | 10 | Capítulo tres, escena I | `s8` |
+| 11 | Capítulo tres, escena II | `s9` |
 
 Cada capítulo abre con su propia presentación animada, en el canal anterior a
 su primera escena. El **canal 0** encadena dos: primero el nombre del cómic,
