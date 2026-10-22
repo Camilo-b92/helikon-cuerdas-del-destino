@@ -1940,6 +1940,16 @@ recorrió cada escena con el nuevo botón.
 - **Reglas que se mantienen:** música solo por el reproductor oficial incrustado, sin letras ni
   carátulas propias; vida personal solo lo público (no se usarán datos de familiares ni de la muerte
   de su madre en 2025); fotos solo con licencia verificable.
+- **Verificado después (mismo día), con acceso del navegador integrado:**
+  - Spotify: `0UWZUmn7sybxMCqrw9tGa7` es el perfil de Juanes (el incrustado oficial muestra «Es Por Ti»,
+    «La Camisa Negra», «A Dios Le Pido»…); sirve para el reproductor. La app de escritorio de Spotify
+    no se pudo controlar (bloqueada por política), así que se comprobó por la web.
+  - Latin Grammy 2001: siete nominaciones y tres premios (BMI, 5 nov 2001) — el dato de la página es correcto.
+  - Estatua: foto de XalD del 24 dic 2023, CC BY-SA 4.0, en Carolina del Príncipe (6°43′N 75°16′O,
+    1.822 m); aldabón: foto de laloking97 del 7 ene 2008, CC BY-SA 2.0, con la descripción «casa de los
+    papás del cantante Juanes». Las dos atribuciones del README coinciden.
+  - Ruta: Medellín – Barbosa – Porce – Gómez Plata – Carolina del Príncipe, unos 97,6 km y 2 h 10 min en
+    carro (Gobernación de Antioquia); fundada en 1787; 19 °C; 4.174 habitantes (DANE, 2023).
 - **Pendiente:** Camilo revisa esta tabla; si da el visto bueno, siguen las subfases 2 a 6 (entrada con
   tres puertas, Vida, Música, Activismo y premios, recorte de texto y pruebas).
 
