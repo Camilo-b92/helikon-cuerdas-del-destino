@@ -9,9 +9,7 @@
   const libro = document.getElementById('libro');
   const tapa = document.getElementById('libroTapa');
   const dorso = document.getElementById('tapaDorso');
-  const boton = document.getElementById('libroAbrir');
   const hojaIzq = document.getElementById('portada');
-  const pista = document.querySelector('.baja-pista');
   if (!principal || !escenario || !libro || !tapa || !hojaIzq) return;
 
   const UMBRAL = 0.72;
@@ -22,8 +20,9 @@
   let disparador = null;
   let clon = null;
   let enganchado = false;
+  let viaje = 0;
 
-  const bloques = ['.doble-pagina', '#reparto', '.contraportada']
+  const bloques = ['.doble-pagina', '#reparto']
     .map((q) => document.querySelector(q))
     .filter(Boolean);
   let pendiente = false;
@@ -56,14 +55,73 @@
     principal.classList.toggle('libro-abierto', abierto);
   }
 
-  function abrirDirecto(e, sinFoco){
-    if (!disparador) return;
-    const y = disparador.start + (disparador.end - disparador.start) * aterriza;
-    window.scrollTo(0, Math.round(y));
-    marcarAbierto(true);
-    if (sinFoco === true) return;
+  function marcarIniciado(iniciado){
+    principal.classList.toggle('libro-iniciado', iniciado);
+  }
+
+  function suavizar(t){
+    return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  }
+
+  function cancelarViaje(){
+    if (viaje){
+      window.cancelAnimationFrame(viaje);
+      viaje = 0;
+    }
+    window.removeEventListener('wheel', cancelarViaje);
+    window.removeEventListener('touchstart', cancelarViaje);
+    window.removeEventListener('keydown', cancelarViaje);
+    window.removeEventListener('pointerdown', cancelarViaje);
+  }
+
+  function destinoAbierto(){
+    return Math.round(disparador.start + (disparador.end - disparador.start) * aterriza);
+  }
+
+  function enfocarPrimera(){
     const primera = escenario.querySelector('.pagina a');
     if (primera) primera.focus({ preventScroll: true });
+  }
+
+  function abrirDirecto(e, sinFoco){
+    if (!disparador) return;
+    cancelarViaje();
+    window.scrollTo(0, destinoAbierto());
+    marcarAbierto(true);
+    if (sinFoco === true) return;
+    enfocarPrimera();
+  }
+
+  function abrirAnimado(){
+    if (!disparador || principal.classList.contains('libro-abierto')) return;
+    cancelarViaje();
+    const desde = window.scrollY;
+    const hasta = destinoAbierto();
+    const distancia = hasta - desde;
+    if (Math.abs(distancia) < 4){
+      abrirDirecto();
+      return;
+    }
+    const duracion = Math.min(2200, Math.max(1100, Math.abs(distancia) * 1.15));
+    const t0 = performance.now();
+
+    const paso = (ahora) => {
+      const t = Math.min(1, (ahora - t0) / duracion);
+      window.scrollTo(0, Math.round(desde + distancia * suavizar(t)));
+      if (t < 1){
+        viaje = window.requestAnimationFrame(paso);
+        return;
+      }
+      cancelarViaje();
+      marcarAbierto(true);
+      enfocarPrimera();
+    };
+
+    window.addEventListener('wheel', cancelarViaje, { passive: true, once: true });
+    window.addEventListener('touchstart', cancelarViaje, { passive: true, once: true });
+    window.addEventListener('keydown', cancelarViaje, { once: true });
+    window.addEventListener('pointerdown', cancelarViaje, { once: true });
+    viaje = window.requestAnimationFrame(paso);
   }
 
   function crearClon(){
@@ -98,21 +156,12 @@
     if (enganchado) return;
     enganchado = true;
 
-    tapa.addEventListener('click', abrirDirecto);
-    if (boton) boton.addEventListener('click', abrirDirecto);
+    tapa.addEventListener('click', abrirAnimado);
 
     escenario.addEventListener('focusin', (e) => {
       if (principal.classList.contains('libro-abierto')) return;
       if (e.target.closest('.pagina')) abrirDirecto(e, true);
     });
-
-    if (pista){
-      pista.addEventListener('click', (e) => {
-        if (!disparador || principal.classList.contains('libro-abierto')) return;
-        e.preventDefault();
-        abrirDirecto();
-      });
-    }
   }
 
   function montar(g){
@@ -145,7 +194,10 @@
           start: 'top top+=' + parseInt(getComputedStyle(document.documentElement).getPropertyValue('--menu-alto'), 10),
           end: 'bottom bottom',
           scrub: true,
-          onUpdate: (self) => marcarAbierto(self.progress >= UMBRAL)
+          onUpdate: (self) => {
+            marcarAbierto(self.progress >= UMBRAL);
+            marcarIniciado(self.progress > 0.015);
+          }
         }
       });
       disparador = linea.scrollTrigger;
@@ -162,9 +214,11 @@
       enganchar();
 
       return () => {
+        cancelarViaje();
         disparador = null;
         quitarClon();
         marcarAbierto(false);
+        marcarIniciado(false);
         libro.style.transform = '';
       };
     });
@@ -184,7 +238,10 @@
           end: () => '+=' + alto(),
           scrub: true,
           invalidateOnRefresh: true,
-          onUpdate: (self) => marcarAbierto(self.progress >= 0.98)
+          onUpdate: (self) => {
+            marcarAbierto(self.progress >= 0.98);
+            marcarIniciado(self.progress > 0.02);
+          }
         }
       });
       disparador = linea.scrollTrigger;
@@ -196,8 +253,10 @@
       enganchar();
 
       return () => {
+        cancelarViaje();
         disparador = null;
         marcarAbierto(false);
+        marcarIniciado(false);
         tapa.style.transform = '';
       };
     });
@@ -212,8 +271,10 @@
       mm.revert();
       mm = null;
     }
+    cancelarViaje();
     disparador = null;
     marcarAbierto(false);
+    marcarIniciado(false);
     M.liberar();
   }
 

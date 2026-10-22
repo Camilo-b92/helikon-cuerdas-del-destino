@@ -433,6 +433,10 @@
 .vineta:focus-visible .vineta-figura{
   translate: 0 -3%;
 }
+.vineta:focus-visible{
+  outline: 4px solid var(--ink);
+  outline-offset: 5px;
+}
 
 .rotulo{
   display: inline-block;
@@ -516,172 +520,6 @@
   line-height: 1;
 }
 
-.contraportada{
-  display: grid;
-  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
-  gap: 26px;
-  align-items: stretch;
-}
-.baja-pista{
-  position: fixed;
-  left: 50%;
-  bottom: 14px;
-  z-index: 20;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  min-height: 44px;
-  padding: 0 18px;
-  translate: -50% 0;
-  background: var(--ink);
-  border: 3px solid var(--paper);
-  color: var(--paper);
-  font-family: 'Special Elite', serif;
-  font-size: 0.78rem;
-  letter-spacing: 1.5px;
-  text-decoration: none;
-  text-transform: uppercase;
-  white-space: nowrap;
-  box-shadow: 4px 4px 0 rgba(23,19,14,0.45);
-  transition: opacity 0.3s ease, visibility 0.3s ease;
-}
-@media (min-width: 761px){
-  .baja-pista{
-    left: 70%;
-    bottom: 4px;
-  }
-}
-.baja-pista:focus-visible{
-  outline: 3px solid #254f68;
-  outline-offset: 3px;
-}
-.baja-pista.baja-oculta{
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-}
-.baja-flecha{
-  display: inline-block;
-  font-size: 0.7rem;
-}
-@media (prefers-reduced-motion: no-preference){
-  .baja-flecha{
-    animation: bajaFlecha 1.4s ease-in-out infinite;
-  }
-}
-@keyframes bajaFlecha{
-  0%, 100%{ translate: 0 -2px; }
-  50%{ translate: 0 3px; }
-}
-
-.continuara{
-  position: relative;
-  isolation: isolate;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 10px;
-  padding: 34px;
-  background: var(--blue);
-  color: #fffdf6;
-  border: 7px solid var(--ink);
-  box-shadow: 11px 11px 0 var(--ink);
-}
-.continuara::before{
-  content: '';
-  position: absolute;
-  inset: -40%;
-  z-index: -1;
-  background: repeating-conic-gradient(from 0deg at 75% 60%, rgba(255,255,255,0.06) 0 6deg, transparent 6deg 14deg);
-}
-.continuara-titulo{
-  font-family: Bangers, cursive;
-  font-weight: 400;
-  font-size: clamp(3.2rem, 8vw, 5.8rem);
-  line-height: 0.85;
-  letter-spacing: 3px;
-  text-shadow: 5px 5px 0 var(--ink);
-}
-.continuara-en{
-  font-family: 'Special Elite', serif;
-  font-size: 0.95rem;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-}
-.continuara-logo{
-  width: min(470px, 100%);
-  height: auto;
-  margin-block: 4px 12px;
-  rotate: -3deg;
-  filter: drop-shadow(4px 4px 0 var(--ink));
-}
-.continuara-boton{
-  padding: 10px 20px 8px;
-  background: var(--yellow);
-  color: var(--ink);
-  border: 4px solid var(--ink);
-  box-shadow: 5px 5px 0 var(--ink);
-  font-family: Bangers, cursive;
-  font-size: 1.55rem;
-  letter-spacing: 1px;
-  text-decoration: none;
-  transition: translate 0.15s ease, box-shadow 0.15s ease;
-}
-.continuara-boton:hover,
-.continuara-boton:focus-visible{
-  translate: -3px -3px;
-  box-shadow: 8px 8px 0 var(--ink);
-}
-.continuara-boton:focus-visible,
-.vineta:focus-visible{
-  outline: 4px solid var(--ink);
-  outline-offset: 5px;
-}
-
-.creditos{
-  padding: 28px 30px;
-  background: #f4eddb;
-  border: 7px solid var(--ink);
-  box-shadow: 11px 11px 0 var(--ink);
-}
-.creditos-titulo{
-  font-family: Bangers, cursive;
-  font-weight: 400;
-  font-size: 2.3rem;
-  letter-spacing: 2px;
-  line-height: 1;
-}
-.creditos-lista{
-  margin-top: 14px;
-}
-.creditos-lista div{
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 14px;
-  padding-block: 9px;
-  border-bottom: 2px dotted var(--ink);
-}
-.creditos-lista dt{
-  font-family: 'Special Elite', serif;
-  font-size: 0.72rem;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-}
-.creditos-lista dd{
-  font-family: Bangers, cursive;
-  font-size: 1.35rem;
-  letter-spacing: 1px;
-  text-align: right;
-}
-.creditos-foto{
-  margin-top: 16px;
-  font-size: 0.72rem;
-  line-height: 1.5;
-  opacity: 0.75;
-}
-
 @media (prefers-reduced-motion: no-preference){
   .portada-titulo{
     animation: estampa 0.75s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s both;
@@ -759,8 +597,6 @@
   .vineta--helikon .vineta-figura{
     right: -30%;
   }
-  .contraportada{ grid-template-columns: 1fr; }
-  .continuara{ padding: 26px 22px; }
 }
 
 @media (max-width: 560px){
@@ -775,8 +611,7 @@
   .capa,
   .globo,
   .vineta-figura,
-  .personaje .personaje-figura,
-  .continuara-boton{
+  .personaje .personaje-figura{
     transition: none;
   }
   .vineta:hover .vineta-figura,
@@ -1051,4 +886,12 @@ body.con-expediente{ overflow: hidden; }
   .personaje-boton .personaje-figura,
   .personaje-lupa{ transition: none; }
   .expediente-paso:hover{ translate: none; }
+}
+
+.foto-credito{
+  padding: 4px 16px 28px;
+  text-align: center;
+  font-size: 0.72rem;
+  line-height: 1.5;
+  opacity: 0.75;
 }

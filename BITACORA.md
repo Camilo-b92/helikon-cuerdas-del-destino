@@ -1866,6 +1866,37 @@ recorrió cada escena con el nuevo botón.
 - **Pendiente:** fase 5 (Juanes, recorrido interactivo) sigue bloqueada hasta que Camilo
   confirme esta revisión.
 
+
+### Ronda 37 — Ajustes de la portada y de la página Helikón (revisión del maestro)
+
+- **Directo sobre `main`**, sin rama.
+- **Pedido.** Cambios por página que dio Camilo tras la revisión con su maestro.
+- **Inicio.**
+  - Se quitaron "Abrir directo" y "Sigue bajando" (HTML, CSS y los listeners de `libro.js` y
+    `home.js`).
+  - Nueva indicación de scroll fija, "Desplázate para abrir el cómic" con un ratón animado;
+    desaparece en cuanto se empieza a bajar (`libro-iniciado`).
+  - Pulsar la cubierta ahora **anima el scroll** hasta abrir el libro, como pidió el maestro; si la
+    persona mueve la rueda o toca la pantalla, el recorrido se cancela.
+  - **Parpadeo corregido.** Causa confirmada reproduciéndolo con las transiciones alargadas: al
+    llegar al 72 % del recorrido, la cubierta (con su copia de la portada) y la hoja izquierda
+    real se cruzaban con un fundido de 0,18 s; a mitad ambas eran semitransparentes y se veía el
+    fondo y el título al revés. Se quitaron las dos `transition`: el cambio es instantáneo y,
+    medido con capturas, la diferencia entre antes y después del cambio es solo de borde de
+    menos de un píxel.
+  - Se quitó la contraportada entera (Continuará…, botón "Enciende el televisor" y créditos del
+    equipo). **La atribución de la foto de Juanes (CC BY 3.0) se conservó** en una línea al
+    final de la página, porque la licencia la exige donde se use la foto y vivía en esos créditos.
+- **Helikón.** Se quitó el sello circular. El titular pasa a ancho completo y la entradilla
+  crece. El relato del origen gana una frase de entrada, un título corto por cartucho y texto
+  más grande (de 0,82 a 0,98–1,1 rem); las filas de viñetas son más altas y el cartucho de la
+  viñeta del nombre va en el flujo. El `og:image` de Helikón sigue siendo la imagen del sello
+  (es la vista previa al compartir el enlace, no la página); si se quiere, se cambia aparte.
+- **Pruebas.** fase1, fase2, fase3 (actualizada: indicación visible, clic en la tapa anima,
+  sin botones ni contraportada), fase4, opt-in y axe en las cuatro páginas: 0 fallos.
+- **No se probó** en Brave ni en teléfono real. En el sandbox no cargan Bangers ni Special
+  Elite, así que las capturas usaron tipografías de reserva: conviene mirar la página real.
+
 ---
 
 ## Pendientes

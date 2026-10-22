@@ -9,37 +9,68 @@
   display: contents;
 }
 .libro-tapa,
-.libro-abrir{
+.libro-indicio{
   display: none;
 }
 
-html:is(.anim, .anim-espera) .numero:not(.libro-abierto) .libro-abrir{
+html:is(.anim, .anim-espera) .numero:not(.libro-abierto):not(.libro-iniciado) .libro-indicio{
   position: fixed;
-  left: 16px;
-  bottom: 14px;
+  left: 50%;
+  bottom: 18px;
   z-index: 21;
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  min-height: 44px;
-  padding: 0 18px;
+  gap: 12px;
+  max-width: calc(100vw - 24px);
+  padding: 8px 16px 8px 18px;
+  translate: -50% 0;
   background: var(--yellow);
   color: var(--ink);
   border: 3px solid var(--ink);
   box-shadow: 4px 4px 0 var(--ink);
   font-family: Bangers, cursive;
-  font-size: 1.2rem;
+  font-size: 1.25rem;
   letter-spacing: 1.5px;
-  cursor: pointer;
-  transition: translate 0.15s ease, box-shadow 0.15s ease;
+  line-height: 1;
+  pointer-events: none;
 }
-html:is(.anim, .anim-espera) .numero:not(.libro-abierto) .libro-abrir:hover,
-html:is(.anim, .anim-espera) .numero:not(.libro-abierto) .libro-abrir:focus-visible{
-  translate: -2px -2px;
-  box-shadow: 6px 6px 0 var(--ink);
+.indicio-texto{
+  white-space: nowrap;
 }
-html:is(.anim, .anim-espera) .libro-abrir:focus-visible{
-  outline: 4px solid var(--blue);
-  outline-offset: 4px;
+.indicio-raton{
+  position: relative;
+  flex: none;
+  width: 22px;
+  height: 34px;
+  border: 3px solid var(--ink);
+  border-radius: 12px;
+}
+.indicio-raton i{
+  position: absolute;
+  top: 5px;
+  left: 50%;
+  width: 4px;
+  height: 7px;
+  margin-left: -2px;
+  background: var(--ink);
+  border-radius: 2px;
+}
+@media (prefers-reduced-motion: no-preference){
+  html.anim .indicio-raton i{
+    animation: indicioRueda 1.5s ease-in-out infinite;
+  }
+  html.anim .libro-indicio{
+    animation: indicioLate 2.4s ease-in-out infinite;
+  }
+}
+@keyframes indicioRueda{
+  0%{ translate: 0 0; opacity: 1; }
+  70%{ translate: 0 10px; opacity: 0; }
+  100%{ translate: 0 0; opacity: 0; }
+}
+@keyframes indicioLate{
+  0%, 100%{ margin-bottom: 0; }
+  50%{ margin-bottom: 5px; }
 }
 
 @media (min-width: 761px){
@@ -84,9 +115,6 @@ html:is(.anim, .anim-espera) .libro-abrir:focus-visible{
   html:is(.anim, .anim-espera) .numero:not(.libro-abierto) .doble-pagina .portada{
     opacity: 0;
   }
-  html:is(.anim, .anim-espera) .doble-pagina .portada{
-    transition: opacity 0.18s ease;
-  }
 }
 
 @media (max-width: 760px){
@@ -127,13 +155,15 @@ html:is(.anim, .anim-espera) .libro-abrir:focus-visible{
   html:is(.anim, .anim-espera) .tapa-dorso{
     display: none;
   }
-  html:is(.anim, .anim-espera) .numero:not(.libro-abierto) .libro-abrir{
-    left: auto;
-    right: 10px;
-    bottom: 66px;
-    min-height: 40px;
-    padding: 0 14px;
+  html:is(.anim, .anim-espera) .numero:not(.libro-abierto):not(.libro-iniciado) .libro-indicio{
+    bottom: 14px;
+    gap: 10px;
+    padding: 7px 12px 7px 14px;
     font-size: 1.05rem;
+  }
+  .indicio-raton{
+    width: 19px;
+    height: 29px;
   }
 }
 
@@ -141,7 +171,6 @@ html:is(.anim, .anim-espera) .libro-abrir:focus-visible{
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  transition: opacity 0.18s ease, visibility 0s linear 0.18s;
 }
 
 .tapa-cara{

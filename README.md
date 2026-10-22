@@ -271,15 +271,18 @@ apilan en vertical, como un webtoon.
   viñetas de tamaño distinto que llevan a las tres secciones, con personajes
   reales del cómic hablando en globos (`.globo`). La viñeta del cómic es la más
   grande porque es la entrada principal.
-- **Debajo**, el reparto con los cinco personajes y la contraportada: "Continuará
-  en el capítulo tres", con el rótulo real de *El Desenlace*, y los créditos del
-  equipo.
-- **Una pista de scroll** (`.baja-pista`): un enlace fijo "Sigue bajando ▼" que
-  lleva a `#reparto`. La doble página ocupa casi toda la ventana y no se ve
-  que haya más debajo; la pista se oculta sola en cuanto se baja 80 px
-  (`initPistaBajar()` en `home.js`). En escritorio se coloca sobre el margen de
-  la hoja derecha, para no tapar el código de barras; en celular va centrada. La
-  flecha solo se mueve si no hay preferencia de movimiento reducido.
+- **Debajo**, el reparto con los cinco personajes y, al final, una línea con la
+  atribución de la foto de Juanes (CC BY 3.0, ver [créditos de
+  imágenes](#créditos-de-imágenes)). La página ya no tiene contraportada, botón
+  final ni créditos del equipo.
+- **Una indicación de scroll** (`#libroIndicio`, `.libro-indicio`): un rótulo
+  fijo "Desplázate para abrir el cómic" con un ratón que mueve la rueda. No es
+  un botón (`pointer-events: none`, `aria-hidden`). Se muestra solo con el libro
+  cerrado y sin haber empezado a bajar: `libro.js` pone `libro-iniciado` en
+  `#contenido` en cuanto el progreso supera el 1,5 % (2 % en móvil) y la
+  indicación desaparece. Solo existe con animaciones activas; con movimiento
+  reducido el libro ya está abierto y no hace falta. El rótulo late y la rueda
+  se mueve solo sin preferencia de movimiento reducido.
 
 **La portada no cuenta la historia.** Las fichas y las tarjetas del reparto
 dicen quién es cada personaje, no qué le pasa: nada de crisis, derrota ni
@@ -353,14 +356,17 @@ Cuenta el origen del estudio que hace el cómic y presenta a su equipo; no hay
 nada más. Se lee de arriba abajo:
 
 1. **Menú común**, con "Helikón" resaltado.
-2. **Titular y sello**: la entradilla dice qué es Helikón (el estudio que
-   dibuja, anima y programa el cómic) antes de contar su origen. El lema gira
-   alrededor de un círculo con `textPath`, estirado con `textLength` para que
-   dé la vuelta completa.
+2. **Titular**: ocupa todo el ancho (ya no hay sello circular) y la entradilla,
+   a 1,05–1,22 rem, dice qué es Helikón (el estudio que dibuja, anima y programa
+   el cómic) antes de contar su origen.
 3. **El monte de las musas**, el origen en cuatro viñetas
    (`.vineta-origen`): el Monte Helicón, Pegaso golpeando la roca, la fuente
    Hipocrene con las nueve musas y el nombre HELIKÓN. Los dibujos son SVG en
-   línea con trazo de tinta.
+   línea con trazo de tinta. Una frase de entrada (`.origen-intro`) abre el
+   relato, y cada cartucho lleva un título corto en Bangers (`.cartucho-titulo`:
+   El monte, El golpe, La fuente, El nombre) y el texto a 0,98–1,1 rem; las filas
+   de viñetas se hicieron más altas (340 / 380 / 340 px) para que el cartucho no
+   tape el dibujo, y el del nombre va en el flujo, no encima del título.
 4. **Manifiesto** como página de impacto, con la lira.
 5. **Quién es quién**: fichas del equipo al estilo del *Who's Who* de los
    cómics.
@@ -427,8 +433,6 @@ Reglas de esta página:
 - **Las sombras del título van en `em`**, no en píxeles. Con desplazamientos
   fijos, a tamaño de móvil las capas de papel y tinta se separaban y dejaban
   franjas claras entre las letras.
-- **El sello dice "Estudio"** en la parte baja, en Bangers a 32 px, para que no
-  roce el borde del círculo rojo.
 
 ### `juanes/juanes.js`
 
@@ -460,9 +464,15 @@ el script solo lee su posición.
   fija (`sticky`) sobre la primera hoja y se levanta y se desvanece. Ese recorrido es un
   `margin-top` de `.doble-pagina` (no `padding` de `.libro`, que empujaría también a la
   cubierta).
-- **Salvaguardas.** Botón **Abrir directo** visible desde el primer cuadro; la cubierta
-  y "Sigue bajando" también abren al pulsarlas; si alguien llega con Tab a una viñeta
-  tapada, el libro se abre solo. Sin JavaScript, con GSAP bloqueado, con movimiento
+- **Salvaguardas.** La indicación "Desplázate para abrir el cómic" se ve desde el primer
+  cuadro; pulsar la cubierta **anima el scroll** hasta abrir el libro (`abrirAnimado()`:
+  recorrido de 1,1 a 2,2 s con ease in-out, que se cancela si la persona usa la rueda,
+  el dedo o el teclado); si alguien llega con Tab a una viñeta tapada, el libro se abre
+  solo y de golpe, porque ahí el foco ya está en la viñeta.
+- **Sin parpadeo al abrir.** El cambio entre la cubierta (copia de la portada en el dorso)
+  y la hoja izquierda real es **instantáneo**, sin `transition`. Antes se cruzaban con un
+  fundido de 0,18 s y, a mitad, las dos eran semitransparentes: se veía el fondo y una
+  doble imagen con el título al revés. Como las dos son idénticas, el cambio no se nota. Sin JavaScript, con GSAP bloqueado, con movimiento
   reducido o con el interruptor en "no" la portada se ve ya abierta, como antes.
 - **Sin saltos al cargar.** La cubierta es HTML estático y el estado cerrado lo da el CSS
   desde el primer pintado (cuelga de `html.anim-espera` / `html.anim`, que

@@ -8,42 +8,13 @@
 
 .titular{
   position: relative;
-  display: grid;
-  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
-  align-items: center;
-  gap: 30px;
-  padding-block: 50px 36px;
-}
-.sello{
-  justify-self: center;
-  width: min(100%, 380px);
-  height: auto;
-  rotate: -8deg;
-  filter: drop-shadow(8px 8px 0 var(--ink));
-}
-@media (max-width: 960px){
-  .sello{ width: min(86%, 340px); }
-}
-.sello-texto{
-  font-family: Bangers, cursive;
-  font-size: 25px;
-  letter-spacing: 2.4px;
-  text-transform: uppercase;
-  fill: #17130e;
-}
-.sello-numero{
-  font-family: Bangers, cursive;
-  font-size: 32px;
-  letter-spacing: 1px;
-  fill: #fffdf6;
-  stroke: #17130e;
-  stroke-width: 1.5px;
-  paint-order: stroke;
+  max-width: 900px;
+  padding-block: 54px 30px;
 }
 .titular-antetitulo{
   font-family: 'Special Elite', serif;
-  font-size: 0.85rem;
-  letter-spacing: 2px;
+  font-size: clamp(0.95rem, 1.6vw, 1.15rem);
+  letter-spacing: 1.5px;
   text-transform: uppercase;
 }
 .titular-antetitulo em{
@@ -54,8 +25,8 @@
   margin-top: 8px;
   font-family: Bangers, cursive;
   font-weight: 400;
-  font-size: clamp(3.2rem, 11vw, 8.6rem);
-  line-height: 0.84;
+  font-size: clamp(3.4rem, 12vw, 8.6rem);
+  line-height: 0.88;
   letter-spacing: 3px;
   rotate: -2deg;
   text-shadow: 0.05em 0.05em 0 var(--paper), 0.09em 0.09em 0 var(--ink);
@@ -71,15 +42,15 @@
   font-weight: 700;
 }
 .titular-entradilla{
-  max-width: 58ch;
-  margin-top: 30px;
-  padding: 14px 18px;
+  max-width: 60ch;
+  margin-top: 38px;
+  padding: 20px 26px 22px;
   background: #fffdf6;
   border: 4px solid var(--ink);
-  box-shadow: 6px 6px 0 var(--ink);
+  box-shadow: 7px 7px 0 var(--ink);
   font-family: 'Special Elite', serif;
-  font-size: 0.92rem;
-  line-height: 1.55;
+  font-size: clamp(1.05rem, 1.5vw, 1.22rem);
+  line-height: 1.65;
 }
 
 .rotulo{
@@ -122,22 +93,39 @@
   z-index: 3;
   top: 12px;
   left: 12px;
-  max-width: min(72%, 420px);
-  padding: 8px 12px;
+  max-width: min(78%, 460px);
+  padding: 10px 16px 12px;
   background: var(--yellow);
   border: 3px solid var(--ink);
-  box-shadow: 3px 3px 0 var(--ink);
+  box-shadow: 4px 4px 0 var(--ink);
   font-family: 'Special Elite', serif;
-  font-size: 0.82rem;
-  line-height: 1.35;
+  font-size: clamp(0.98rem, 1.3vw, 1.1rem);
+  line-height: 1.45;
+}
+.cartucho-titulo{
+  display: block;
+  margin-bottom: 4px;
+  font-family: Bangers, cursive;
+  font-weight: 400;
+  font-size: clamp(1.45rem, 2vw, 1.8rem);
+  letter-spacing: 1.5px;
+  line-height: 1;
+}
+
+.origen-intro{
+  max-width: 54ch;
+  margin-top: 26px;
+  font-family: 'Special Elite', serif;
+  font-size: clamp(1.1rem, 1.7vw, 1.3rem);
+  line-height: 1.6;
 }
 
 .origen-pagina{
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  grid-template-rows: 300px 290px 300px;
+  grid-template-rows: 340px 380px 340px;
   gap: 14px;
-  margin-top: 28px;
+  margin-top: 24px;
   padding: 16px;
   background: #fffdf6;
   border: 6px solid var(--ink);
@@ -184,14 +172,14 @@
 .vineta-origen--krak .origen-dibujo,
 .vineta-origen--musas .origen-dibujo{
   inset: auto 0 0 0;
-  height: 82%;
+  height: 64%;
 }
 
 .vineta-origen--musas{
   background: radial-gradient(circle at 50% 32%, #3a6c88 0%, var(--blue) 48%, #17313f 100%);
 }
 .vineta-origen--musas .cartucho{
-  max-width: 88%;
+  max-width: calc(100% - 24px);
 }
 
 .onomatopeya{
@@ -205,8 +193,8 @@
   pointer-events: none;
 }
 .onomatopeya--krak{
-  right: 14px;
-  top: 58px;
+  right: 16px;
+  top: 118px;
   rotate: 14deg;
   font-size: clamp(2.4rem, 5vw, 3.6rem);
 }
@@ -217,11 +205,18 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 14px;
-  padding: 60px 20px 24px;
+  gap: 18px;
+  padding: 16px 20px 28px;
   background:
     repeating-conic-gradient(from 0deg at 50% 58%, rgba(23,19,14,0.13) 0 5deg, transparent 5deg 12deg),
     var(--yellow);
+}
+.vineta-origen--nombre .cartucho{
+  position: relative;
+  top: auto;
+  left: auto;
+  align-self: flex-start;
+  max-width: min(100%, 520px);
 }
 .nombre-grande{
   display: flex;
@@ -242,7 +237,7 @@
   border: 3px solid var(--ink);
   box-shadow: 4px 4px 0 var(--ink);
   font-family: 'Patrick Hand SC', 'Comic Sans MS', cursive;
-  font-size: clamp(1rem, 2.4vw, 1.4rem);
+  font-size: clamp(1.15rem, 2.6vw, 1.6rem);
   text-align: center;
 }
 .onomatopeya--flash{
@@ -482,26 +477,26 @@
 
 @media (max-width: 700px){
   .titular{
-    grid-template-columns: 1fr;
     padding-top: 36px;
   }
-  .sello{
-    grid-row: 1;
-    width: min(62vw, 240px);
+  .titular-entradilla{
+    margin-top: 28px;
+    padding: 16px 18px 18px;
   }
   .origen-pagina{
     grid-template-columns: 1fr;
-    grid-template-rows: 240px 270px 290px auto;
+    grid-template-rows: 310px 340px 360px auto;
     padding: 10px;
     gap: 10px;
   }
-  .vineta-origen--nombre{ min-height: 280px; }
-  .nombre-grande{ font-size: 18vw; }
-  .vineta-origen--monte .cartucho{ top: auto; bottom: 12px; }
-  .onomatopeya--krak{ top: auto; bottom: 34%; right: 10px; }
+  .vineta-origen--nombre{ min-height: 340px; }
+  .vineta-origen--monte .origen-dibujo{ top: 56px; height: calc(100% - 56px); }
+  .nombre-grande{ font-size: 15vw; }
+  .onomatopeya--krak{ top: 132px; right: 10px; }
   .manifiesto{ grid-template-columns: 1fr; }
   .manifiesto-lira{ display: none; }
-  .cartucho{ font-size: 0.76rem; }
+  .cartucho{ font-size: 0.95rem; padding: 8px 12px 10px; }
+  .cartucho-titulo{ font-size: 1.4rem; }
 }
 
 @media (prefers-reduced-motion: reduce){

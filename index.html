@@ -48,13 +48,10 @@
 
   <main class="numero" id="contenido" tabindex="-1">
 
-    <a class="baja-pista" href="#reparto" aria-label="Sigue bajando para conocer al reparto">
-      <span>Sigue bajando</span>
-      <span class="baja-flecha" aria-hidden="true">&#9660;</span>
-    </a>
-
-
-    <button type="button" class="libro-abrir" id="libroAbrir">Abrir directo</button>
+    <div class="libro-indicio" id="libroIndicio" aria-hidden="true">
+      <span class="indicio-texto">Desplázate para abrir el cómic</span>
+      <span class="indicio-raton"><i></i></span>
+    </div>
 
     <div class="libro-escenario" id="libroEscenario">
       <div class="libro-fijo">
@@ -227,30 +224,11 @@
       </ul>
     </section>
 
-    <section class="contraportada" aria-labelledby="continuaraTitulo" data-reveal>
-      <div class="continuara">
-        <h2 class="continuara-titulo" id="continuaraTitulo">Continuará…</h2>
-        <p class="continuara-en">en el capítulo tres</p>
-        <img class="continuara-logo" src="comic/assets/presentacion-c3/json/images/img_1.png"
-             width="745" height="206" loading="lazy" alt="El Desenlace">
-        <a class="continuara-boton" href="comic/">Enciende el televisor</a>
-      </div>
-
-      <div class="creditos">
-        <h2 class="creditos-titulo">Créditos</h2>
-        <dl class="creditos-lista">
-          <div><dt>Dibujo y animación</dt><dd>Gabriel Torres</dd></div>
-          <div><dt>Dibujo</dt><dd>Brayhan Mosquera</dd></div>
-          <div><dt>Programación</dt><dd>Camilo Betancourt</dd></div>
-          <div><dt>Una producción de</dt><dd>Helikón</dd></div>
-        </dl>
-        <p class="creditos-foto">
-          Foto de Juanes: RGB Productions,
-          <a href="https://commons.wikimedia.org/wiki/File:Juanes_2022.png" target="_blank" rel="noopener">Wikimedia Commons</a>,
-          CC BY 3.0.
-        </p>
-      </div>
-    </section>
+    <p class="foto-credito">
+      Foto de Juanes: RGB Productions,
+      <a href="https://commons.wikimedia.org/wiki/File:Juanes_2022.png" target="_blank" rel="noopener">Wikimedia Commons</a>,
+      CC BY 3.0.
+    </p>
 
   </main>
 
