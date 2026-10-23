@@ -90,7 +90,9 @@ Lo que eso implica al trabajar:
 ├── juanes/                 El artista que inspira el cómic
 │   ├── index.html
 │   ├── juanes.css
-│   └── juanes.js
+│   ├── juanes.js
+│   ├── premios-datos.js    Todos los premios y homenajes (año, ceremonia, categoría, obra)
+│   └── muro.js             El muro de premios: matriz, filtros, búsqueda, recorrido y detalle
 │
 └── comic/                  El cómic dentro del televisor
     ├── index.html
@@ -450,7 +452,7 @@ Reglas de esta página:
   emite `linea:hito` (año, título y clase) en `document`; el vinilo lo escucha.
 - `initRuta()` — el mapa de la ruta (pestañas con flechas, paradas del mapa y el pin que recorre el trazo).
 - `initCartas()` — las cartas de Activismo (botón con `aria-pressed`; la cara oculta queda `inert`).
-- `initMuro()` — el muro de premios: genera las estatuillas desde `data-grammy` y `data-latin`, filtra y muestra el detalle.
+- El muro de premios ya no vive aquí: está en `muro.js` (ver «Premios»).
 - `initReproductor()` — inserta el iframe de Spotify solo al pulsar «Cargar el reproductor».
 - `cargarCuandoSeAcerque()` — importa `guitarra.js` y `disco.js` solo cuando su escenario está a menos de 600 px.
 
@@ -617,19 +619,38 @@ sin giro.
 
 #### Premios (`#premios`)
 
-Las cuatro cifras animadas y **el muro**: una estatuilla por premio y año (26 Latin Grammy y
-4 Grammy, de la tabla de Wikipedia y de grammy.com), con filtro Todos / Grammy / Latin Grammy
-y detalle al tocar un año. Para añadir un año, un `<li class="muro-anio"
-data-anio data-latin data-grammy data-detalle>` en `#muroLista`.
+Las cuatro cifras animadas y **el muro**, que reúne en un solo gráfico todos los premios y homenajes de Juanes. Los
+datos están en `juanes/premios-datos.js` y la lógica en `juanes/muro.js` (se cargan antes que `juanes.js`).
 
-Debajo del muro hay dos bloques estáticos, sin JavaScript:
+**Datos.** `window.PREMIOS_JUANES` tiene `familias` (7, con color), `ceremonias` (24, cada una en su familia),
+`destacadas` (obras para los atajos de búsqueda) y `registros`: `[año, ceremonia, categoría, obra, tipo]`, con tipo `'p'`
+(premio) o `'h'` (homenaje). Hoy son 142 premios y 15 homenajes, de 2001 a 2026, tomados de la lista de premios de
+Wikipedia, grammy.com, BMI, uDiscover Music y El Tiempo. **Para añadir un premio** basta una línea en `registros`; si es
+de una ceremonia nueva, una entrada en `ceremonias`.
 
-- **«Más allá de los Grammy»** (`#ceremonias`): una tarjeta por ceremonia (`.ceremonia`, con
-  `.ceremonia-cifra`, `.ceremonia-nombre` y `.ceremonia-detalle`). Los conteos salen de la lista de
-  premios de Wikipedia, que puede estar incompleta; cuando no hay conteo fiable la cifra es el rango
-  de años.
-- **«Reconocimientos especiales»** (`.otros`): distinciones honoríficas en orden cronológico, de Time 100
-  (2005) a Leyenda de Nuestra Tierra (2026), cada una con su fuente en la nota de abajo.
+**Familias** (cada una con su color, fila y filtro): Grammy, Latin Grammy, Industria latina (Billboard, Lo Nuestro, BMI),
+Televisión, radio y público, Colombia (Nuestra Tierra), Festivales y prensa (Viña del Mar, Ondas, Amigo…) y Homenajes
+(estrella en vez de estatuilla; incluye los honores de cualquier ceremonia).
+
+**El gráfico.** Una matriz de años (columnas) por familias (filas). Arriba, barras apiladas con el total de cada año por
+familia. En cada casilla, una estatuilla con su cifra cuando hay más de una; el tamaño crece con la cantidad.
+
+**Interacciones.**
+- Tocar una casilla, un año (columna) o una familia (fila) abre el detalle: cada premio con ceremonia, categoría y obra.
+  «Todo» y `Esc` quitan la selección.
+- Al pasar el cursor o enfocar, se resaltan fila y columna y una línea resume qué hay.
+- Buscador por canción, álbum, categoría, ceremonia o año (sin tildes), con atajos a las nueve obras con más premios; en
+  el detalle, tocar una obra la busca.
+- «Elegir ceremonias»: filtro múltiple por ceremonia o por familia completa, con conteos que se ajustan a la búsqueda, y
+  «Solo homenajes».
+- Cifras vivas (premios, homenajes, años, ceremonias) que cuentan hacia el nuevo valor.
+- «Recorrer los años»: avanza año por año con el acumulado; «Detener» o cualquier clic lo corta.
+- Teclado: flechas, `Inicio`/`Fin` y `RePág`/`AvPág` se mueven por la tabla (una sola parada de tabulador).
+- Con movimiento reducido no hay animaciones de entrada ni de conteo. En pantallas estrechas la tabla se desliza a los
+  lados y la columna de familias se queda fija.
+
+Los conteos oficiales según Wikipedia (160 ganados y 395 nominaciones) son mayores que lo que se puede fechar uno por uno,
+así que la lista puede estar incompleta.
 
 #### La línea de tiempo
 

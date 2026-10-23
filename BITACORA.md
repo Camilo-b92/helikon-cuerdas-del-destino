@@ -2180,6 +2180,25 @@ recorrió cada escena con el nuevo botón.
 - **Verificado:** capturas a 1366, 820 y 390 px sin desborde ni errores de consola; axe sin violaciones.
 - **Pendiente:** la lista de Wikipedia puede estar incompleta; si se encuentra un premio que falte, se añade con su fuente.
 
+### Ronda 47 — Un solo muro para todos los premios
+
+- **Pedido.** Camilo: juntar todos los premios en el gráfico de los Grammy, renovarlo y hacer la interactividad mucho más
+  rica, diferenciando año, premio y demás.
+- **Directo sobre `main`**, sin rama.
+- **Hecho.** El muro pasó de columnas de estatuillas (solo Grammy y Latin Grammy) a una matriz año × familia con barras
+  apiladas por año. Datos en `juanes/premios-datos.js` (142 premios y 15 homenajes con año, ceremonia, categoría y obra) y
+  lógica nueva en `juanes/muro.js`; `initMuro()` salió de `juanes.js`. Se quitaron las doce tarjetas de ceremonias y la lista
+  de reconocimientos especiales: ahora son filtros y la fila «Homenajes» del propio muro.
+- **Interacciones nuevas:** filtro múltiple por ceremonia y familia, «Solo homenajes», buscador sin tildes con atajos a las
+  obras más premiadas, resaltado cruzado de fila y columna, detalle por casilla, año o familia, recorrido animado de los
+  años, cifras que cuentan, y teclado completo.
+- **Cambios de datos.** Los Latin Grammy suman 26 (más Persona del Año 2019 como homenaje); Los 40 pasa a 5 por el premio
+  de 2014. Nuestra Tierra queda en 12 al fechar cada premio uno por uno (la ronda 46 decía que no sumaba 12; esa frase
+  quedó corregida por esta lista). Una categoría que Wikipedia no da (p. ej. Rolling Stone en Español) se dejó genérica en
+  vez de inventarla.
+- **Verificado:** capturas a 1366, 820 y 390 px sin desborde ni errores; axe sin violaciones; filtros, búsqueda, recorrido y
+  teclado probados con Playwright.
+
 ---
 
 ## Pendientes

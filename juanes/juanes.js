@@ -482,96 +482,6 @@ function initCartas(){
   });
 }
 
-function initMuro(){
-  const lista = document.getElementById('muroLista');
-  const detalle = document.getElementById('muroDetalle');
-  const muro = document.getElementById('muro');
-  if (!lista || !detalle || !muro) return;
-
-  const anios = Array.from(lista.querySelectorAll('.muro-anio'));
-  const filtros = Array.from(muro.querySelectorAll('.filtro'));
-  const NS = 'http://www.w3.org/2000/svg';
-
-  function estatuilla(serie, orden){
-    const svg = document.createElementNS(NS, 'svg');
-    svg.setAttribute('class', 'est est--' + serie);
-    svg.setAttribute('aria-hidden', 'true');
-    svg.style.setProperty('--orden', orden);
-    const uso = document.createElementNS(NS, 'use');
-    uso.setAttribute('href', '#icono-premio');
-    svg.appendChild(uso);
-    return svg;
-  }
-
-  anios.forEach((li) => {
-    const grammy = Number(li.dataset.grammy) || 0;
-    const latin = Number(li.dataset.latin) || 0;
-    const anio = li.dataset.anio;
-    const partes = [];
-    if (grammy) partes.push(grammy + ' Grammy');
-    if (latin) partes.push(latin + ' Latin Grammy');
-
-    const boton = document.createElement('button');
-    boton.type = 'button';
-    boton.className = 'muro-boton';
-    boton.setAttribute('aria-pressed', 'false');
-    boton.setAttribute('aria-label', anio + ': ' + partes.join(' y '));
-
-    const pila = document.createElement('span');
-    pila.className = 'muro-pila';
-    pila.setAttribute('aria-hidden', 'true');
-    for (let k = 0; k < latin; k++) pila.appendChild(estatuilla('latin', k));
-    for (let k = 0; k < grammy; k++) pila.appendChild(estatuilla('grammy', latin + k));
-
-    const etiqueta = document.createElement('span');
-    etiqueta.className = 'muro-etiqueta';
-    etiqueta.setAttribute('aria-hidden', 'true');
-    etiqueta.textContent = anio;
-
-    boton.append(pila, etiqueta);
-    li.append(boton);
-
-    boton.addEventListener('click', () => {
-      anios.forEach((otro) => {
-        const b = otro.querySelector('.muro-boton');
-        b.setAttribute('aria-pressed', String(b === boton));
-      });
-      detalle.textContent = anio + '. ' + li.dataset.detalle;
-    });
-  });
-
-  filtros.forEach((boton) => {
-    boton.addEventListener('click', () => {
-      const filtro = boton.dataset.filtro;
-      filtros.forEach((b) => b.setAttribute('aria-pressed', String(b === boton)));
-      muro.dataset.filtro = filtro;
-      anios.forEach((li) => {
-        const tiene = filtro === 'todo' ||
-          (filtro === 'grammy' && li.dataset.grammy) ||
-          (filtro === 'latin' && li.dataset.latin);
-        li.hidden = !tiene;
-      });
-      detalle.textContent = 'Elige un año del muro.';
-      anios.forEach((li) => {
-        const b = li.querySelector('.muro-boton');
-        if (b) b.setAttribute('aria-pressed', 'false');
-      });
-    });
-  });
-
-  if ('IntersectionObserver' in window){
-    const vigia = new IntersectionObserver((entradas) => {
-      if (entradas[0].isIntersecting){
-        muro.classList.add('muro--lleno');
-        vigia.disconnect();
-      }
-    }, { threshold: 0.25 });
-    vigia.observe(lista);
-  } else {
-    muro.classList.add('muro--lleno');
-  }
-}
-
 function initReproductor(){
   const caja = document.getElementById('reproductor');
   const boton = document.getElementById('reproductorCargar');
@@ -619,7 +529,6 @@ function cargarCuandoSeAcerque(selector, modulo){
 
 initRuta();
 initCartas();
-initMuro();
 initReproductor();
 cargarCuandoSeAcerque('#guitarraEscenario', '../assets/js/guitarra.js');
 cargarCuandoSeAcerque('#disco', '../assets/js/disco.js');
