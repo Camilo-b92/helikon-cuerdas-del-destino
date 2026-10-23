@@ -888,10 +888,3 @@ body.con-expediente{ overflow: hidden; }
   .expediente-paso:hover{ translate: none; }
 }
 
-.foto-credito{
-  padding: 4px 16px 28px;
-  text-align: center;
-  font-size: 0.72rem;
-  line-height: 1.5;
-  opacity: 0.75;
-}

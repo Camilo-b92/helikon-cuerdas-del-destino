@@ -2146,6 +2146,21 @@ recorrió cada escena con el nuevo botón.
 
 ---
 
+### Ronda 45 — Correcciones de la portada
+
+- **Pedido.** Camilo: ya son tres capítulos, la fecha de lanzamiento es el 26 de octubre, quitar el crédito de la
+  foto de Juanes al pie de la página inicial y poner el logo original de Helikón.
+- **Directo sobre `main`**, sin rama.
+- **Hecho:** «¡2 capítulos!» pasó a «¡3 capítulos!» y «Capítulos 1 y 2» a «Capítulos 1, 2 y 3» (tapa cerrada y
+  panel *El cómic*); «Sept. 2026» pasó a «26 oct. 2026»; se quitó el párrafo `.foto-credito` de `index.html` y su
+  regla en `home.css`.
+- **Decisión:** el crédito de la foto (RGB Productions, CC BY 3.0) ya figura en la página de Juanes y en la tabla de
+  atribuciones del README, así que la licencia sigue cumplida sin repetirlo en la portada.
+- **Pendiente:** el logo original de Helikón (en el repositorio solo hay la «H» dorada del favicon y el sello de la
+  montaña; falta saber cuál es el que Camilo quiere).
+
+---
+
 ## Pendientes
 
 En orden de lo que más aporta:
