@@ -619,9 +619,17 @@ sin giro.
 
 Las cuatro cifras animadas y **el muro**: una estatuilla por premio y año (26 Latin Grammy y
 4 Grammy, de la tabla de Wikipedia y de grammy.com), con filtro Todos / Grammy / Latin Grammy
-y detalle al tocar un año. Tres reconocimientos más (Time 100, Caballero de las Artes y las
-Letras, Persona del Año) van debajo. Para añadir un año, un `<li class="muro-anio"
+y detalle al tocar un año. Para añadir un año, un `<li class="muro-anio"
 data-anio data-latin data-grammy data-detalle>` en `#muroLista`.
+
+Debajo del muro hay dos bloques estáticos, sin JavaScript:
+
+- **«Más allá de los Grammy»** (`#ceremonias`): una tarjeta por ceremonia (`.ceremonia`, con
+  `.ceremonia-cifra`, `.ceremonia-nombre` y `.ceremonia-detalle`). Los conteos salen de la lista de
+  premios de Wikipedia, que puede estar incompleta; cuando no hay conteo fiable la cifra es el rango
+  de años.
+- **«Reconocimientos especiales»** (`.otros`): distinciones honoríficas en orden cronológico, de Time 100
+  (2005) a Leyenda de Nuestra Tierra (2026), cada una con su fuente en la nota de abajo.
 
 #### La línea de tiempo
 

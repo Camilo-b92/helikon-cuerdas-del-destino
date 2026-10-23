@@ -2166,6 +2166,22 @@ recorrió cada escena con el nuevo botón.
 
 ---
 
+### Ronda 46 — Premios de Juanes: todas las ceremonias
+
+- **Pedido.** Camilo: la sección de premios solo mostraba Grammy y Latin Grammy; trajo un listado de Gemini con muchos más.
+- **Directo sobre `main`**, sin rama.
+- **El listado de Gemini no se publicó tal cual.** Se contrastó con la lista de Wikipedia y las fuentes originales (BMI,
+  uDiscover Music, El Tiempo). Lo que no coincide: los cuatro Grammy no son todos de Rock/Alternativo (2009 y 2013 fueron
+  Pop Latino); Lo Nuestro son 14 en la lista, no 9; Nuestra Tierra no suma 12; Viña del Mar no registra Gaviotas de Oro
+  (sí Antorchas de Plata y de Oro y Gaviotas de Plata); los NRJ Music Awards no aparecen en ninguna fuente consultada y se
+  dejaron fuera; Premios Shock lo nombra Artista de la Década (honor), pero no figuran estatuillas.
+- **Hecho.** Bloque nuevo «Más allá de los Grammy» con doce tarjetas por ceremonia y «Reconocimientos especiales»
+  ampliado de 3 a 14 distinciones, de 2005 a 2026. Fuentes añadidas a la sección y al desplegable de fuentes.
+- **Verificado:** capturas a 1366, 820 y 390 px sin desborde ni errores de consola; axe sin violaciones.
+- **Pendiente:** la lista de Wikipedia puede estar incompleta; si se encuentra un premio que falte, se añade con su fuente.
+
+---
+
 ## Pendientes
 
 En orden de lo que más aporta:
