@@ -270,18 +270,18 @@ abierto. En escritorio se ven dos hojas enfrentadas; en móvil (≤ 760 px) se
 apilan en vertical, como un webtoon.
 
 - **Hoja izquierda, la portada** (`.portada`). Lleva lo que tiene la portada de
-  un cómic impreso: caja editorial en la esquina con la cara del niño y el sello
-  Helikón, fecha, precio y código de barras. El título es el **logotipo oficial** y los
+  un cómic impreso: caja editorial en la esquina con el logo café de Helikón, fecha de lanzamiento
+  (26 oct. 2026), precio y código de barras. La tapa cerrada lleva el logo amarillo. El título es el **logotipo oficial** y los
   anillos rojos vienen de la presentación animada del capítulo uno. Juanes se
   sale del marco por abajo.
 - **Hoja derecha, la página 1** (`.pagina`). Un cartucho de narrador y tres
   viñetas de tamaño distinto que llevan a las tres secciones, con personajes
   reales del cómic hablando en globos (`.globo`). La viñeta del cómic es la más
   grande porque es la entrada principal.
-- **Debajo**, el reparto con los cinco personajes y, al final, una línea con la
-  atribución de la foto de Juanes (CC BY 3.0, ver [créditos de
-  imágenes](#créditos-de-imágenes)). La página ya no tiene contraportada, botón
-  final ni créditos del equipo.
+- **Debajo**, el reparto con los cinco personajes. La atribución de la foto de
+  Juanes (CC BY 3.0) ya no va al pie de esta página: está en la página de Juanes
+  y en los [créditos de imágenes](#créditos-de-imágenes). La página no tiene
+  contraportada, botón final ni créditos del equipo.
 - **Una indicación de scroll** (`#libroIndicio`, `.libro-indicio`): un rótulo
   fijo "Desplázate para abrir el cómic" con un ratón que mueve la rueda. No es
   un botón (`pointer-events: none`, `aria-hidden`). Se muestra solo con el libro

@@ -237,27 +237,12 @@ html:is(.anim, .anim-espera) .numero:not(.libro-abierto):not(.libro-iniciado) .l
   vector-effect: non-scaling-stroke;
 }
 
-.tapa-sello{
+.tapa-logo{
   position: absolute;
   z-index: 3;
-  top: calc(4 * var(--u));
+  top: calc(5 * var(--u));
   left: calc(11 * var(--u));
-  display: flex;
-  align-items: center;
-  gap: calc(1.6 * var(--u));
-  padding: calc(0.8 * var(--u)) calc(2 * var(--u)) calc(0.8 * var(--u)) calc(1 * var(--u));
-  rotate: -2deg;
-  background: var(--paper);
-  border: calc(0.55 * var(--u)) solid var(--ink);
-  box-shadow: calc(0.8 * var(--u)) calc(0.8 * var(--u)) 0 var(--ink);
-  font-family: 'Special Elite', serif;
-  font-size: calc(2.3 * var(--u));
-  letter-spacing: calc(0.25 * var(--u));
-  text-transform: uppercase;
-  line-height: 1;
-}
-.tapa-sello img{
-  width: calc(6.4 * var(--u));
+  width: calc(54 * var(--u));
   height: auto;
 }
 

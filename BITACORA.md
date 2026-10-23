@@ -2156,8 +2156,13 @@ recorrió cada escena con el nuevo botón.
   regla en `home.css`.
 - **Decisión:** el crédito de la foto (RGB Productions, CC BY 3.0) ya figura en la página de Juanes y en la tabla de
   atribuciones del README, así que la licencia sigue cumplida sin repetirlo en la portada.
-- **Pendiente:** el logo original de Helikón (en el repositorio solo hay la «H» dorada del favicon y el sello de la
-  montaña; falta saber cuál es el que Camilo quiere).
+- **Logo original de Helikón.** Camilo entregó dos SVG (`assets/img/logo-helikon-amarillo.svg` y
+  `assets/img/logo-helikon-cafe.svg`). El amarillo (`#f1b648`) va en la tapa cerrada del cómic, sobre fondo oscuro,
+  en lugar del sello «Helikón presenta» con la cabeza del niño; el café (`#662d1a`) va en la caja editorial de la
+  portada ya desplegada, en lugar de la cabeza y la palabra. La columna de la caja se ensanchó de 23 a 29 unidades.
+  Los SVG llevan «HELIKÓN» como texto en Arial Bold (tal como los entregó): en un equipo sin Arial se vería con
+  otra sans.
+- **Probado:** capturas a 1366 y 390 px (tapa y portada abierta), sin desborde, fase3, optin, axall e in2 sin fallos.
 
 ---
 

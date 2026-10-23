@@ -66,32 +66,25 @@
   inset: 0 0 auto 0;
   height: 14cqh;
   display: grid;
-  grid-template-columns: calc(23 * var(--u)) 1fr auto;
+  grid-template-columns: calc(29 * var(--u)) 1fr auto;
   align-items: stretch;
   background: var(--paper);
   border-bottom: calc(0.9 * var(--u)) solid var(--ink);
 }
 .caja-editorial{
   display: grid;
-  grid-template-rows: 1fr auto;
   justify-items: center;
-  align-items: end;
-  padding: calc(0.8 * var(--u)) calc(0.6 * var(--u)) calc(0.7 * var(--u));
+  align-items: center;
+  padding: calc(1.2 * var(--u)) calc(2 * var(--u));
   background: #fffdf6;
   border-right: calc(0.9 * var(--u)) solid var(--ink);
   overflow: hidden;
 }
-.caja-cara{
-  width: calc(13 * var(--u));
+.caja-logo{
+  width: 100%;
   height: auto;
-  align-self: center;
-}
-.caja-sello{
-  font-family: 'Special Elite', serif;
-  font-size: calc(1.9 * var(--u));
-  letter-spacing: calc(0.3 * var(--u));
-  text-transform: uppercase;
-  line-height: 1;
+  max-height: 100%;
+  object-fit: contain;
 }
 .franja-serie{
   align-self: center;
