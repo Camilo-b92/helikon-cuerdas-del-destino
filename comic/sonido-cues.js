@@ -193,13 +193,13 @@
     grupo: 'tv', dur: 0.55,
     fn: (c, b, t, op, HH) => {
       const d = mezcla(c, b, 0.05);
-      HH.tono(c, d, { t: t, dur: 0.07, f: 150, f2: 85, vol: 0.22, a: 0.002 });
-      HH.rafaga(c, d, { t: t, dur: 0.46, filtro: ['highpass', 700, 0.5], vol: 0.2, a: 0.015, suave: 0.55 });
-      HH.rafaga(c, d, { t: t + 0.03, dur: 0.4, ruido: 'rosa', filtro: ['bandpass', 1800, 0.6], vol: 0.1, a: 0.02, suave: 0.4 });
+      HH.tono(c, d, { t: t, dur: 0.07, f: 150, f2: 85, vol: 0.09, a: 0.002 });
+      HH.rafaga(c, d, { t: t, dur: 0.46, filtro: ['bandpass', 1400, 0.4], vol: 0.075, a: 0.015, suave: 0.55 });
+      HH.rafaga(c, d, { t: t + 0.03, dur: 0.4, ruido: 'rosa', filtro: ['bandpass', 1500, 0.6], vol: 0.04, a: 0.02, suave: 0.4 });
       for (let i = 0; i < 12; i++){
-        HH.rafaga(c, d, { t: t + az(0.02, 0.38), dur: 0.01, filtro: ['bandpass', az(1500, 5000), 2], vol: az(0.04, 0.1), a: 0.001 });
+        HH.rafaga(c, d, { t: t + az(0.02, 0.38), dur: 0.01, filtro: ['bandpass', az(1500, 5000), 2], vol: az(0.015, 0.035), a: 0.001 });
       }
-      HH.tono(c, d, { t: t + 0.2, dur: 0.05, f: 120, f2: 70, vol: 0.1, a: 0.002 });
+      HH.tono(c, d, { t: t + 0.2, dur: 0.05, f: 120, f2: 70, vol: 0.04, a: 0.002 });
     }
   });
 
