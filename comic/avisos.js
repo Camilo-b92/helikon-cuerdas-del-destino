@@ -12,13 +12,16 @@
     6: { mira: false, fin: () => [s5.anims.textVine] },
     7: { mira: false, fin: () => [s6.anims.textoFantas] },
     10: { mira: false, fin: () => [s8.anims.txt] },
-    11: { mira: false, fin: () => [s9.anims.textMom] }
+    11: { mira: false, fin: () => [s9.anims.textMom] },
+    12: { mira: false, fin: () => [s10.anims.txt] }
   };
 
   const tvEl = document.getElementById('tv');
   const aviso = document.getElementById('avisoEscena');
   const estado = document.getElementById('avisoEstado');
   const boton = document.getElementById('avisoSiguiente');
+  const reinicio = document.getElementById('avisoReinicio');
+  const enlaceJuanes = document.getElementById('avisoJuanes');
   const voz = document.getElementById('avisoVoz');
 
   let canal = -1;
@@ -39,6 +42,8 @@
     aviso.hidden = true;
     aviso.classList.remove('es-fin', 'es-mira');
     boton.hidden = true;
+    reinicio.hidden = true;
+    enlaceJuanes.hidden = true;
     if (tvEl.classList.contains('fin-escena')) tvEl.classList.remove('fin-escena');
   }
 
@@ -54,11 +59,12 @@
     if (canal < 0 || !aviso.hidden && aviso.classList.contains('es-fin')) return;
     const hayMas = canal < ULTIMO;
     const capitulo = siguienteEsCapitulo();
+    const alFinal = canal + 1 === ULTIMO;
     const texto = !hayMas ? 'Última escena disponible'
       : capitulo ? 'Capítulo terminado' : 'Escena terminada';
     estado.textContent = texto;
     if (hayMas){
-      boton.innerHTML = (capitulo ? 'Siguiente capítulo' : 'Siguiente escena') + ' &rarr;';
+      boton.innerHTML = (alFinal ? 'Ver el final' : capitulo ? 'Siguiente capítulo' : 'Siguiente escena') + ' &rarr;';
       boton.hidden = false;
       tvEl.classList.add('fin-escena');
     } else {
@@ -70,6 +76,21 @@
     hablar(hayMas ? texto + '. Pulsa el botón derecho o «' + boton.textContent + '» para continuar.' : texto + '.');
     document.dispatchEvent(new CustomEvent('escena-fin'));
   }
+
+  function mostrarFinal(){
+    if (canal !== ULTIMO) return;
+    estado.textContent = 'Fin del cómic';
+    boton.hidden = true;
+    reinicio.hidden = false;
+    enlaceJuanes.hidden = false;
+    aviso.classList.remove('es-mira');
+    aviso.classList.add('es-fin');
+    aviso.hidden = false;
+    hablar('Fin del cómic. Puedes volver al principio o conocer a Juanes.');
+    document.dispatchEvent(new CustomEvent('escena-fin'));
+  }
+
+  document.addEventListener('final-presentacion', mostrarFinal);
 
   function conectar(anim, indice){
     if (!anim || conectadas.has(anim)) return;
@@ -112,4 +133,5 @@
   }).observe(tvEl, { attributes: true, attributeFilter: ['class'] });
 
   boton.addEventListener('click', () => { changeChannel(1); });
+  reinicio.addEventListener('click', () => { changeChannel(-ULTIMO); });
 })();

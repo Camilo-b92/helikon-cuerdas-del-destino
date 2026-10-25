@@ -23,7 +23,8 @@
     7: ['amb-noche', {}],
     8: ['amb-noche', {}],
     10: ['amb-interior', { noche: true }],
-    11: ['amb-interior', { noche: true }]
+    11: ['amb-interior', { noche: true }],
+    12: ['amb-concierto', {}]
   };
 
   const lineas = {};
@@ -148,7 +149,11 @@
     's9-jua': () => linea('s9', [[0, 'musica-final']]),
     's9-textJuan': () => linea('s9j', [burb(0.05, 0.85), burb(4.48, 0.8)]),
     's9-mom': () => linea('s9m', [[0, 'panel']]),
-    's9-textMom': () => linea('s9t', [burb(0.05, 1.1), burb(4.04, 1.1), burb(10.04, 1.1), burb(16, 1.1)])
+    's9-textMom': () => linea('s9t', [burb(0.05, 1.1), burb(4.04, 1.1), burb(10.04, 1.1), burb(16, 1.1)]),
+
+    's10-txt': () => linea('s10t', [[0, 'ovacion'], burb(0.1, 0.95), burb(4.2, 0.9), burb(9.5, 0.95)]),
+
+    'p4-titulo': () => linea('p4', [[0, 'titulo-final']])
   };
 
   const PAUSAS = {
@@ -249,6 +254,7 @@
     const amb = AMBIENTES[indice];
     if (amb) bucle('ambiente', amb[0], amb[1], 1.4);
     if (indice === 10) despues(0.8, () => bucle('musica', 'musica-cuarto', {}, 2));
+    if (indice === 12) despues(0.8, () => bucle('musica', 'musica-concierto', {}, 1.2));
     conectarAnimaciones();
   };
 

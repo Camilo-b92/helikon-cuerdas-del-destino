@@ -2199,6 +2199,27 @@ recorrió cada escena con el nuevo botón.
 - **Verificado:** capturas a 1366, 820 y 390 px sin desborde ni errores; axe sin violaciones; filtros, búsqueda, recorrido y
   teclado probados con Playwright.
 
+### Ronda 48 — La última escena y el título final
+
+- **Pedido.** Camilo: agregar la última escena del cómic y la presentación final, con sonidos y todo lo necesario para que
+  el cómic quede completo.
+- **Directo sobre `main`**, sin rama.
+- **Hecho.** Dos canales nuevos: el **12** (capítulo tres, escena III: el concierto) y el **13** (título final). El dial
+  pasa a `TOTAL_CHANNELS = 13`. Material en `comic/assets/capitulo-n3/scene3/` y `comic/assets/presentacion-final/`; el PNG
+  de luces se pasó a `webp`.
+- **Decisión.** Las lámparas del diseño original se movían con las flechas del teclado, que en el televisor cambian de
+  canal; se manejan con el cursor (o el toque en pantallas táctiles). Los comentarios del código original no se trajeron.
+- **Final del cómic.** El canal 12 termina con *Ver el final →*; el 13 muestra *Fin del cómic*, con *Volver al principio* y
+  el enlace *Conoce a Juanes →* para que el lector pase del cómic a la página del personaje.
+- **Sonido nuevo (4 sonidos, 48 en total):** `amb-concierto` (murmullo, aplausos y gritos al azar), `musica-concierto`
+  (rasgueo, bajo y batería sintética), `ovacion` (al tocar a Juan) y `titulo-final`. El globo de texto suena con las
+  burbujas ya existentes.
+- **Verificado:** los 14 canales se sintonizan uno a uno, el dial se detiene en el 13, cero errores de consola, axe sin
+  violaciones en los canales 12 y 13, capturas a 1366, 820 y 390 px, movimiento reducido, y los cuatro sonidos nuevos
+  renderizados sin conexión sin valores inválidos ni saturación. **Pendiente de oído:** el volumen relativo se afina
+  escuchando.
+- **Sigue pendiente:** las voces de los personajes (inventario en el documento del proyecto en claude.ai).
+
 ---
 
 ## Pendientes

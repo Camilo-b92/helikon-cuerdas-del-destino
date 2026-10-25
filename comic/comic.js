@@ -1,4 +1,4 @@
-const TOTAL_CHANNELS = 11;
+const TOTAL_CHANNELS = 13;
 let currentChannel = 0;
 let tvOn = false;
 let isAnimating = false;
@@ -58,12 +58,17 @@ const scene9Stage = document.getElementById('scene9Stage');
 const scene9Container = document.getElementById('scene9Container');
 const scene9Hint = document.getElementById('scene9Hint');
 
+const scene10Stage = document.getElementById('scene10Stage');
+const scene10Container = document.getElementById('scene10Container');
+const scene10Hint = document.getElementById('scene10Hint');
+
 const channelNames = [
   'Capítulo 1 — Presentación', 'Capítulo 1 — Escena I: El llamado',
   'Capítulo 1 — Escena II', 'Capítulo 1 — Escena III',
   'Capítulo 2 — Presentación', 'Capítulo 2 — Escena I', 'Capítulo 2 — Escena II',
   'Capítulo 2 — Escena III', 'Capítulo 2 — Escena IV',
-  'Capítulo 3 — Presentación', 'Capítulo 3 — Escena I', 'Capítulo 3 — Escena II'
+  'Capítulo 3 — Presentación', 'Capítulo 3 — Escena I', 'Capítulo 3 — Escena II',
+  'Capítulo 3 — Escena III', 'Final — Cuerdas del Destino'
 ];
 
 const esTactil = window.matchMedia('(hover: none)').matches;
@@ -140,9 +145,10 @@ function scaleScene6(){ scaleStage(scene6Stage, scene6Container); }
 function scaleScene7(){ scaleStage(scene7Stage, scene7Container); }
 function scaleScene8(){ scaleStage(scene8Stage, scene8Container); }
 function scaleScene9(){ scaleStage(scene9Stage, scene9Container); }
+function scaleScene10(){ scaleStage(scene10Stage, scene10Container); }
 
 window.addEventListener('resize', () => {
-  scaleScene1(); scaleScene2(); scaleScene3(); scaleScene4(); scaleScene5(); scaleScene6(); scaleScene7(); scaleScene8(); scaleScene9();
+  scaleScene1(); scaleScene2(); scaleScene3(); scaleScene4(); scaleScene5(); scaleScene6(); scaleScene7(); scaleScene8(); scaleScene9(); scaleScene10();
 });
 
 let s2 = { juanesBusca: null, caja: null, texto: null, ready: false, textoTimer: null, playTimer: null };
@@ -272,6 +278,19 @@ function prefetchScene9(){
   });
   ['jua', 'textJuan', 'mom', 'textMom'].forEach(name => {
     fetch(`assets/capitulo-n3/scene2/json/${name}.json`).catch(() => {});
+  });
+}
+
+let scene10Prefetched = false;
+function prefetchScene10(){
+  if (scene10Prefetched) return;
+  scene10Prefetched = true;
+  ['fondo.png', 'escenario.png', 'luces.webp', 'micro.png', 'lamUno.png', 'lamDos.png'].forEach(name => {
+    const img = new Image();
+    img.src = `assets/capitulo-n3/scene3/img/${name}`;
+  });
+  ['juanSing', 'peopleUno', 'peopleDos', 'peopleCuatro', 'txt'].forEach(name => {
+    fetch(`assets/capitulo-n3/scene3/json/${name}.json`).catch(() => {});
   });
 }
 
@@ -855,6 +874,130 @@ function stopScene9(){
   Object.values(s9.anims).forEach(a => a && a.pause());
 }
 
+const S10_ANGULO_MAX = 30;
+const S10_VELOCIDAD = 70;
+
+let s10 = {
+  anims: {},
+  ready: false,
+  played: false,
+  angulo: 0,
+  objetivo: 0,
+  raf: null,
+  ultimo: null,
+  soltarTimer: null,
+  lamUno: [],
+  lamDos: []
+};
+
+function s10Aplicar(){
+  s10.lamUno.forEach(l => { l.style.transform = `rotate(${s10.angulo}deg)`; });
+  s10.lamDos.forEach(l => { l.style.transform = `rotate(${-s10.angulo}deg)`; });
+}
+
+function s10Paso(ahora){
+  if (s10.ultimo === null) s10.ultimo = ahora;
+  const dt = Math.min(0.1, (ahora - s10.ultimo) / 1000);
+  s10.ultimo = ahora;
+  const paso = S10_VELOCIDAD * dt;
+  if (s10.angulo < s10.objetivo) s10.angulo = Math.min(s10.angulo + paso, s10.objetivo);
+  else if (s10.angulo > s10.objetivo) s10.angulo = Math.max(s10.angulo - paso, s10.objetivo);
+  s10Aplicar();
+  if (s10.angulo === s10.objetivo){
+    s10.raf = null;
+    s10.ultimo = null;
+    return;
+  }
+  s10.raf = requestAnimationFrame(s10Paso);
+}
+
+function s10Apuntar(grados){
+  s10.objetivo = Math.max(-S10_ANGULO_MAX, Math.min(S10_ANGULO_MAX, grados));
+  if (s10.raf === null && s10.angulo !== s10.objetivo) s10.raf = requestAnimationFrame(s10Paso);
+}
+
+function s10DesdeX(e){
+  const r = scene10Stage.getBoundingClientRect();
+  if (!r.width) return 0;
+  return ((e.clientX - r.left) / r.width - 0.5) * 2 * S10_ANGULO_MAX;
+}
+
+function initScene10(){
+  if (s10.ready || typeof lottie === 'undefined') return;
+
+  const load = (name, elId, loop) => lottie.loadAnimation({
+    container: document.getElementById(elId),
+    renderer: 'svg', loop, autoplay: false,
+    path: `assets/capitulo-n3/scene3/json/${name}.json`
+  });
+
+  s10.anims.peopleSeis = load('peopleCuatro', 's10-peopleSeis', true);
+  s10.anims.peopleCinco = load('peopleUno', 's10-peopleCinco', true);
+  s10.anims.peopleCuatro = load('peopleCuatro', 's10-peopleCuatro', true);
+  s10.anims.peopleTres = load('peopleUno', 's10-peopleTres', true);
+  s10.anims.peopleDos = load('peopleDos', 's10-peopleDos', true);
+  s10.anims.juanSing = load('juanSing', 's10-juanSing', true);
+  s10.anims.peopleUno = load('peopleUno', 's10-peopleUno', true);
+  s10.anims.txt = load('txt', 's10-txt', false);
+
+  s10.lamUno = Array.from(scene10Container.querySelectorAll('.s10-lamUno'));
+  s10.lamDos = Array.from(scene10Container.querySelectorAll('.s10-lamDos'));
+
+  document.getElementById('s10-cajaJuan').addEventListener('click', () => {
+    if (s10.played) return;
+    s10.played = true;
+    document.getElementById('s10-cajaJuan').classList.add('is-locked');
+    scene10Hint.classList.add('is-hidden');
+    document.getElementById('s10-cajaTxt').classList.add('s10-visible');
+    s10.anims.txt.goToAndPlay(0, true);
+  });
+
+  scene10Stage.addEventListener('pointermove', (e) => {
+    if (e.pointerType === 'touch') return;
+    s10Apuntar(s10DesdeX(e));
+  });
+  scene10Stage.addEventListener('pointerleave', (e) => {
+    if (e.pointerType !== 'touch') s10Apuntar(0);
+  });
+  scene10Stage.addEventListener('pointerdown', (e) => {
+    if (e.pointerType !== 'touch') return;
+    clearTimeout(s10.soltarTimer);
+    s10Apuntar(s10DesdeX(e));
+  });
+  ['pointerup', 'pointercancel'].forEach(tipo => {
+    scene10Stage.addEventListener(tipo, (e) => {
+      if (e.pointerType !== 'touch') return;
+      clearTimeout(s10.soltarTimer);
+      s10.soltarTimer = setTimeout(() => s10Apuntar(0), 900);
+    });
+  });
+
+  s10.ready = true;
+}
+
+function resetScene10(){
+  clearTimeout(s10.soltarTimer);
+  s10.played = false;
+  s10.angulo = 0;
+  s10.objetivo = 0;
+  s10Aplicar();
+  Object.values(s10.anims).forEach(a => a && a.goToAndStop(0, true));
+  document.getElementById('s10-cajaJuan').classList.remove('is-locked');
+  document.getElementById('s10-cajaTxt').classList.remove('s10-visible');
+  scene10Hint.classList.remove('is-hidden');
+}
+
+function playScene10(){
+  ['peopleSeis', 'peopleCinco', 'peopleCuatro', 'peopleTres', 'peopleDos', 'peopleUno', 'juanSing'].forEach(nombre => {
+    if (s10.anims[nombre]) s10.anims[nombre].play();
+  });
+}
+
+function stopScene10(){
+  clearTimeout(s10.soltarTimer);
+  Object.values(s10.anims).forEach(a => a && a.pause());
+}
+
 const PRES_DELAY_MS = 450;
 const PRES_SAFETY_MS = 6000;
 
@@ -1011,6 +1154,16 @@ const pres3 = crearPresentacion({
   targetId: 'p3-titulo', hintId: 'pres3Hint'
 });
 
+const pres4 = crearPresentacion({
+  ruta: 'assets/presentacion-final/json', imagenes: 5,
+  stageId: 'pres4Stage', containerId: 'pres4Container',
+  targetId: 'p4-titulo',
+  alTerminar: (token) => {
+    if (token !== pres4.tokenActual()) return;
+    document.dispatchEvent(new CustomEvent('final-presentacion'));
+  }
+});
+
 function showChannel(index){
   channels.forEach(ch => {
     ch.classList.toggle('is-active', Number(ch.dataset.channel) === index);
@@ -1121,8 +1274,25 @@ function showChannel(index){
     initScene9();
     resetScene9();
     requestAnimationFrame(scaleScene9);
+    prefetchScene10();
   } else if (s9.ready){
     stopScene9();
+  }
+
+  if (index === 12){
+    initScene10();
+    resetScene10();
+    requestAnimationFrame(scaleScene10);
+    playScene10();
+    pres4.prefetch();
+  } else if (s10.ready){
+    stopScene10();
+  }
+
+  if (index === 13){
+    pres4.play();
+  } else if (pres4.ready){
+    pres4.stop();
   }
 
   tvCaption.textContent = leyendaCanal(index);
@@ -1330,9 +1500,11 @@ function powerOff(){
     if (s7.ready) stopScene7();
     if (s8.ready) stopScene8();
     if (s9.ready) stopScene9();
+    if (s10.ready) stopScene10();
     cerrarCapituloUno();
     pres2.stop();
     pres3.stop();
+    pres4.stop();
     tvCaption.textContent = 'Televisor apagado';
   }, 560);
 }

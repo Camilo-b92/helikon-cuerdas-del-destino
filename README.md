@@ -104,7 +104,7 @@ Lo que eso implica al trabajar:
     ├── entrada-caminante.js  El rig y la animación de la caminante (módulo sin DOM; lo usan el sitio y Remotion)
     ├── entrada.css
     ├── sonido-motor.js     Motor de sonido: Web Audio sintetizado, sin archivos de audio (API `window.Sonido`)
-    ├── sonido-cues.js      Los 44 sonidos del cómic (televisor, escenas, ambientes, música, entrada)
+    ├── sonido-cues.js      Los 48 sonidos del cómic (televisor, escenas, ambientes, música, entrada)
     ├── sonido-escenas.js   Pega los sonidos a las animaciones: qué suena, cuándo y en qué canal
     └── assets/             Arte, video y animaciones Lottie
         ├── entrada/         La caminante (caminante.json), el tocón y el paisaje de la entrada (seis SVG)
@@ -709,8 +709,8 @@ Máquina de estados con cuatro banderas: `tvOn`, `isAnimating`,
 `introPlaying` e `introEnded`. Mientras `isAnimating` está en `true` los
 botones de canal quedan deshabilitados.
 
-**El dial.** `TOTAL_CHANNELS = 10` es el **último índice**, no la cantidad: los
-canales van de 0 a 10. `showChannel(index)` es el despachador central — marca
+**El dial.** `TOTAL_CHANNELS = 13` es el **último índice**, no la cantidad: los
+canales van de 0 a 13. `showChannel(index)` es el despachador central — marca
 la `<section>` activa, arranca lo que corresponda a ese canal, detiene lo de
 los demás, adelanta la carga del siguiente y actualiza el pie de foto.
 
@@ -798,6 +798,8 @@ queda con un anillo fijo.
 | 8 | Cuando Juan llega al final del recorrido |
 | 10 | Al terminar el globo de Juanes, tras tocarlo (~14 s) |
 | 11 | Al terminar el globo de la mamá, tras tocar a Juanes (~32 s) |
+| 12 | Al terminar el globo final de Juan, tras tocarlo (~15 s); el botón dice *Ver el final* |
+| 13 | Al terminar el título final: *Fin del cómic*, con *Volver al principio* y *Conoce a Juanes* |
 
 | Canal | Escena | Cómo se maneja | Aviso |
 |---|---|---|---|
@@ -809,6 +811,7 @@ queda con un anillo fijo.
 | 7 | Capítulo dos, escena III | Dos clics, en orden: el recuadro y luego el fantasma | *Toca el recuadro*, y después *Toca al fantasma* |
 | 8 | Capítulo dos, escena IV | Mantener la flecha derecha, o el botón *Correr* | *Mantén la flecha → para correr* (con pantalla táctil: *Mantén pulsado el botón Correr*) |
 | 10 | Capítulo tres, escena I | Clic en Juanes, y opcionalmente en la puerta, la cortina y los libros | *Toca a Juanes y explora el cuarto* |
+| 12 | Capítulo tres, escena III | Clic en Juan para que hable; mover el cursor (o tocar los lados) para mover las luces | *Toca a Juanes y mueve el cursor para mover las luces* (táctil: *…toca los lados…*) |
 
 **Canal 7 — Escena III del capítulo dos.** Es una secuencia de dos pasos, que
 guarda en `s6.paso` (`recuadro`, `texto`, `fantasma`). El clic en el recuadro
@@ -864,6 +867,29 @@ oculta al tocar. Los dos fondos son PNG con transparencia, reescalados al
 doble de su tamaño en pantalla (de 3047x1947 a 1463x935; 108 KB → 93 KB y
 42 KB → 28 KB). `textMom.json` pesa casi 1 MB, así que se precarga desde el
 canal 10 (`prefetchScene9()`).
+
+**Canal 12 — Escena III del capítulo tres (el concierto).** Es un escenario de
+once capas (`scene10Stage`, cajas `s10-*` posicionadas en el escenario de
+1134x658): público en seis filas (`peopleUno`, `peopleDos` y `peopleCuatro`
+repetidos en distintas alturas), el escenario, Juan cantando (`juanSing`), el
+micrófono, dos lámparas y las luces. Todas las animaciones están en bucle y se
+pausan al salir del canal. El único clic es Juan (`#s10-cajaJuan`): se atiende
+una vez (`s10.played`) y enciende el globo (`txt.json`, 376 cuadros a 25 fps,
+15 s) que al terminar dispara el aviso *Ver el final*. Las lámparas del diseño
+original se movían con las flechas del teclado, que aquí ya cambian de canal,
+así que se manejan con el puntero: `s10Apuntar(grados)` lleva el ángulo hasta
+±30° con un `requestAnimationFrame`, `lamUno` gira en un sentido y `lamDos` en
+el contrario. Con ratón sigue el cursor; con pantalla táctil, el toque y
+vuelve al centro 0,9 s después de soltar. Las cajas llevan
+`pointer-events: none` salvo Juan. `luces.webp` sustituye al PNG original
+(menos peso). Se precarga desde el canal 11 (`prefetchScene10()`).
+
+**Canal 13 — Título final.** Misma máquina que las demás presentaciones
+(`pres4`, `assets/presentacion-final/`, 5 imágenes), pero con `alTerminar`, que
+lanza el evento `final-presentacion`. `avisos.js` lo recoge y muestra el aviso
+*Fin del cómic* con dos acciones que no existen en ningún otro canal:
+*Volver al principio* (`changeChannel(-ULTIMO)`, de vuelta al canal 0) y el
+enlace *Conoce a Juanes →* hacia `../juanes/`.
 
 **Estática del cambio de canal.** `runStatic(duration, onMid, done)` dibuja
 ruido en un buffer **seis veces más pequeño** y lo escala hacia arriba sin
@@ -1078,11 +1104,14 @@ que no hay licencias que revisar ni peso que descargar (los tres archivos suman 
   `bucle(...)`, `parar(grupo, fade)`, `silenciar/alternar/silenciado`, `alCambiar(fn)`, `render(...)`
   (renderiza un sonido sin conexión, para pruebas) y `H` (herramientas: guitarra Karplus-Strong,
   campanas FM, ruido filtrado, rasgueo, colchones…).
-- **`sonido-cues.js`** registra los 44 sonidos, en grupos: `tv` (encender, apagar, estática, botón,
+- **`sonido-cues.js`** registra los 48 sonidos, en grupos: `tv` (encender, apagar, estática, botón,
   zumbido), `ui` (aviso de fin de escena, sonido activado), `escena` (pasos por tipo de suelo, puerta,
   cortina, libros, silbido, golpe, caja, rebotes, revólver, susto, fantasma, latido, texto, burbuja,
-  panel, títulos y capítulos), `entrada`, `ambiente` (campo, interior, ciudad, noche) y `musica` (la
-  del papá, la de la calle, la del sueño, la del cuarto y el final de 38 s).
+  panel, títulos y capítulos), `entrada`, `ambiente` (campo, interior, ciudad, noche, concierto) y `musica` (la
+  del papá, la de la calle, la del sueño, la del cuarto, el final de 38 s y la del concierto). El
+  concierto añade `ovacion` (público aplaudiendo al hablar Juan) y `titulo-final` (acorde de guitarra
+  y campanas del título). Como `showChannel` limpia el canal *después* de la función original, la
+  música del canal 12 se arranca con un temporizador (`despues(0.8, …)`).
 - **`sonido-escenas.js`** es el único que conoce el cómic. Envuelve `lottie.loadAnimation` y cada
   animación avisa por el `id` de su contenedor; un mapa `EVENTOS` dice qué suena y con qué retraso
   (los tiempos salen de los fotogramas de entrada de cada capa de texto del JSON). También envuelve
@@ -1394,6 +1423,8 @@ capítulos: cada capítulo empieza con su presentación y la historia sigue.
 | 9 | Presentación del capítulo tres | `pres3` |
 | 10 | Capítulo tres, escena I | `s8` |
 | 11 | Capítulo tres, escena II | `s9` |
+| 12 | Capítulo tres, escena III — el concierto | `s10` |
+| 13 | Título final | `pres4` |
 
 Cada capítulo abre con su propia presentación animada, en el canal anterior a
 su primera escena. El **canal 0** encadena dos: primero el nombre del cómic,

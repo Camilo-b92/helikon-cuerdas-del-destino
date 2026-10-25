@@ -803,4 +803,121 @@
       HH.campana(c, mix, { t: t + 31.7, f: n('mi7'), vol: 0.05, dur: 4 });
     }
   });
+  function palmada(c, d, t, vol, pan){
+    const f = az(1700, 3000);
+    H.rafaga(c, d, { t: t, dur: az(0.025, 0.045), filtro: ['bandpass', f, 1.2], vol: vol, a: 0.001, pan: pan });
+    H.rafaga(c, d, { t: t + 0.004, dur: 0.05, ruido: 'rosa', filtro: ['bandpass', 900, 0.9], vol: vol * 0.4, a: 0.002, pan: pan });
+  }
+
+  function grito(c, d, t, vol, pan){
+    const f = az(380, 620);
+    H.tono(c, d, { t: t, dur: az(0.35, 0.6), f: f, f2: f * az(1.4, 1.9), glide: 0.28, tipo: 'sawtooth', vol: vol, a: 0.05, filtro: ['bandpass', 1200, 1.4], pan: pan });
+  }
+
+  function silbidoPublico(c, d, t, vol, pan){
+    const f = az(2300, 3100);
+    H.tono(c, d, { t: t, dur: 0.7, f: f, f2: f * 1.25, glide: 0.5, vol: vol, a: 0.06, vib: [6, 40], pan: pan });
+  }
+
+  R('amb-concierto', {
+    grupo: 'ambiente', bucle: true, dur: 60,
+    fn: (c, b, t0, op, HH, ses) => {
+      zumbidoBajo(c, ses, b.seco, t0, { vol: 0.05, f: 240 });
+      viento(c, ses, b.seco, t0, { vol: 0.055, f: 760 });
+      viento(c, ses, b.seco, t0, { vol: 0.03, f: 1500 });
+      const d = mezcla(c, b, 0.35);
+      return {
+        tick: (desde, hasta) => {
+          const ventana = hasta - desde;
+          if (Math.random() < 0.55){
+            const t = desde + az(0, ventana - 0.8);
+            const n1 = Math.floor(az(3, 9));
+            const pan = az(-0.8, 0.8);
+            for (let i = 0; i < n1; i++) palmada(c, d, t + i * az(0.12, 0.22), az(0.012, 0.024), pan);
+          }
+          if (Math.random() < 0.28) grito(c, d, desde + az(0, ventana - 0.7), az(0.012, 0.022), az(-0.8, 0.8));
+          if (Math.random() < 0.1) silbidoPublico(c, d, desde + az(0, ventana - 0.9), 0.012, az(-0.7, 0.7));
+        }
+      };
+    }
+  });
+
+  R('ovacion', {
+    grupo: 'escena', dur: 9,
+    fn: (c, b, t, op, HH) => {
+      const d = mezcla(c, b, 0.4);
+      HH.rafaga(c, d, { t: t, dur: 8, ruido: 'rosa', filtro: ['bandpass', 900, 0.6], vol: 0.22, a: 0.9, suave: 0.45 });
+      HH.rafaga(c, d, { t: t, dur: 8, ruido: 'rosa', filtro: ['bandpass', 2400, 0.7], vol: 0.08, a: 1.2, suave: 0.4 });
+      for (let i = 0; i < 90; i++){
+        const k = Math.pow(Math.random(), 1.6);
+        palmada(c, d, t + 0.2 + k * 6.8, az(0.04, 0.07) * (1 - k * 0.6), az(-0.9, 0.9));
+      }
+      for (let i = 0; i < 9; i++) grito(c, d, t + 0.3 + Math.random() * 4.5, az(0.025, 0.04), az(-0.9, 0.9));
+      silbidoPublico(c, d, t + 0.9, 0.025, -0.5);
+      silbidoPublico(c, d, t + 1.8, 0.022, 0.6);
+    }
+  });
+
+  R('musica-concierto', {
+    grupo: 'musica', bucle: true, dur: 60,
+    fn: (c, b, t0, op, HH, ses) => {
+      const mix = mezcla(c, b, 0.3);
+      const bateria = mezcla(c, b, 0.12);
+      const cuerpo = HH.cuerpoGuitarra(c, mix);
+      const acordes = [
+        { raiz: n('do2'), notas: [n('do3'), n('mi3'), n('sol3'), n('do4'), n('mi4')] },
+        { raiz: n('sol2'), notas: [n('sol2'), n('re3'), n('sol3'), n('si3'), n('re4')] },
+        { raiz: n('la2'), notas: [n('la2'), n('mi3'), n('la3'), n('do4'), n('mi4')] },
+        { raiz: n('fa2'), notas: [n('fa2'), n('do3'), n('fa3'), n('la3'), n('do4')] }
+      ];
+      let idx = 0;
+      return {
+        tick: (desde) => {
+          const a = acordes[idx % acordes.length];
+          const batir = idx >= 2;
+          [0, 0.75, 1, 1.5].forEach((dt, i) => {
+            HH.rasgueo(c, cuerpo, {
+              t: desde + dt + az(0, 0.01), notas: a.notas, sep: 0.02, dur: 1.5,
+              vol: (i === 0 ? 0.12 : 0.09), brillo: 0.6, abajo: i !== 2
+            });
+          });
+          HH.colchon(c, mix, { t: desde, dur: 2.6, f: [a.raiz * 2, a.raiz * 3], vol: 0.03, a: 0.5, r: 1.2, corte: 900 });
+          HH.tono(c, bateria, { t: desde, dur: 0.6, f: a.raiz, vol: 0.15, a: 0.01, filtro: ['lowpass', 400, 0.7] });
+          HH.tono(c, bateria, { t: desde + 1, dur: 0.5, f: a.raiz * 1.5, vol: 0.1, a: 0.01, filtro: ['lowpass', 400, 0.7] });
+          if (batir){
+            [0, 1].forEach((q) => {
+              const tt = desde + q;
+              HH.tono(c, bateria, { t: tt, dur: 0.2, f: 130, f2: 42, glide: 0.12, vol: 0.22, a: 0.002 });
+              HH.rafaga(c, bateria, { t: tt, dur: 0.02, filtro: ['highpass', 2000, 0.5], vol: 0.05, a: 0.001 });
+              const ts = tt + 0.5;
+              HH.rafaga(c, bateria, { t: ts, dur: 0.16, ruido: 'blanco', filtro: ['bandpass', 1900, 0.9], vol: 0.12, a: 0.002 });
+              HH.tono(c, bateria, { t: ts, dur: 0.1, f: 210, f2: 150, vol: 0.14, a: 0.002 });
+            });
+            for (let i = 0; i < 8; i++){
+              HH.rafaga(c, bateria, { t: desde + i * 0.25, dur: i % 2 ? 0.025 : 0.04, filtro: ['highpass', 7000, 0.6], vol: i % 2 ? 0.022 : 0.034, a: 0.001, pan: 0.3 });
+            }
+          }
+          idx++;
+        }
+      };
+    }
+  });
+
+  R('titulo-final', {
+    grupo: 'escena', dur: 11,
+    fn: (c, b, t, op, HH) => {
+      const d = mezcla(c, b, 0.5);
+      const cuerpo = HH.cuerpoGuitarra(c, d);
+      [['do2', 0], ['sol2', 0.12], ['do3', 0.24], ['mi3', 0.36], ['sol3', 0.48], ['do4', 0.6], ['mi4', 0.72], ['sol4', 0.84]].forEach((p, i) => {
+        HH.cuerda(c, cuerpo, { t: t + 0.2 + p[1], f: n(p[0]), dur: 4.6, vol: 0.24 - i * 0.012, brillo: 0.58, amort: 1.05 });
+      });
+      HH.colchon(c, d, { t: t, dur: 9.5, f: [n('do3'), n('sol3'), n('do4'), n('mi4')], vol: 0.09, a: 1.4, r: 4, corte: 1400 });
+      HH.colchon(c, d, { t: t + 1.2, dur: 8.5, f: [n('mi4'), n('sol4'), n('do5')], vol: 0.04, a: 2, r: 4, corte: 1800 });
+      HH.tono(c, d, { t: t, dur: 3.8, f: 65.4, vol: 0.16, a: 0.5 });
+      [['do6', 1.2], ['sol6', 1.65], ['mi6', 2.1], ['do7', 2.7]].forEach((p) => {
+        HH.campana(c, d, { t: t + p[1], f: n(p[0]), vol: 0.09, dur: 4 });
+      });
+      HH.rafaga(c, d, { t: t, dur: 2.6, ruido: 'rosa', filtro: ['bandpass', 500, 0.8], barrido: 3200, vol: 0.06, a: 1.6, suave: 0.5 });
+    }
+  });
 })();

@@ -711,6 +711,86 @@ a{ color: inherit; }
   #scene8Hint, #scene9Hint{ left: 50%; }
 }
 
+#scene10Container{
+  background-image: url(assets/capitulo-n3/scene3/img/fondo.png);
+  background-size: 100% 100%;
+}
+.s10-caja{ position: absolute; pointer-events: none; }
+#s10-cajaLuces{
+  width: 1133.64px; height: 473.44px; left: 0; top: 122px;
+  animation: s10Wiggle 1.6s ease-in-out infinite, s10Parpadeo 2.2s ease-in-out infinite;
+}
+#s10-luces{
+  width: 100%; height: 100%;
+  background-image: url(assets/capitulo-n3/scene3/img/luces.webp);
+  background-size: 100% 100%;
+}
+@keyframes s10Wiggle{
+  0%, 100%{ transform: translate(0, 0) rotate(0deg); }
+  25%{ transform: translate(0.4px, -0.4px) rotate(0.03deg); }
+  50%{ transform: translate(-0.4px, 0.4px) rotate(-0.03deg); }
+  75%{ transform: translate(0.4px, 0.4px) rotate(0.03deg); }
+}
+@keyframes s10Parpadeo{
+  0%, 100%{ opacity: 1; }
+  50%{ opacity: 0.5; }
+}
+.s10-gente{ width: 1134px; left: 0; }
+.s10-gente > div{ width: 1134px; }
+#s10-cajaUno{ height: 199px; top: 500px; }
+#s10-cajaDos{ height: 180.11px; top: 470px; }
+#s10-cajaTres{ height: 199px; top: 400px; }
+#s10-cajaCuatro{ height: 199px; top: 370px; }
+#s10-cajaCinco{ height: 199px; top: 300px; }
+#s10-cajaSeis{ height: 199px; top: 270px; }
+#s10-cajaEscenario{ width: 726.82px; height: 232.2px; left: 203.59px; top: 425.8px; }
+#s10-escenario{
+  width: 100%; height: 100%;
+  background-image: url(assets/capitulo-n3/scene3/img/escenario.png);
+  background-size: 100% 100%;
+}
+#s10-cajaJuan{ width: 350px; left: 330px; top: 150px; pointer-events: auto; cursor: pointer; }
+#s10-cajaJuan.is-locked{ cursor: default; }
+#s10-juanSing{ width: 100%; }
+#s10-cajaMicro{ width: 60px; height: 250px; left: 552px; top: 250px; }
+#s10-micro{
+  width: 100%; height: 100%;
+  background-image: url(assets/capitulo-n3/scene3/img/micro.png);
+  background-size: 100% 100%;
+}
+.s10-lam{ width: 427.51px; height: 650.27px; top: 30px; }
+#s10-lam1{ left: 350px; }
+#s10-lam2{ left: 790px; }
+.s10-lamUno{
+  width: 427.51px; height: 650.27px;
+  background-image: url(assets/capitulo-n3/scene3/img/lamUno.png);
+  background-size: 100% 100%;
+  transform-origin: top left;
+}
+.s10-lamDos{
+  width: 384.73px; height: 661.88px;
+  background-image: url(assets/capitulo-n3/scene3/img/lamDos.png);
+  background-size: 100% 100%;
+  transform-origin: top right;
+}
+.s10-lamDos.s10-caja,
+.s10-caja.s10-lamDos{ width: 384.73px; height: 661.88px; top: 40px; }
+#s10-lamDos1{ left: -220px; }
+#s10-lamDos2{ left: 200px; }
+#s10-lamDos3{ left: 600px; }
+#s10-cajaTxt{
+  width: 516.67px; height: 488.79px; left: 550px; top: 20px;
+  opacity: 0;
+  transition: opacity 0.3s ease-out;
+}
+#s10-cajaTxt.s10-visible{ opacity: 1; }
+#s10-txt{ width: 300px; }
+#p4-titulo{ position: absolute; inset: 0; width: 1134px; height: 658px; }
+@media (max-width: 640px){
+  #scene10Hint{ left: 50%; }
+}
+html[data-movimiento="reducido"] #s10-cajaLuces{ animation: none; }
+
 .scanlines{
   position: absolute;
   inset: 0;
@@ -1015,7 +1095,8 @@ a{ color: inherit; }
   #s4-juanCaminando.s4-pulso,
   #s5-fondoSky,
   #s6-fantasmaEsc,
-  #s7-sky{
+  #s7-sky,
+  #s10-cajaLuces{
     animation: none !important;
   }
 }
