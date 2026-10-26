@@ -26,7 +26,7 @@ html[data-movimiento="reducido"] .expediente-paso:hover{ translate: none; }
 html[data-movimiento="reducido"] .expediente-hoja{ animation: none; }
 
 html[data-movimiento="reducido"] .team-card:hover,
-html[data-movimiento="reducido"] .team-card:hover .team-icon,
+html[data-movimiento="reducido"] .team-card:hover .team-foto,
 html[data-movimiento="reducido"] .team-card:hover .team-portrait::after{ transform: none; }
 html[data-movimiento="reducido"] .team-card:hover .team-grito,
 html[data-movimiento="reducido"] .clipping:hover{ scale: 1; }

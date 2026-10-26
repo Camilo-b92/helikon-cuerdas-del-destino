@@ -199,8 +199,10 @@ carga, el contenido se ve igual en vez de quedarse invisible para siempre.
 
 ### No hay fotos del equipo
 
-Las fichas de integrantes en la página de Helikón usan las iniciales y un
-icono del oficio, no retratos. No teníamos fotos y no se generaron con IA.
+*Resuelto el 26 de octubre de 2026:* Camilo entregó las fotos de los tres
+integrantes y entraron en las fichas (`assets/img/equipo/`), reemplazando las
+iniciales y el icono del oficio. Antes no había fotos y no se generaron con IA;
+esa regla se mantiene para todo lo demás.
 
 ### Se quitó la transición de "pasar la página"
 
@@ -2219,6 +2221,16 @@ recorrió cada escena con el nuevo botón.
   renderizados sin conexión sin valores inválidos ni saturación. **Pendiente de oído:** el volumen relativo se afina
   escuchando.
 - **Sigue pendiente:** las voces de los personajes (inventario en el documento del proyecto en claude.ai).
+
+### Ronda 49 — Fotos del equipo
+
+- **Pedido.** Camilo: poner las fotos de Gabriel Torres, Brayhan y la suya en sus fichas.
+- **Hecho.** Tres WebP de 640x800 (75–120 KB) en `assets/img/equipo/`; `.team-foto` sustituye al icono y a las iniciales,
+  el retrato pasó de 200 px fijos a proporción 4:4,6 (1:1 en móvil) y la foto se acerca un poco al pasar el cursor.
+  Se quitó el CSS del icono y las iniciales, que ya no se usaban.
+- **Nombre.** Camilo escribió «Brayhan Castillo»; el sitio dice Brayhan Mosquera. Se dejó Mosquera a la espera de
+  confirmación.
+- **Verificado:** capturas a 1366 y 390 px, sin desborde ni errores.
 
 ---
 

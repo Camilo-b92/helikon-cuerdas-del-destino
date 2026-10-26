@@ -427,8 +427,10 @@ Cosas que conviene saber antes de tocarla:
 
 Reglas de esta página:
 
-- **Nada inventado sobre personas reales.** Sin retratos, sin frases que no
-  dijeron y sin estadísticas de "poderes". Las fichas dicen el oficio y lo que
+- **Nada inventado sobre personas reales.** Las fichas llevan la foto que cada
+  integrante entregó (`assets/img/equipo/`, WebP de 640x800 recortado al
+  rostro; la clase `.team-foto` la encaja con `object-fit: cover`), sin frases
+  que no dijeron y sin estadísticas de "poderes". Dicen el oficio y lo que
   cada uno aporta al cómic.
 - **El dibujo del monte usa `preserveAspectRatio="xMidYMax slice"`** con la
   cima centrada en un lienzo de 1000×260, de la misma proporción que la viñeta.
