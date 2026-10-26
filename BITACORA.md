@@ -2228,8 +2228,8 @@ recorrió cada escena con el nuevo botón.
 - **Hecho.** Tres WebP de 640x800 (75–120 KB) en `assets/img/equipo/`; `.team-foto` sustituye al icono y a las iniciales,
   el retrato pasó de 200 px fijos a proporción 4:4,6 (1:1 en móvil) y la foto se acerca un poco al pasar el cursor.
   Se quitó el CSS del icono y las iniciales, que ya no se usaban.
-- **Nombre.** Camilo escribió «Brayhan Castillo»; el sitio dice Brayhan Mosquera. Se dejó Mosquera a la espera de
-  confirmación.
+- **Nombre.** El apellido correcto es **Castillo**, no Mosquera: se corrigió en la ficha, el README y el nombre del archivo
+  de la foto.
 - **Verificado:** capturas a 1366 y 390 px, sin desborde ni errores.
 
 ---

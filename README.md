@@ -16,7 +16,7 @@ televisor retro cambiando de canal.
 |---|---|
 | Gabriel Torres | Dibujante y Animador |
 | Camilo Betancourt | Programador |
-| Brayhan Mosquera | Dibujante |
+| Brayhan Castillo | Dibujante |
 
 ## Qué tecnologías usa y por qué
 
@@ -1339,7 +1339,7 @@ cómic, y el tocón está hecho con código con el estilo de los fondos. No se u
 generativa. La herramienta Remotion solo se usa para revisar; no entra al sitio.
 
 Los dibujos, las animaciones y el texto del cómic son del equipo (Gabriel
-Torres, Brayhan Mosquera y Camilo Betancourt) y no llevan fila.
+Torres, Brayhan Castillo y Camilo Betancourt) y no llevan fila.
 
 ## Créditos de imágenes
 
